@@ -1,0 +1,1298 @@
+{
+  "createdAt": "2025-07-22T05:42:50.275Z",
+  "updatedAt": "2025-07-22T05:42:50.275Z",
+  "id": "UHtroe6YlhRLxd3P",
+  "name": "My workflow 3",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "000cc7ae-f42c-455d-b716-91c359b30bd9",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1240,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Defensive check for iterability\nconst arr = $json.arr || null;\nlet output = [];\nif (Array.isArray(arr)) {\n  for (const i of arr) {\n    output.push({ value: i });\n  }\n} else {\n  // arr is not iterable, return empty array\n  return [];\n}\nreturn output;"
+      },
+      "id": "b7e7ccd3-c74d-4e6e-9750-11a85fdb29ef",
+      "name": "Defensive Iterable Check",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1000,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "8cf0d07d-b795-4fd4-a62e-d22bed4e9d78",
+      "name": "Set Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -740,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.state }}",
+        "options": {
+          "systemMessage": "=Planner – élabore un plan JSON (actions, blueprint ou email_user)"
+        }
+      },
+      "id": "fa91dbaf-759f-4e3d-8e4b-046e8cdedd1a",
+      "name": "Planner (Kimi V2)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -500,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Critic – évalue le plan, attribue un score 0-10 et propose corrections"
+        }
+      },
+      "id": "f73138b8-b474-4a64-97c2-28fb0217aead",
+      "name": "Critic (GPT-4o mini)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Validator – vérifie éthique, coût et risques ; renvoie OK/NOK + raisons"
+        }
+      },
+      "id": "802dc307-b2d4-45c0-902a-e58662f391c3",
+      "name": "Validator (Claude Sonnet)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        20,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Sélectionne l'action finale selon le verdict du Validator et le score du Critic\nconst plan = $json.output || item;\nitem.action     = plan.action;\nitem.blueprint  = plan.blueprint;\nitem.email_user = plan.email_user;\nreturn item;"
+      },
+      "id": "0061ee30-2d39-491d-8cbd-77b66a07737d",
+      "name": "Aggregator",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        260,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "13645f54-0c92-4a25-85e7-7640203ce903",
+      "name": "Set After Aggregator",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        520,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://postman-echo.com/get",
+        "options": {}
+      },
+      "id": "32f7ce3b-9f78-4331-8944-4b8fd318b6ce",
+      "name": "HTTP After Set",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Defensive check for iterability\nconst arr = $json.arr || null;\nlet output = [];\nif (Array.isArray(arr)) {\n  for (const i of arr) {\n    output.push({ value: i });\n  }\n} else {\n  // arr is not iterable, return empty array\n  return [];\n}\nreturn output;"
+      },
+      "id": "f3e73a7c-81c9-4e71-a353-5b3a81ac314e",
+      "name": "Defensive Iterable Check1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d70c7e46-30f8-4af8-a78b-675341d79d3b",
+      "name": "Set Context1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        200,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.state }}",
+        "options": {
+          "systemMessage": "=Planner – élabore un plan JSON (actions, blueprint ou email_user)"
+        }
+      },
+      "id": "24ee0034-4c0e-4783-abe7-e7e84d261ea3",
+      "name": "Planner (Kimi V2)1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        460,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Critic – évalue le plan, attribue un score 0-10 et propose corrections"
+        }
+      },
+      "id": "cb4b51dc-5dd4-475e-8c18-623700adde5e",
+      "name": "Critic (GPT-4o mini)1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        700,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Validator – vérifie éthique, coût et risques ; renvoie OK/NOK + raisons"
+        }
+      },
+      "id": "969c9c82-2e0a-411a-8da5-a9aafb2f3214",
+      "name": "Validator (Claude Sonnet)1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        960,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Sélectionne l'action finale selon le verdict du Validator et le score du Critic\nconst plan = $json.output || item;\nitem.action     = plan.action;\nitem.blueprint  = plan.blueprint;\nitem.email_user = plan.email_user;\nreturn item;"
+      },
+      "id": "a2e97ea7-5280-4834-9e63-572da63cfd66",
+      "name": "Aggregator1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "66b9537e-dc3d-42b7-a909-37ff6d4b95ef",
+      "name": "Set After Aggregator1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        1460,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.test }}",
+              "value2": "after aggregator"
+            }
+          ]
+        }
+      },
+      "id": "64374dc8-cbab-4927-880c-5c899811514c",
+      "name": "IF After Set",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3840,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Defensive check for iterability\nconst arr = $json.arr || null;\nlet output = [];\nif (Array.isArray(arr)) {\n  for (const i of arr) {\n    output.push({ value: i });\n  }\n} else {\n  // arr is not iterable, return empty array\n  return [];\n}\nreturn output;"
+      },
+      "id": "a80fa336-28ec-43ae-b2cc-4f96a3bf93d8",
+      "name": "Defensive Iterable Check2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1e407838-6fad-4465-9f05-355235e57d78",
+      "name": "Set Context2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        2340,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.state }}",
+        "options": {
+          "systemMessage": "=Planner – élabore un plan JSON (actions, blueprint ou email_user)"
+        }
+      },
+      "id": "b63af229-ea92-41a4-964a-daa970648670",
+      "name": "Planner (Kimi V2)2",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2600,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Critic – évalue le plan, attribue un score 0-10 et propose corrections"
+        }
+      },
+      "id": "5f990fdb-99ad-43fd-a94a-3a4e4a52981f",
+      "name": "Critic (GPT-4o mini)2",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2840,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Validator – vérifie éthique, coût et risques ; renvoie OK/NOK + raisons"
+        }
+      },
+      "id": "a453780c-9974-4c88-aa30-8e8a4bf72917",
+      "name": "Validator (Claude Sonnet)2",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        3100,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Sélectionne l'action finale selon le verdict du Validator et le score du Critic\nconst plan = $json.output || item;\nitem.action     = plan.action;\nitem.blueprint  = plan.blueprint;\nitem.email_user = plan.email_user;\nreturn item;"
+      },
+      "id": "15b14b62-49bd-455b-aab4-363d398d0d87",
+      "name": "Aggregator2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3340,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c9993ced-60fe-49f4-901e-78a276810e10",
+      "name": "Set After Aggregator2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        3600,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### Tutorial: The Logic Trio (Merge, IF, Switch)\n\nWelcome! This workflow will teach you the three most important nodes for controlling the flow of your data.\n\n**The Analogy: A Package Sorting Center**\n- **Data Items:** Think of these as packages moving on a conveyor belt.\n- **Merge Node:** A point where multiple conveyor belts combine into one.\n- **IF Node:** A simple sorting gate with two paths (e.g., \"Fragile\" or \"Not Fragile\").\n- **Switch Node:** An advanced sorting machine with many paths (e.g., sorting by destination city).\n\n\n**How to use this tutorial:**\n1.  Click **\"Execute Workflow\"**.\n2.  Follow the flow from left to right, clicking on each node to see its output.\n3.  Read the sticky notes to understand what each node does.",
+        "height": 596,
+        "width": 624
+      },
+      "id": "36e862e1-63c8-422b-a56e-0364427a6dc5",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -520,
+        1500
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 1. The Merge Node\n\n**Analogy:** A conveyor belt where packages from different loading docks (the `Set` nodes) come together.\n\n**What it does:** The Merge node combines multiple streams of data into a single stream.\n\nHere, it's set to **Append** mode, which is the most common. It waits for all incoming data and then passes it all through together.\n\n**➡️ Look at the output. We now have both the letter and the parcel in one list, ready for the next step!**",
+        "height": 604,
+        "width": 384,
+        "color": 4
+      },
+      "id": "154ef1e2-0d33-4a52-b67c-a7a59733b005",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        1500
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 2. The IF Node\n\n**Analogy:** A simple sorting gate with two paths: a \"true\" path and a \"false\" path.\n\n**What it does:** The IF node checks if a condition is met. If it's true, the data goes down the top output. If it's false, it goes down the bottom output.\n\nHere, we're asking a simple question: **\"Does this package have an `is_fragile` property?\"**\n\n**➡️ The parcel will go down the 'true' path, and the letters (which don't have that property) will go down the 'false' path.**",
+        "height": 596,
+        "width": 384,
+        "color": 4
+      },
+      "id": "a11ddf16-fb71-44f1-a5c6-f4f33cf32f3b",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        900,
+        1500
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "handling_instructions",
+              "type": "string",
+              "value": "Handle with care!"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "bede05be-0c2f-4f3e-8f19-12ba8379bc5b",
+      "name": "Add 'Fragile' Handling",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1380,
+        1820
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "handling_instructions",
+              "type": "string",
+              "value": "Standard handling"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "0cffcbdd-4068-492d-936b-538b49411fb2",
+      "name": "Add 'Standard' Handling",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1380,
+        2020
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "### Merge Again?\n\n**Why do we need another Merge node here?**\n\nAfter the IF node, our data was split into two different paths. Before we can perform the *next* sorting step on all packages, we need to get them back onto the same conveyor belt.\n\nThis is a very common and important pattern in n8n: \n**Split -> Process -> Merge.**",
+        "height": 552,
+        "width": 384,
+        "color": 5
+      },
+      "id": "9b8e14b7-7540-433b-8e21-0cf2d081eb48",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1580,
+        1580
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### 3. The Switch Node\n\n**Analogy:** An advanced sorting machine that can send packages to many different destinations.\n\n**What it does:** The Switch node is like an IF node with multiple doors. It checks the value of a single field (`destination` in this case) and sends the data down the path that matches the value.\n\n- If the destination is \"London\", it goes to output 0.\n- If it's \"New York\", it goes to output 1.\n- If it's something else, it goes to the **default** output.\n\n\n**➡️ This is much cleaner than using many IF nodes chained together!**",
+        "height": 648,
+        "width": 400,
+        "color": 4
+      },
+      "id": "e514da46-378a-4c6c-bc6c-2828312fd839",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1980,
+        1500
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "sorting_bin",
+              "type": "string",
+              "value": "A1 (London)"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "e99e4ad0-79fe-4348-8546-04c5302f431e",
+      "name": "Send to London Bin",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2540,
+        1640
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "sorting_bin",
+              "type": "string",
+              "value": "B2 (New York)"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "344ae283-53df-4227-814c-a4d1d5be9752",
+      "name": "Send to New York Bin",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2540,
+        1820
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "sorting_bin",
+              "type": "string",
+              "value": "C3 (Tokyo)"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "d4f2b310-c2f2-4b6d-9208-a6d88d54bdff",
+      "name": "Send to Tokyo Bin",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2540,
+        2020
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "sorting_bin",
+              "type": "string",
+              "value": "Return to Sender"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "48671b5b-eca8-4951-8af1-4685ed63c89f",
+      "name": "Default Bin",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2540,
+        2220
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {},
+      "id": "55cb6e85-0aa7-47b4-98e5-fad55414713d",
+      "name": "Final Sorted Packages",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        2920,
+        1940
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### All Packages Sorted!\n\nCongratulations! You've successfully used the three logic nodes to sort your packages.\n\n**You learned how to:**\n- **Merge** data from different sources.\n- Use **IF** for simple true/false decisions.\n- Use **Switch** for complex, multi-path routing.\n\n\nMastering these three nodes is the key to building powerful and intelligent workflows in n8n.",
+        "height": 560,
+        "width": 368,
+        "color": 6
+      },
+      "id": "ae6a3660-3c38-4656-8ddf-6ae8f2193d8e",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2780,
+        1580
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "8d43cde4-027a-4ca7-a24c-6f74f12d6238",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.destination }}",
+                    "rightValue": "London"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "London"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "399a0fbd-6be5-48e9-9f66-04cf385cb418",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.destination }}",
+                    "rightValue": "New York"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "New York"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "a69d387d-a174-42b3-bc5f-c8b46b7c2375",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.destination }}",
+                    "rightValue": "Tokyo"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Tokyo"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Default"
+        }
+      },
+      "id": "35a18161-314b-4208-8edb-3d31dcbae119",
+      "name": "3. Switch Node",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        2140,
+        1900
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "package_id",
+              "type": "string",
+              "value": "L-001"
+            },
+            {
+              "id": "67890",
+              "name": "type",
+              "type": "string",
+              "value": "letter"
+            },
+            {
+              "id": "abcde",
+              "name": "destination",
+              "type": "string",
+              "value": "London"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "01dce4ca-e005-403f-89d3-ebe5d3258902",
+      "name": "Create Letter",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        260,
+        1740
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {},
+      "id": "a083abfe-f5d3-4404-84ff-6ecec9d1810b",
+      "name": "1. Merge Node",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        620,
+        1900
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a68aad83-1d09-4ebe-9732-aaedc407bb4b",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.is_fragile }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "8a527789-0ec0-4ce3-bde0-4451ad5e058c",
+      "name": "2. IF Node",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1020,
+        1920
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {},
+      "id": "50cf1a3f-6739-46dd-b121-cf21a7976a81",
+      "name": "Re-group All Packages",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1720,
+        1920
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "package_id",
+              "type": "string",
+              "value": "L-002"
+            },
+            {
+              "id": "67890",
+              "name": "type",
+              "type": "string",
+              "value": "letter"
+            },
+            {
+              "id": "abcde",
+              "name": "destination",
+              "type": "string",
+              "value": "Tokyo"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ffa3a0ad-62fd-48bf-8bdd-021f27015d31",
+      "name": "Create 2nd Letter",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        260,
+        1920
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "12345",
+              "name": "package_id",
+              "type": "string",
+              "value": "P-001"
+            },
+            {
+              "id": "67890",
+              "name": "type",
+              "type": "string",
+              "value": "parcel"
+            },
+            {
+              "id": "abcde",
+              "name": "destination",
+              "type": "string",
+              "value": "New York"
+            },
+            {
+              "id": "fghij",
+              "name": "is_fragile",
+              "type": "boolean",
+              "value": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "18d0249b-6408-4b88-a00f-4aed5e847acb",
+      "name": "Create Parcel",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        260,
+        2120
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "## Was this helpful? Let me know!\n\nI really hope this template helped you understand how Logical Operation Nodes work here in n8n. Your feedback is incredibly valuable and helps me create better resources for the n8n community.\n\n### **Share Your Thoughts & Ideas**\n\nWhether you have a suggestion, found a typo, or just want to say thanks, I'd love to hear from you!\nHere's a simple n8n form built for this purpose:\n\n#### ➡️ **[Click here to give feedback](https://api.ia2s.app/form/templates/feedback?template=Merge%20If%20Switch)**\n\n### **Ready to Build Something Great?**\n\nIf you're looking to take your n8n skills or business automation to the next level, I can help.\n\n**🎓 n8n Coaching:** Want to become an n8n pro? I offer one-on-one coaching sessions to help you master workflows, tackle specific problems, and build with confidence.\n#### ➡️ **[Book a Coaching Session](https://api.ia2s.app/form/templates/coaching?template=Merge%20If%20Switch)**\n\n**💼 n8n Consulting:** Have a complex project, an integration challenge, or need a custom workflow built for your business? Let's work together to create a powerful automation solution.\n#### ➡️ **[Inquire About Consulting Services](https://api.ia2s.app/form/templates/consulting?template=Merge%20If%20Switch)**\n\n---\n\nHappy Automating!\nLucas Peyrin",
+        "height": 800,
+        "width": 540,
+        "color": 3
+      },
+      "id": "0467d471-609b-4424-870e-29c0a9985c85",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3180,
+        1340
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Defensive Iterable Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Defensive Iterable Check": {
+      "main": [
+        [
+          {
+            "node": "Set Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Context": {
+      "main": [
+        [
+          {
+            "node": "Planner (Kimi V2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planner (Kimi V2)": {
+      "main": [
+        [
+          {
+            "node": "Critic (GPT-4o mini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic (GPT-4o mini)": {
+      "main": [
+        [
+          {
+            "node": "Validator (Claude Sonnet)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validator (Claude Sonnet)": {
+      "main": [
+        [
+          {
+            "node": "Aggregator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregator": {
+      "main": [
+        [
+          {
+            "node": "Set After Aggregator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Defensive Iterable Check1": {
+      "main": [
+        [
+          {
+            "node": "Set Context1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Context1": {
+      "main": [
+        [
+          {
+            "node": "Planner (Kimi V2)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planner (Kimi V2)1": {
+      "main": [
+        [
+          {
+            "node": "Critic (GPT-4o mini)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic (GPT-4o mini)1": {
+      "main": [
+        [
+          {
+            "node": "Validator (Claude Sonnet)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validator (Claude Sonnet)1": {
+      "main": [
+        [
+          {
+            "node": "Aggregator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregator1": {
+      "main": [
+        [
+          {
+            "node": "Set After Aggregator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set After Aggregator1": {
+      "main": [
+        [
+          {
+            "node": "HTTP After Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Defensive Iterable Check2": {
+      "main": [
+        [
+          {
+            "node": "Set Context2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Context2": {
+      "main": [
+        [
+          {
+            "node": "Planner (Kimi V2)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planner (Kimi V2)2": {
+      "main": [
+        [
+          {
+            "node": "Critic (GPT-4o mini)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic (GPT-4o mini)2": {
+      "main": [
+        [
+          {
+            "node": "Validator (Claude Sonnet)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validator (Claude Sonnet)2": {
+      "main": [
+        [
+          {
+            "node": "Aggregator2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregator2": {
+      "main": [
+        [
+          {
+            "node": "Set After Aggregator2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set After Aggregator2": {
+      "main": [
+        [
+          {
+            "node": "IF After Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. IF Node": {
+      "main": [
+        [
+          {
+            "node": "Add 'Fragile' Handling",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add 'Standard' Handling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Bin": {
+      "main": [
+        [
+          {
+            "node": "Final Sorted Packages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Switch Node": {
+      "main": [
+        [
+          {
+            "node": "Send to London Bin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to New York Bin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to Tokyo Bin",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Default Bin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Tokyo Bin": {
+      "main": [
+        [
+          {
+            "node": "Final Sorted Packages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to London Bin": {
+      "main": [
+        [
+          {
+            "node": "Final Sorted Packages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to New York Bin": {
+      "main": [
+        [
+          {
+            "node": "Final Sorted Packages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final Sorted Packages": {
+      "main": [
+        [
+          {
+            "node": "3. Switch Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "d4a3e6b9-e57d-4511-a560-b6bd393d5814",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-22T05:42:50.283Z",
+      "updatedAt": "2025-07-22T05:42:50.283Z",
+      "role": "workflow:owner",
+      "workflowId": "UHtroe6YlhRLxd3P",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

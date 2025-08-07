@@ -1,0 +1,390 @@
+{
+  "createdAt": "2025-07-29T14:47:15.300Z",
+  "updatedAt": "2025-07-29T19:11:14.000Z",
+  "id": "CeE6rGNPlBWBovnD",
+  "name": "Brain-Hub v3 Main",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        }
+      },
+      "id": "cron_trigger",
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        100,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Load context and initialize run\nconst runId = 'run_' + Date.now();\nconst totalRuns = $getWorkflowStaticData('global').totalRuns || 0;\nconst isVerification = (totalRuns % 50 === 0);\n\nreturn [{\n  json: {\n    runId,\n    totalRuns: totalRuns + 1,\n    isVerification,\n    context: {\n      explorationMode: !isVerification,\n      verificationMode: isVerification,\n      timestamp: new Date().toISOString()\n    }\n  }\n}];"
+      },
+      "id": "context_loader",
+      "name": "Context Loader",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        300,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "lLOiPevOcAHJILQ8",
+        "options": {}
+      },
+      "id": "researcher_sw",
+      "name": "Researcher_SW",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        500,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "lLOiPevOcAHJILQ8",
+        "options": {}
+      },
+      "id": "engineer_sw",
+      "name": "Engineer_SW",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        700,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "lLOiPevOcAHJILQ8",
+        "options": {}
+      },
+      "id": "analyst_sw",
+      "name": "Analyst_SW",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        900,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Aggregate results and calculate fitness\nconst f = (a,b,c) => (a + b + c) / 3;\nconst results = items[0].json;\n\n// Extract scores from analyst response\nconst analystData = JSON.parse(results.response || '{}');\nconst sigLoss = analystData.signalLoss || 0.8;\nconst sigBench = analystData.benchmarkScore || 0.7;\nconst llmJudge = analystData.llmScore || 0.9;\n\nconst fitness = f(sigLoss, sigBench, llmJudge);\n\nlet action;\nif (fitness < 0.55) {\n  action = 'continue_loop';\n} else if (fitness < 0.75) {\n  action = 'spawn_workflow';\n} else {\n  action = 'email_user';\n}\n\nreturn [{\n  json: {\n    runId: results.runId,\n    fitness,\n    action,\n    blueprint: results.blueprint || {},\n    analysis: analystData,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "aggregator",
+      "name": "Aggregator 2.0",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.action}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "continue_loop"
+            },
+            {
+              "value2": "spawn_workflow"
+            },
+            {
+              "value2": "email_user"
+            }
+          ]
+        }
+      },
+      "id": "switch_action",
+      "name": "Switch Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1300,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "update_candidate_pool",
+      "name": "Update Candidate Pool",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        1260,
+        -160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "update_analysis_log",
+      "name": "Update Analysis Log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        1200,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "toEmail": "user@example.com",
+        "subject": "Brain-Hub v3: High Fitness Workflow Detected",
+        "text": "A workflow with fitness score {{$json.fitness}} has been generated. Details: {{JSON.stringify($json.analysis)}}",
+        "options": {}
+      },
+      "id": "email_notification",
+      "name": "Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        280
+      ],
+      "credentials": {
+        "smtp": {
+          "id": null,
+          "name": "smtp-ttank-creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Update global counter\nconst staticData = $getWorkflowStaticData('global');\nstaticData.totalRuns = (staticData.totalRuns || 0) + 1;\nreturn items;"
+      },
+      "id": "update_total_runs",
+      "name": "Update Total Runs",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        -20
+      ]
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {
+      "main": [
+        [
+          {
+            "node": "Context Loader",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context Loader": {
+      "main": [
+        [
+          {
+            "node": "Researcher_SW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Researcher_SW": {
+      "main": [
+        [
+          {
+            "node": "Engineer_SW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Engineer_SW": {
+      "main": [
+        [
+          {
+            "node": "Analyst_SW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyst_SW": {
+      "main": [
+        [
+          {
+            "node": "Aggregator 2.0",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregator 2.0": {
+      "main": [
+        [
+          {
+            "node": "Switch Action",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Candidate Pool",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Analysis Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Action": {
+      "main": [
+        [
+          {
+            "node": "Update Total Runs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Total Runs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Notification": {
+      "main": [
+        [
+          {
+            "node": "Update Total Runs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Guadeloupe",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "67a3f080-c36b-461b-af67-6f5477d3da2c",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-29T14:47:15.301Z",
+      "updatedAt": "2025-07-29T14:47:15.301Z",
+      "role": "workflow:owner",
+      "workflowId": "CeE6rGNPlBWBovnD",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

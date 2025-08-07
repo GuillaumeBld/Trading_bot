@@ -1,0 +1,392 @@
+{
+  "createdAt": "2025-08-07T03:20:55.278Z",
+  "updatedAt": "2025-08-07T03:21:12.000Z",
+  "id": "JLBdqZXLV86aPjvz",
+  "name": "trading-signal",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trading-signal",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "55102cda-ef5f-475d-9983-adde53afe2b6",
+      "name": "Trading Signal Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        200
+      ],
+      "webhookId": "trading-signal-processor"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "82eb5072-4125-4c7e-8fec-a94e98bbbcc7",
+      "name": "OpenRouter Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -1440,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.signal_type}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "5da28b49-5286-4db3-91a4-03580675be36",
+      "name": "Signal Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1220,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$node['OpenRouter Config'].json['openrouter_base_url']}}/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['OpenRouter Config'].json['openrouter_api_key']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "HTTP-Referer",
+              "value": "https://your-domain.com"
+            },
+            {
+              "name": "X-Title",
+              "value": "Trading Bot Signal Processor"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "id": "c8ce1921-a6dc-4560-a49d-937cb0e4b647",
+      "name": "OpenRouter AI Analysis",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -1000,
+        200
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pGjf5G1B4ohFX6Qx",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse OpenRouter response and extract recommendation\nconst response = $input.first().json;\n\nif (!response.choices || !response.choices[0]) {\n  throw new Error('Invalid response from OpenRouter API');\n}\n\nconst aiResponse = response.choices[0].message.content;\nlet aiAnalysis;\n\ntry {\n  // Try to parse as JSON first\n  aiAnalysis = JSON.parse(aiResponse);\n} catch (e) {\n  // If not JSON, extract key information using regex\n  const confidenceMatch = aiResponse.match(/confidence[_\\s]*score[:\\s]*(\\d+)/i);\n  const recommendationMatch = aiResponse.match(/recommendation[:\\s]*(BUY|SELL|HOLD)/i);\n  const riskMatch = aiResponse.match(/risk[_\\s]*level[:\\s]*(LOW|MEDIUM|HIGH)/i);\n  \n  aiAnalysis = {\n    confidence_score: confidenceMatch ? parseInt(confidenceMatch[1]) : 50,\n    recommendation: recommendationMatch ? recommendationMatch[1] : 'HOLD',\n    risk_level: riskMatch ? riskMatch[1] : 'MEDIUM',\n    reasoning: aiResponse,\n    suggested_position_size: 5 // Default 5%\n  };\n}\n\n// Combine original signal with AI analysis\nconst originalSignal = $('Signal Validation').first().json;\nconst enhancedSignal = {\n  ...originalSignal,\n  ai_analysis: aiAnalysis,\n  processed_at: new Date().toISOString(),\n  processor_version: '2.0',\n  ai_provider: 'OpenRouter',\n  model_used: $node['OpenRouter Config'].json['preferred_model']\n};\n\nreturn enhancedSignal;"
+      },
+      "id": "98b14d26-63ce-4e60-a623-de801e2b8757",
+      "name": "Process AI Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -780,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.ai_analysis.confidence_score}}",
+              "operation": "largerEqual",
+              "value2": 70
+            }
+          ]
+        }
+      },
+      "id": "404ccc25-da0e-451f-b58b-fe6450628856",
+      "name": "High Confidence Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$node['Trading Bot Config'].json['webhook_url']}}/execute-trade",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['Trading Bot Config'].json['api_key']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "id": "3350d03e-27b7-4bc4-9388-68f700b2bd9f",
+      "name": "Execute Trade",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -340,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$node['Trading Bot Config'].json['webhook_url']}}/log-signal",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node['Trading Bot Config'].json['api_key']}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "id": "f012c5aa-8f0d-4a82-b10d-e2d8c449f4b7",
+      "name": "Log Signal Only",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        -340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "0f317662-f761-428a-8fb1-a4df4df6122b",
+      "name": "Trading Bot Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -1440,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"status\": \"success\",\n  \"message\": \"Signal processed successfully\",\n  \"signal_id\": \"{{$json.signal_id || 'auto-generated'}}\",\n  \"ai_analysis\": {{JSON.stringify($json.ai_analysis)}},\n  \"action_taken\": \"{{$json.ai_analysis.confidence_score >= 70 ? 'trade_executed' : 'logged_only'}}\",\n  \"timestamp\": \"{{$json.processed_at}}\"\n}",
+        "options": {}
+      },
+      "id": "113de702-8cf1-4e15-b6df-0d1e88cc8b99",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        200
+      ]
+    }
+  ],
+  "connections": {
+    "Trading Signal Webhook": {
+      "main": [
+        [
+          {
+            "node": "Signal Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signal Validation": {
+      "main": [
+        [
+          {
+            "node": "OpenRouter AI Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Process AI Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process AI Response": {
+      "main": [
+        [
+          {
+            "node": "High Confidence Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Confidence Filter": {
+      "main": [
+        [
+          {
+            "node": "Execute Trade",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Signal Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Trade": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Signal Only": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "7231d052-7bc8-4efb-8122-a7ab287bd35e",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-08-07T03:20:55.286Z",
+      "updatedAt": "2025-08-07T03:20:55.286Z",
+      "role": "workflow:owner",
+      "workflowId": "JLBdqZXLV86aPjvz",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

@@ -1,0 +1,260 @@
+{
+  "createdAt": "2025-07-22T15:24:50.278Z",
+  "updatedAt": "2025-07-22T15:24:50.278Z",
+  "id": "LZbmZSXjBOBUUsOq",
+  "name": "My workflow 3",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "cad25cc5-691e-4df8-b5f0-4f7db3e49406",
+      "name": "Aggregator",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 4,
+      "position": [
+        1820,
+        1060
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "3aaf496b-2c3d-49ee-966d-cd1421dc36fd",
+      "name": "Set After Aggregator",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        3608,
+        1320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Defensive check for iterability\nconst arr = $json.arr || null;\nlet output = [];\nif (Array.isArray(arr)) {\n  for (const i of arr) {\n    output.push({ value: i });\n  }\n} else {\n  // arr is not iterable, return empty array\n  return [];\n}\nreturn output;"
+      },
+      "id": "0b90f6ca-dc3f-4d78-a861-3845b54829eb",
+      "name": "Defensive Iterable Check6",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        1320
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "52e28754-b5f4-4e2e-8a7d-afa59c1583fc",
+      "name": "Set Context6",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        2060,
+        1140
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.state }}",
+        "options": {
+          "systemMessage": "=Planner – élabore un plan JSON (actions, blueprint ou email_user)"
+        }
+      },
+      "id": "c7340631-0f88-49f4-ba7d-03e2e82d4f2b",
+      "name": "Planner (Kimi V2)6",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2260,
+        1320
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Critic – évalue le plan, attribue un score 0-10 et propose corrections"
+        }
+      },
+      "id": "2998c433-50cf-4cd4-ad6e-d289e871b5f8",
+      "name": "Critic (GPT-4o mini)6",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        2636,
+        1320
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output }}",
+        "options": {
+          "systemMessage": "=Validator – vérifie éthique, coût et risques ; renvoie OK/NOK + raisons"
+        }
+      },
+      "id": "c9af614e-c390-42f6-a1d4-2910ace840ef",
+      "name": "Validator (Claude Sonnet)6",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        3012,
+        1320
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Sélectionne l'action finale selon le verdict du Validator et le score du Critic\nconst plan = $json.output || item;\nitem.action     = plan.action;\nitem.blueprint  = plan.blueprint;\nitem.email_user = plan.email_user;\nreturn item;"
+      },
+      "id": "39e48de7-3492-46f7-a866-b3912d076b6e",
+      "name": "Aggregator6",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        3388,
+        1320
+      ]
+    }
+  ],
+  "connections": {
+    "Defensive Iterable Check6": {
+      "main": [
+        [
+          {
+            "node": "Set Context6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Context6": {
+      "main": [
+        [
+          {
+            "node": "Planner (Kimi V2)6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planner (Kimi V2)6": {
+      "main": [
+        [
+          {
+            "node": "Critic (GPT-4o mini)6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic (GPT-4o mini)6": {
+      "main": [
+        [
+          {
+            "node": "Validator (Claude Sonnet)6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validator (Claude Sonnet)6": {
+      "main": [
+        [
+          {
+            "node": "Aggregator6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregator6": {
+      "main": [
+        [
+          {
+            "node": "Set After Aggregator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "e5383ea1-a607-4b36-b761-fb89efa5fb10",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-22T15:24:50.281Z",
+      "updatedAt": "2025-07-22T15:24:50.281Z",
+      "role": "workflow:owner",
+      "workflowId": "LZbmZSXjBOBUUsOq",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

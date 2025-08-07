@@ -1,0 +1,149 @@
+{
+  "createdAt": "2025-07-21T04:08:53.982Z",
+  "updatedAt": "2025-07-21T17:08:48.000Z",
+  "id": "L2YHiej9gdkBdTTs",
+  "name": "Think tank",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -3900,
+        -120
+      ],
+      "id": "6c042ed1-bbb7-4460-8ccc-7441e45b9ce1",
+      "name": "When chat message received",
+      "webhookId": "ebacaba5-d2b6-4b3e-b105-287a470dc82a"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -2940,
+        -640
+      ],
+      "id": "1a26d1ca-34bb-4a43-8f53-f2bbbfe436d3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -3080,
+        -320
+      ],
+      "id": "a392f2b0-67ec-4f50-9365-68898545d713",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "DgQSQ6OnWRyMfHDV",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "b0d5b757-c4d2-4374-bfc5-e672336f0640",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-21T04:08:54.009Z",
+      "updatedAt": "2025-07-21T04:08:54.009Z",
+      "role": "workflow:owner",
+      "workflowId": "L2YHiej9gdkBdTTs",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

@@ -1,0 +1,1724 @@
+{
+  "createdAt": "2025-08-02T01:40:46.699Z",
+  "updatedAt": "2025-08-02T01:41:14.000Z",
+  "id": "KTzJq0nW1ITLeB4Q",
+  "name": "N8N Workflows MCP Server",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "821226b0-12ad-4d1d-81c3-dfa3c286cce4",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "629d95d6-2501-4ad4-a5ed-e557237e1cc2",
+              "name": "name",
+              "type": "string",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "id": "30699f7c-98d3-44ee-9749-c5528579f7e6",
+              "name": "description",
+              "type": "string",
+              "value": "={{\n$json.nodes\n  .filter(node => node.type === 'n8n-nodes-base.stickyNote')\n  .filter(node => node.parameters.content.toLowerCase().includes('try it out'))\n  .map(node => node.parameters.content.substr(0,255) + '...')\n  .join('\\n')\n}}"
+            },
+            {
+              "id": "6199c275-1ced-4f72-ba59-cb068db54c1b",
+              "name": "parameters",
+              "type": "string",
+              "value": "={{\n(function(node) {\n  if (!node) return {};\n  const inputs = node.parameters.workflowInputs.values;\n  return {\n    \"type\": \"object\",\n    \"required\": inputs.map(input => input.name),\n    \"properties\": inputs.reduce((acc, input) => ({\n      ...acc,\n      [input.name]: { type: input.type ?? 'string' }\n    }), {})\n  }\n})(\n$json.nodes\n  .filter(node => node.type === 'n8n-nodes-base.executeWorkflowTrigger')\n  .first()\n)\n.toJsonString()\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "11daa6d9-a0f7-4719-bc93-15ecfc82328b",
+      "name": "Simplify Workflows",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        860,
+        280
+      ],
+      "executeOnce": false,
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "operation"
+            },
+            {
+              "name": "workflowIds"
+            },
+            {
+              "name": "parameters",
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "id": "e6e30f2f-4617-4fbe-814a-4256aee88055",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -460,
+        880
+      ],
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "3254a8f9-5fd3-4089-be16-cc3fd20639b8",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('When Executed by Another Workflow').first().json.operation }}",
+                    "rightValue": "addWorkflow"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Add"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "a33dd02d-5192-48c9-b569-eafddabd2462",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('When Executed by Another Workflow').first().json.operation }}",
+                    "rightValue": "removeWorkflow"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "remove"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "2d68dc3f-a213-47f8-8453-1bceae404653",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('When Executed by Another Workflow').first().json.operation }}",
+                    "rightValue": "listWorkflows"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "list"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "2146a87e-1a50-4caa-a2ee-f7f6fc2b19c9",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('When Executed by Another Workflow').first().json.operation }}",
+                    "rightValue": "searchWorkflows"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "search"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "98b25a51-2cb5-49af-9609-827245595dc9",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('When Executed by Another Workflow').first().json.operation }}",
+                    "rightValue": "executeWorkflow"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "execute"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e02a0d0d-2766-4dad-9b22-706cc7ed309f",
+      "name": "Operations",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -60,
+        840
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "filters": {
+          "tags": "mcp"
+        },
+        "requestOptions": {}
+      },
+      "id": "37154575-0353-4a24-8313-7ac1ef697e7f",
+      "name": "Get MCP-tagged Workflows",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        200,
+        480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "90c97733-48de-4402-8388-5d49e3534388",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{\n$json.id\n  ? $('When Executed by Another Workflow').first().json.workflowIds.split(',').includes($json.id)\n  : false\n}}",
+              "rightValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8acca7a6-0316-45b8-92b7-d190647f0003",
+      "name": "Filter Matching Ids",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        420,
+        480
+      ],
+      "executeOnce": false,
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "mcp_n8n_tools",
+        "value": "={{\n($('Get Memory').item.json.data?.parseJson() ?? [])\n  .concat($input.all().map(item => item.json))\n  .toJsonString()\n}}"
+      },
+      "id": "bac5db51-9612-4b15-b76a-0b5bd6b5344f",
+      "name": "Store In Memory",
+      "type": "n8n-nodes-base.redis",
+      "position": [
+        1080,
+        280
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d921063f-e8ed-44a8-95a0-4402ecde6c5d",
+              "name": "=response",
+              "type": "string",
+              "value": "={{ $('Simplify Workflows').all().length }} tools were added successfully."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "74ff365a-7733-4840-9f32-7ccba77080fd",
+      "name": "AddTool Success",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1300,
+        280
+      ],
+      "executeOnce": true,
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8c4e0763-a4ff-4e8a-a992-13e4e12a5685",
+              "name": "response",
+              "type": "string",
+              "value": "Expected Tools matching Ids given, but none found."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "46fc7dae-9f4e-410c-bb10-1ac0cc3177c2",
+      "name": "AddTool Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        860,
+        480
+      ],
+      "executeOnce": true,
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "data",
+        "key": "mcp_n8n_tools",
+        "options": {}
+      },
+      "id": "c2c45775-6205-4208-bafd-01292e9fa537",
+      "name": "Get Memory",
+      "type": "n8n-nodes-base.redis",
+      "position": [
+        -260,
+        880
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "id": "ca628cce-a4ef-4f5b-8446-a87dbeda5785",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        420,
+        680
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d2c149fb-d115-449b-9b74-f3c2f8ff7950",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{\n$json.id\n  ? $('Operations').first().json.workflowIds.split(',').includes($json.id)\n  : false\n}}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7284aad0-1528-46a0-826b-bcfbb1aac9dd",
+      "name": "Filter Matching IDs",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        640,
+        680
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "mcp_n8n_tools",
+        "value": "={{ $input.all().flatMap(item => item.json.data).compact() }}"
+      },
+      "id": "00c16eec-0588-4914-9cf8-71e89a93564f",
+      "name": "Store In Memory1",
+      "type": "n8n-nodes-base.redis",
+      "position": [
+        1080,
+        780
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1368947f-6625-4e2e-ae27-0fcad0a1d12a",
+              "name": "response",
+              "type": "string",
+              "value": "={{ $('When Executed by Another Workflow').first().json.workflowIds.split(',').length }} tool(s) removed successfully."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4c734b66-8d1d-4415-b976-2b460445ff35",
+      "name": "Remove Tool Success",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1300,
+        680
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bce29a06-cff6-4409-96d2-04cc858a0e98",
+              "name": "data",
+              "type": "array",
+              "value": "={{ $json.data.parseJson() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3233144d-ff93-4b66-9ed6-1e04fc106f90",
+      "name": "Convert to JSON",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        200,
+        680
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bce29a06-cff6-4409-96d2-04cc858a0e98",
+              "name": "response",
+              "type": "array",
+              "value": "={{\n$json.data\n  ? $json.data.parseJson()\n  : []\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a556a660-5627-4a51-8efa-2288a77b6114",
+      "name": "listTools Success",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        200,
+        880
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "filters": {
+          "tags": "mcp"
+        },
+        "requestOptions": {}
+      },
+      "id": "3478462f-f237-449f-8cda-40865e876d9f",
+      "name": "Get MCP-tagged Workflows1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        420,
+        880
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "821226b0-12ad-4d1d-81c3-dfa3c286cce4",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "629d95d6-2501-4ad4-a5ed-e557237e1cc2",
+              "name": "name",
+              "type": "string",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "id": "30699f7c-98d3-44ee-9749-c5528579f7e6",
+              "name": "description",
+              "type": "string",
+              "value": "={{\n$json.nodes\n  .filter(node => node.type === 'n8n-nodes-base.stickyNote')\n  .filter(node => node.parameters.content.toLowerCase().includes('try it out'))\n  .map(node => node.parameters.content.substr(0,255) + '...')\n  .join('\\n')\n}}"
+            },
+            {
+              "id": "137221ef-f0a3-4441-bae7-d9d4a22e05b7",
+              "name": "parameters",
+              "type": "string",
+              "value": "={{\n(function(node) {\n  if (!node) return {};\n  const inputs = node.parameters.workflowInputs.values;\n  return {\n    \"type\": \"object\",\n    \"required\": inputs.map(input => input.name),\n    \"properties\": inputs.reduce((acc, input) => ({\n      ...acc,\n      [input.name]: { type: input.type ?? 'string' }\n    }), {})\n  }\n})(\n$json.nodes\n  .filter(node => node.type === 'n8n-nodes-base.executeWorkflowTrigger')\n  .first()\n)\n.toJsonString()\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1c92b633-f9b1-4a49-b60c-039869628a7b",
+      "name": "Simplify Workflows1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        640,
+        880
+      ],
+      "executeOnce": false,
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "response",
+        "options": {}
+      },
+      "id": "56741dad-9424-4d9b-b27e-3fcbd47ecdb2",
+      "name": "listTools Success1",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        860,
+        880
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $('When Executed by Another Workflow').first().json.parameters }}",
+        "options": {}
+      },
+      "id": "b022a79e-ecd8-4681-a095-8d217a46e785",
+      "name": "Get Parameters",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        680,
+        1300
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "response",
+        "options": {}
+      },
+      "id": "2a8e3159-9cca-423f-8bfe-990219308add",
+      "name": "executeTool Result",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        1160,
+        1300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful assistant who only uses workflows to answer questions and perform tasks.\n* When asked to complete a task, you will assume there is a workflow which you can use. Do not generate custom scripts or raw commands - use a workflow isntead.\n* Only use the available active workflows as listed using the \"listWorkflows\" tool.\n* Workflows returned by \"listWorkflows\" tool are active in the pool and do not need to be added again.\n* Always ask the user before adding workflows to the availble pool.\n* You do not need to confirm each step with the user when executing workflows.\n* When executing the workflow, the required parameters schema for it is listed in the workflow's profile. To get this profile, use the listWokflows tool.\n* If no available workflows are suitable and you are not able to complete the task, simply let the user know.\n* Do not search for workflows in the directory unless the user requests."
+        }
+      },
+      "id": "05ba585d-d51f-4898-aa35-9c5b34dccde0",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -1000,
+        1320
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "0d14cc63-81da-43eb-ac0f-0ae3065d9f52",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -1240,
+        1320
+      ],
+      "webhookId": "86a50552-8058-4896-bd7e-ab95eba073ce",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "=<Production URL of MCP Server>"
+      },
+      "id": "f2b8f8bd-600a-46ca-b968-495355f21fde",
+      "name": "MCP Client",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        -760,
+        1520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 30
+      },
+      "id": "21fe758d-dcac-4b7e-beea-10436081c495",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -900,
+        1520
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bce29a06-cff6-4409-96d2-04cc858a0e98",
+              "name": "data",
+              "type": "array",
+              "value": "={{ $json.data.parseJson() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "78f7daa8-1b0b-4c08-b380-bbeb87a16c14",
+      "name": "Convert to JSON1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        240,
+        1400
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "9c9df00b-b090-4773-8012-1824b4eeb13f",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              },
+              "leftValue": "={{\n$json.data.find(d => d.id === $('When Executed by Another Workflow').item.json.workflowIds)\n}}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "270ecf15-590a-42d2-8e10-9f2c2647149a",
+      "name": "Has Workflow Available?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        460,
+        1400
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2fa3e311-e836-42f4-922a-fae19d8e0267",
+              "name": "response",
+              "type": "string",
+              "value": "=Expected workflow to be available but not yet added. You can only use workflows which have been added to the available pool. Use the listWorkflows tool to see available workflows."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "28ecd50f-e177-4ba1-a16d-925e6b25ecaf",
+      "name": "ExecuteTool Error",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        680,
+        1500
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "15aef770-639e-4df0-900f-29013ccd00c4",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cc6a4f03-9f14-4bd1-b78a-d2dadb4d7fce",
+      "name": "Workflow Exists?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        640,
+        480
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "path": "4625bcf4-0dd9-4562-a70f-6fee41f6f12d"
+      },
+      "id": "fc01125f-641f-4704-ac5c-2cbf0a9a6b46",
+      "name": "N8N Workflows MCP Server",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        -1120,
+        520
+      ],
+      "webhookId": "4625bcf4-0dd9-4562-a70f-6fee41f6f12d",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "name": "addWorkflow",
+        "description": "Adds one or more workflows by ID to the available pool of workflows for the agent. You can get a list of workflows by calling the listTool tool.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $workflow.id }}"
+        },
+        "workflowInputs": {
+          "value": {
+            "operation": "addWorkflow",
+            "parameters": "null",
+            "workflowIds": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('workflowIds', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowIds",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "workflowIds",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "parameters",
+              "type": "object",
+              "display": true,
+              "required": false,
+              "displayName": "parameters",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "2e696344-8c6f-4e54-98b9-307b0ba45cba",
+      "name": "Add Workflow",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        -1200,
+        740
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "removeWorkflow",
+        "description": "Removes one or more workflows by ID from the available pool of workflows for the agent.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $workflow.id }}"
+        },
+        "workflowInputs": {
+          "value": {
+            "operation": "removeWorkflow",
+            "parameters": "null",
+            "workflowIds": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('workflowIds', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowIds",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "workflowIds",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "parameters",
+              "type": "object",
+              "display": true,
+              "required": false,
+              "displayName": "parameters",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "c55fbefb-e251-4ea2-abfd-86d7a7d729f7",
+      "name": "RemoveWorkflow",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        -1100,
+        840
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "listTool",
+        "description": "Lists the available pool of workflows for the agent.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $workflow.id }}"
+        },
+        "workflowInputs": {
+          "value": {
+            "operation": "listWorkflows",
+            "parameters": "null",
+            "workflowIds": "null"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowIds",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "workflowIds",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "parameters",
+              "type": "object",
+              "display": true,
+              "required": false,
+              "displayName": "parameters",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "9493b03c-3d3a-41e3-aea6-f702c3cc962a",
+      "name": "List Workflows",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        -980,
+        940
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "searchTool",
+        "description": "Returns all workflows which can be added to the pool of available workflows for the agent.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $workflow.id }}"
+        },
+        "workflowInputs": {
+          "value": {
+            "operation": "searchWorkflows",
+            "parameters": "null",
+            "workflowIds": "null"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowIds",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "workflowIds",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "parameters",
+              "type": "object",
+              "display": true,
+              "required": false,
+              "displayName": "parameters",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "d20524ac-748f-4419-b8b4-f1780c8a63d1",
+      "name": "SearchWorkflows",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        -860,
+        840
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "name": "executeTool",
+        "description": "Executes a workflow which has been added to the pool of available workflows for the agent.",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $workflow.id }}"
+        },
+        "workflowInputs": {
+          "value": {
+            "operation": "executeWorkflow",
+            "parameters": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('parameters', ``, 'string') }}",
+            "workflowIds": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('workflowIds', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "operation",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "operation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowIds",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "workflowIds",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "parameters",
+              "type": "object",
+              "display": true,
+              "required": false,
+              "displayName": "parameters",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "id": "f20a3536-f0ab-43a4-85f2-a94a5510895a",
+      "name": "ExecuteWorkflow",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        -740,
+        740
+      ],
+      "typeVersion": 2.1
+    },
+    {
+      "parameters": {
+        "content": "## 1. Add MCP Server Trigger\n[Read more about the MCP server trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-langchain.mcptrigger/)",
+        "height": 740,
+        "width": 720,
+        "color": 7
+      },
+      "id": "299e8199-98bd-423a-b0a5-17fd50d8b85e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1320,
+        360
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('When Executed by Another Workflow').first().json.workflowIds }}"
+        },
+        "workflowInputs": {
+          "value": {},
+          "schema": [],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "id": "ba7ced01-932c-43ce-8622-1b4c87135da0",
+      "name": "Execute Workflow with PassThrough Variables",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        940,
+        1300
+      ],
+      "executeOnce": false,
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## 2. Dynamically manage a list of \"Available\" Workflows\n[Learn more about the n8n node](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.n8n)\n\nThe idea is to limit the number of workflows the agent has access to in order to ensure undesired workflows or duplication of similar workflows are avoided. Here, we do this by managing a virtual list of workflows in memory using Redis - under the hood, it's just an array to store Workflow details.\n\nGood to note, the intended workflows must have **Subworkflow triggers** and ideally, with input schema set as well. This template analyses each workflow's JSON and captures its input schema as part of the workflow's description. Doing so,  when it comes time to execute, the agent will know in what format to set the parameters when calling the subworkflow.\n",
+        "height": 300,
+        "width": 740,
+        "color": 7
+      },
+      "id": "6e74862d-2881-4420-8b0f-74c5be903734",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 3. Let the Agent execute any N8N Workflow\n[Learn more about the Execute Workflow node](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.executeworkflow/)\n\nFinally once the agent has gathered the required workflows, it will start performing the requested task by executing one or more available workflows. The desired behaviour is that the agent will use \"listWorkflows\" to see which workflows are \"active\" and then plan out how to use them. Attempts to use a workflow before adding it to the available pool will result in an error response.",
+        "height": 600,
+        "width": 1160,
+        "color": 7
+      },
+      "id": "663e1dab-abb6-49fb-9e5b-4b0717c5aebd",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        180,
+        1100
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "d2a12532-716e-4d1f-8985-d0217e9d6d75",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -1060,
+        1520
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "2cd1b233-fb24-45d5-9efd-1db44b817809",
+              "operator": {
+                "type": "array",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $input.all().flatMap(item => item.json.data).compact() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "880d667a-e078-4b02-a023-0992ede97a69",
+      "name": "Is Empty Array?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        860,
+        680
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "mcp_n8n_tools"
+      },
+      "id": "05aeb34f-2fba-42ba-be26-bd374f820d2c",
+      "name": "Delete Key",
+      "type": "n8n-nodes-base.redis",
+      "position": [
+        1080,
+        580
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 4. Connect any Agent with a MCP Client\nUse this agent to test your MCP server. Note, i",
+        "height": 560,
+        "width": 740,
+        "color": 7
+      },
+      "id": "7b74e47f-3516-48af-a239-de6421a1e25d",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1320,
+        1140
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "* **AddWorkflow**\n  This tool adds (or rather, appends) workflows to our \"available\" list.\n* **RemoveWorkflow**\n  This tool removes a workflow entry from our list.\n* **listWorkflows**\n  This tool displays the current state of the workflows list and the available workflows within it. Useful for checking which workflows have been added to the list.\n* **searchWorkflows**\n  For now, this tools just pulls the existing workflows from the n8n instance and returns it to the agent. Given more resources, you may want to swap this out for a indexed search instead (you'll need to build this yourself!).",
+        "height": 400,
+        "width": 320,
+        "color": 5
+      },
+      "id": "55cb7222-a4cd-4f1b-a32f-edcf39121a29",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -280,
+        1100
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Try it out!\n### This n8n template shows you how to create an MCP server out of your existing n8n workflows. With this, any MCP client connected can get more done with powerful end-to-end workflows rather than just simple tools.\n\nDesigning agent tools for outcome rather than utility has been a long recommended practice of mine and it applies well when it comes to building MCP servers; In gist, it prefers agents to be making the least calls possible to complete a task.\n\nThis is why n8n can be a great fit for MCP servers! This template connects your agent/MCP client (like Claude Desktop) to your existing workflows by allowing the AI to discover, manage and run these workflows indirectly.\n\n### How it works\n* An MCP trigger is used and attaches 4 custom workflow tools to discover and manage existing workflows to use and 1 custom workflow tool to execute them.\n* We'll introduce an idea of \"available\" workflows which the agent is allowed to use. This will help limit and avoid some issues when trying to use every workflow such as clashes or non-production.\n* The n8n node is a core node which taps into your n8n instance API and is able to retrieve all workflows or filter by tag. For our example, we've tagged the workflows we want to use with \"mcp\" and these are exposed through the tool \"search workflows\".\n* Redis is used as our main memory for keeping track of which workflows are \"available\". The tools we have are \"add Workflow\", \"remove workflow\" and \"list workflows\". The agent should be able to manage this autonomously.\n* Our approach to allow the agent to execute workflows is to use the Subworkflow trigger. The tricky part is figuring out the input schema for each but was eventually solved by pulling this information out of the workflow's template JSON and adding it as part of the \"available\" workflow's description. To pass parameters through the Subworkflow trigger, we can do so via the passthrough method - which is that incoming data is used when parameters are not explicitly set within the node.\n* When running, the agent will not see the \"available\" workflows immediately but will need to discover them via \"list\" and \"search\". The human will need to make the agent aware that these workflows will be preferred when answering queries or completing tasks.\n\n### How to use\n* First, decide which workflows will be made visible to the MCP server. This example uses the tag of \"mcp\" but you can all workflows or filter in other ways.\n* Next, ensure these workflows have Subworkflow triggers with input schema set. This is how the MCP server will run them.\n* Set the MCP server to \"active\" which turns on production mode and makes available to production URL.\n* Use this production URL in your MCP client. For Claude Desktop, see the instructions here - https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-langchain.mcptrigger/#integrating-with-claude-desktop.\n* There is a small learning curve which will shape how you communicate with this MCP server so be patient and test. The MCP server will work better if there is a focused goal in mind ie. Research and report, rather than just a collection of unrelated tools.\n\n### Requirements\n* N8N API key to filter for selected workflows.\n* N8N workflows with Subworkflow triggers!\n* Redis for memory and tracking the \"available\" workflows.\n* MCP Client or Agent for usage such as Claude Desktop - https://claude.ai/download\n\n### Customising this workflow\n* If your targeted workflows do not use the subworkflow trigger, it is possible to amend the executeTool to use HTTP requests for webhooks.\n* Managing available workflows helps if you have many workflows where some may be too similar for the agent. If this isn't a problem for you however, feel free to remove the concept of \"available\" and let the agent discover and use all workflows!",
+        "height": 1440,
+        "width": 600
+      },
+      "id": "cc066bac-a702-4d3f-9c96-58992a5818c5",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2000,
+        100
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### How many existing workflows can I use?\nWell, as many as you want really! For this example, I've limited it for workflows which are tagged as \"mcp\" but you can remove this filter to allow all.",
+        "height": 120,
+        "width": 380,
+        "color": 5
+      },
+      "id": "b0cb62c1-9cd9-4c31-a103-5952318f80e4",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n### 🚨 Ensure this node does not set the input schema!\nFor passthrough parameters to work, this node should not make available input schema fields. ie. the input fields should not be visible.\n\nIf there are, the node needs to be reset!",
+        "height": 440
+      },
+      "id": "885591d8-4dcd-45c0-be47-fd5ad661312e",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        880,
+        1280
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Filter Matching IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Key": {
+      "main": [
+        [
+          {
+            "node": "Remove Tool Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Memory": {
+      "main": [
+        [
+          {
+            "node": "Operations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Operations": {
+      "main": [
+        [
+          {
+            "node": "Get MCP-tagged Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to JSON",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "listTools Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get MCP-tagged Workflows1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to JSON1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Workflow": {
+      "ai_tool": [
+        [
+          {
+            "node": "N8N Workflows MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Parameters": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow with PassThrough Variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows": {
+      "ai_tool": [
+        [
+          {
+            "node": "N8N Workflows MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RemoveWorkflow": {
+      "ai_tool": [
+        [
+          {
+            "node": "N8N Workflows MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to JSON": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ExecuteWorkflow": {
+      "ai_tool": [
+        [
+          {
+            "node": "N8N Workflows MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Empty Array?": {
+      "main": [
+        [
+          {
+            "node": "Delete Key",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Store In Memory1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearchWorkflows": {
+      "ai_tool": [
+        [
+          {
+            "node": "N8N Workflows MCP Server",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store In Memory": {
+      "main": [
+        [
+          {
+            "node": "AddTool Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to JSON1": {
+      "main": [
+        [
+          {
+            "node": "Has Workflow Available?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store In Memory1": {
+      "main": [
+        [
+          {
+            "node": "Remove Tool Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Exists?": {
+      "main": [
+        [
+          {
+            "node": "Simplify Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AddTool Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simplify Workflows": {
+      "main": [
+        [
+          {
+            "node": "Store In Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Matching IDs": {
+      "main": [
+        [
+          {
+            "node": "Is Empty Array?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Matching Ids": {
+      "main": [
+        [
+          {
+            "node": "Workflow Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simplify Workflows1": {
+      "main": [
+        [
+          {
+            "node": "listTools Success1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Workflow Available?": {
+      "main": [
+        [
+          {
+            "node": "Get Parameters",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "ExecuteTool Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get MCP-tagged Workflows": {
+      "main": [
+        [
+          {
+            "node": "Filter Matching Ids",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get MCP-tagged Workflows1": {
+      "main": [
+        [
+          {
+            "node": "Simplify Workflows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get Memory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow with PassThrough Variables": {
+      "main": [
+        [
+          {
+            "node": "executeTool Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b4915b6e-5d49-4ef8-98f1-cf4753f315ec",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-02T01:40:46.704Z",
+      "updatedAt": "2025-08-02T01:40:46.704Z",
+      "role": "workflow:owner",
+      "workflowId": "KTzJq0nW1ITLeB4Q",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

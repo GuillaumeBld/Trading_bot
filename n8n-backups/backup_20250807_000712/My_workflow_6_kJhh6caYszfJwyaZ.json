@@ -1,0 +1,592 @@
+{
+  "createdAt": "2025-07-29T19:00:23.516Z",
+  "updatedAt": "2025-07-29T19:00:23.000Z",
+  "id": "kJhh6caYszfJwyaZ",
+  "name": "My workflow 6",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 7
+            }
+          ]
+        }
+      },
+      "id": "15c5dd75-2d65-492a-b207-6990c01b1754",
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -19
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Load context and initialize run\nconst runId = 'run_' + Date.now();\nconst totalRuns = $getWorkflowStaticData('global').totalRuns || 0;\nconst isVerification = (totalRuns % 50 === 0);\n\nreturn [{\n  json: {\n    runId,\n    totalRuns: totalRuns + 1,\n    isVerification,\n    context: {\n      explorationMode: !isVerification,\n      verificationMode: isVerification,\n      timestamp: new Date().toISOString()\n    }\n  }\n}];"
+      },
+      "id": "b19abce1-f1ef-4580-a2b5-0b96ee78bf0a",
+      "name": "Context Loader",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        220,
+        -19
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "lLOiPevOcAHJILQ8",
+        "options": {}
+      },
+      "id": "53a07790-0005-42cb-8bfa-07d095c5ea4a",
+      "name": "Researcher_SW",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        440,
+        -19
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "lLOiPevOcAHJILQ8",
+        "options": {}
+      },
+      "id": "0b6cfcfb-56d1-4689-9c02-2ebae2f249e5",
+      "name": "Engineer_SW",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        660,
+        -19
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "lLOiPevOcAHJILQ8",
+        "options": {}
+      },
+      "id": "b8d6a09d-9f30-4658-bf6d-ee98b1b80cc0",
+      "name": "Analyst_SW",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -19
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Aggregate results and calculate fitness\nconst f = (a,b,c) => (a + b + c) / 3;\nconst results = items[0].json;\n\n// Extract scores from analyst response\nconst analystData = JSON.parse(results.response || '{}');\nconst sigLoss = analystData.signalLoss || 0.8;\nconst sigBench = analystData.benchmarkScore || 0.7;\nconst llmJudge = analystData.llmScore || 0.9;\n\nconst fitness = f(sigLoss, sigBench, llmJudge);\n\nlet action;\nif (fitness < 0.55) {\n  action = 'continue_loop';\n} else if (fitness < 0.75) {\n  action = 'spawn_workflow';\n} else {\n  action = 'email_user';\n}\n\nreturn [{\n  json: {\n    runId: results.runId,\n    fitness,\n    action,\n    blueprint: results.blueprint || {},\n    analysis: analystData,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "75f09e7b-51c5-476c-968a-d68512ad9b5e",
+      "name": "Aggregator 2.0",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        -19
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json.action}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "continue_loop"
+            },
+            {
+              "value2": "spawn_workflow"
+            },
+            {
+              "value2": "email_user"
+            }
+          ]
+        }
+      },
+      "id": "7e273120-7ceb-4648-9ec8-29e8a5d2e7a6",
+      "name": "Switch Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        -40
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "6e280434-e5f6-48da-b44b-65547af27a32",
+      "name": "Update Candidate Pool",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        0,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "74c54cda-e98d-483b-b7a7-da5498517723",
+      "name": "Update Analysis Log",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        0,
+        380
+      ]
+    },
+    {
+      "parameters": {
+        "toEmail": "user@example.com",
+        "subject": "Brain-Hub v3: High Fitness Workflow Detected",
+        "text": "A workflow with fitness score {{$json.fitness}} has been generated. Details: {{JSON.stringify($json.analysis)}}",
+        "options": {}
+      },
+      "id": "4f12486d-93e8-4fb5-9c86-d1b9526274b5",
+      "name": "Email Notification",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        1540,
+        56
+      ],
+      "credentials": {
+        "smtp": {
+          "id": null,
+          "name": "smtp-ttank-creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Update global counter\nconst staticData = $getWorkflowStaticData('global');\nstaticData.totalRuns = (staticData.totalRuns || 0) + 1;\nreturn items;"
+      },
+      "id": "45c94482-730b-4cfc-bbbd-586e895ec3d8",
+      "name": "Update Total Runs",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        -19
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Initialize variables\nconst inputs = items[0].json;\nreturn [{\n  json: {\n    prompt: inputs.prompt,\n    modelName: inputs.modelName,\n    systemMsg: inputs.systemMsg,\n    memoryKey: inputs.memoryKey,\n    attempt: 0,\n    maxRetries: 3,\n    retryDelay: 5000\n  }\n}];"
+      },
+      "id": "56a80424-5b60-4cc8-adb7-7ae09fc04419",
+      "name": "Function Init",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        860,
+        460
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "3e20b81f-80c0-4d15-bbc3-61bc9e3a0444",
+      "name": "LLM Agent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 2,
+      "position": [
+        1060,
+        460
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "kimi-demo-creds"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.error?.status}}",
+              "operation": "equals",
+              "value2": "429"
+            },
+            {
+              "value1": "={{$json.error?.status}}",
+              "operation": "greaterEqual",
+              "value2": "500"
+            }
+          ]
+        },
+        "combineOperation": "OR"
+      },
+      "id": "e6d4b990-bf10-4952-ae2c-790a335d6c7c",
+      "name": "Check Status",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "unit": "seconds"
+      },
+      "id": "3ef6d83e-fee2-4a99-8945-a6299bc2911f",
+      "name": "Delay & Retry",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        660
+      ],
+      "webhookId": "2dc4ed88-5f05-48d8-8d26-0220cbf60bbe"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Increment attempt counter\nconst current = items[0].json;\ncurrent.attempt += 1;\nreturn [{ json: current }];"
+      },
+      "id": "309652bc-6e2b-4285-bd48-dd69243991e8",
+      "name": "Increment Attempt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1460,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.attempt}}",
+              "operation": "less",
+              "value2": "={{$json.maxRetries}}"
+            }
+          ]
+        }
+      },
+      "id": "fafce95e-ae6e-4e03-8a86-3ca04f7a0ae7",
+      "name": "Check Max Retries",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "34d1ddd8-e212-4703-abca-d0bf1831c1a5",
+      "name": "Log Tokens",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 3,
+      "position": [
+        1860,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepare success output\nconst result = items[0].json;\nreturn [{\n  json: {\n    success: true,\n    response: result.choices?.[0]?.message?.content || result.response,\n    tokens: result.usage || {},\n    model: result.model || result.modelName,\n    runId: result.memoryKey\n  }\n}];"
+      },
+      "id": "0ad42a0b-1637-4039-8d9a-8e2b01de80a7",
+      "name": "Success Output",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2060,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepare error output\nconst error = items[0].json;\nreturn [{\n  json: {\n    success: false,\n    error: error.error || 'Max retries exceeded',\n    attempts: error.attempt,\n    model: error.modelName,\n    runId: error.memoryKey\n  }\n}];"
+      },
+      "id": "ebc5327b-02ec-4e90-afb0-e068cb786bc0",
+      "name": "Error Output",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        860
+      ]
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {
+      "main": [
+        [
+          {
+            "node": "Context Loader",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context Loader": {
+      "main": [
+        [
+          {
+            "node": "Researcher_SW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Researcher_SW": {
+      "main": [
+        [
+          {
+            "node": "Engineer_SW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Engineer_SW": {
+      "main": [
+        [
+          {
+            "node": "Analyst_SW",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyst_SW": {
+      "main": [
+        [
+          {
+            "node": "Aggregator 2.0",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregator 2.0": {
+      "main": [
+        [
+          {
+            "node": "Switch Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Action": {
+      "main": [
+        [
+          {
+            "node": "Update Total Runs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Total Runs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Notification": {
+      "main": [
+        [
+          {
+            "node": "Update Total Runs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status": {
+      "main": [
+        [
+          {
+            "node": "Delay & Retry",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Tokens",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delay & Retry": {
+      "main": [
+        [
+          {
+            "node": "Increment Attempt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Increment Attempt": {
+      "main": [
+        [
+          {
+            "node": "Check Max Retries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Max Retries": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Error Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Tokens": {
+      "main": [
+        [
+          {
+            "node": "Success Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "acba1e4f-b0c7-4080-99cd-fe6ca6fb58ca",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-29T19:00:23.528Z",
+      "updatedAt": "2025-07-29T19:00:23.528Z",
+      "role": "workflow:owner",
+      "workflowId": "kJhh6caYszfJwyaZ",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

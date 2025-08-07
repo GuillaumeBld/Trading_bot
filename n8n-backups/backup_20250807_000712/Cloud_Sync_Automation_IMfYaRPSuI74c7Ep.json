@@ -1,0 +1,395 @@
+{
+  "createdAt": "2025-07-23T03:38:52.971Z",
+  "updatedAt": "2025-08-02T00:22:44.000Z",
+  "id": "IMfYaRPSuI74c7Ep",
+  "name": "Cloud Sync Automation",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// 1) grab the global static-data bucket\nconst staticData = $getWorkflowStaticData('global');\n\n// 2) read last_sync from it (or fallback to 0)\nconst lastSync     = staticData.last_sync || 0;\nconst now          = Date.now();\nconst syncInterval = 30 * 1000; // 30 seconds\n\n// 3) only bail out if we're within the interval\nif (now - lastSync < syncInterval) {\n  return [{\n    json: {\n      skip:    true,\n      message: 'Sync skipped – too recent',\n    },\n  }];\n}\n\n// 4) otherwise update last_sync in your bucket\nstaticData.last_sync = now;\n\n// 5) emit the “go ahead” payload\nreturn [{\n  json: {\n    skip:      false,\n    timestamp: new Date().toISOString(),\n    sync_id:   `sync_${now}`,\n  },\n}];"
+      },
+      "id": "check-changes",
+      "name": "Check Changes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "skip-check",
+              "operator": {
+                "type": "boolean",
+                "operation": "notEqual",
+                "value": true
+              },
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": ""
+            },
+            {
+              "id": "13f20cd4-b517-449f-bd88-583dc5d8a8de",
+              "leftValue": "={{$json.skip}}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "sync-gate",
+      "name": "Sync Gate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1swP0G0xdgd4HFZ0n44ttqrLxXXoUSBXH_CdBwfx83zU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "combineFilters": "AND",
+        "options": {}
+      },
+      "id": "get-workflows",
+      "name": "Get Workflows",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        760,
+        100
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ie8rgGVXzeaoIA51",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1) collect every incoming item’s JSON\nconst workflows = $input\n  .all()                   // array of items\n  .map(item => item.json); // extract each .json\n\n// 2) build an array of only created/updated workflows\nconst output = [];\nworkflows.forEach(wf => {\n  if (wf.Status === 'created' || wf.Status === 'updated') {\n    output.push({\n      json: {\n        Timestamp:     new Date().toISOString(),\n        Action:        wf.Status === 'created' ? 'create' : 'update',\n        Workflow_Name: wf.Workflow_Name,\n        Status:        wf.Status,\n        Version:       wf.Version,\n        Cloud_ID:      wf.Cloud_ID,\n      }\n    });\n  }\n});\n\n// 3) return that array\nreturn output;"
+      },
+      "id": "process-updates",
+      "name": "Process Updates",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        980,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1swP0G0xdgd4HFZ0n44ttqrLxXXoUSBXH_CdBwfx83zU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.Timestamp }}",
+            "Action": "={{ $json.Action }}",
+            "Workflow_Name": "={{ $json.Workflow_Name }}",
+            "Status": "={{ $json.Status }}",
+            "Version": "={{ $json.Version }}",
+            "Cloud_ID": "={{ $json.Cloud_ID }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Action",
+              "displayName": "Action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow_Name",
+              "displayName": "Workflow_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Version",
+              "displayName": "Version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cloud_ID",
+              "displayName": "Cloud_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "log-sync",
+      "name": "Log Sync",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1200,
+        100
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ie8rgGVXzeaoIA51",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        100
+      ],
+      "id": "82c3e219-54df-4f51-9d18-071811efe2c8",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "@ThinkTank972_bot",
+        "text": "=Cloud sync complete: {{$node[\"Process Updates\"].json[\"message\"]}}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1600,
+        -140
+      ],
+      "id": "c318a371-7f9e-41b9-b10f-6143c78f3869",
+      "name": "Telegram",
+      "webhookId": "10889fca-780f-4999-b575-16ce8c22d179",
+      "credentials": {
+        "telegramApi": {
+          "id": "oqv5BvVRRWk3Cf2s",
+          "name": "Telegram account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Check Changes": {
+      "main": [
+        [
+          {
+            "node": "Sync Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync Gate": {
+      "main": [
+        [
+          {
+            "node": "Get Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Workflows": {
+      "main": [
+        [
+          {
+            "node": "Process Updates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Updates": {
+      "main": [
+        [
+          {
+            "node": "Log Sync",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Sync": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check Changes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "node:Schedule Trigger": {
+      "recurrenceRules": []
+    },
+    "global": {
+      "last_sync": 1754094120043
+    }
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "c57d4829-a9ad-4025-aeb9-dbd8e16191de",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-07-23T03:38:52.973Z",
+      "updatedAt": "2025-07-23T03:38:52.973Z",
+      "role": "workflow:owner",
+      "workflowId": "IMfYaRPSuI74c7Ep",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

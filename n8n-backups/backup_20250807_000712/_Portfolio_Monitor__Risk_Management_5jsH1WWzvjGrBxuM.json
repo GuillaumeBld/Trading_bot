@@ -1,0 +1,212 @@
+{
+  "createdAt": "2025-08-06T15:17:56.586Z",
+  "updatedAt": "2025-08-06T15:23:00.000Z",
+  "id": "5jsH1WWzvjGrBxuM",
+  "name": "📊 Portfolio Monitor & Risk Management",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "schedule_trigger",
+      "name": "Every 5 Minutes Monitor",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        20,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "interval": 5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "get_portfolio",
+      "name": "Get Portfolio Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://your-trading-bot-api.com/api/portfolio",
+        "authentication": "genericCredentialType",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.TRADING_BOT_API_KEY }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "process_portfolio",
+      "name": "Process Portfolio Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Process portfolio data and calculate risk metrics\nconst portfolio = $json;\n\nif (!portfolio.positions || !Array.isArray(portfolio.positions)) {\n  throw new Error('Invalid portfolio data: missing positions array');\n}\n\n// Calculate portfolio metrics\nconst positions = portfolio.positions;\nconst totalValue = positions.reduce((sum, pos) => sum + (pos.quantity * pos.currentPrice), 0);\nconst totalCost = positions.reduce((sum, pos) => sum + (pos.quantity * pos.averagePrice), 0);\nconst totalPnL = totalValue - totalCost;\nconst totalPnLPercent = (totalPnL / totalCost) * 100;\n\n// Risk calculations\nconst diversificationScore = positions.length >= 5 ? 'good' : positions.length >= 3 ? 'moderate' : 'poor';\nconst largestPosition = Math.max(...positions.map(pos => (pos.quantity * pos.currentPrice) / totalValue));\nconst concentrationRisk = largestPosition > 0.3 ? 'high' : largestPosition > 0.2 ? 'medium' : 'low';\n\n// Position-level risk analysis\nconst riskAnalysis = positions.map(position => {\n  const positionValue = position.quantity * position.currentPrice;\n  const positionWeight = positionValue / totalValue;\n  const unrealizedPnL = (position.currentPrice - position.averagePrice) * position.quantity;\n  const unrealizedPnLPercent = ((position.currentPrice - position.averagePrice) / position.averagePrice) * 100;\n  \n  // Risk flags\n  const riskFlags = [];\n  if (unrealizedPnLPercent < -10) riskFlags.push('large_loss');\n  if (positionWeight > 0.25) riskFlags.push('overweight');\n  if (position.currentPrice < position.stopLoss) riskFlags.push('stop_loss_triggered');\n  \n  return {\n    symbol: position.symbol,\n    quantity: position.quantity,\n    currentPrice: position.currentPrice,\n    averagePrice: position.averagePrice,\n    positionValue,\n    positionWeight,\n    unrealizedPnL,\n    unrealizedPnLPercent,\n    riskFlags,\n    riskLevel: riskFlags.length > 1 ? 'high' : riskFlags.length > 0 ? 'medium' : 'low'\n  };\n});\n\n// Overall risk assessment\nconst highRiskPositions = riskAnalysis.filter(pos => pos.riskLevel === 'high');\nconst mediumRiskPositions = riskAnalysis.filter(pos => pos.riskLevel === 'medium');\n\nconst overallRisk = {\n  level: highRiskPositions.length > 0 ? 'high' : mediumRiskPositions.length > 1 ? 'medium' : 'low',\n  score: Math.max(0, Math.min(100, 50 + (totalPnLPercent * 2) - (highRiskPositions.length * 20))),\n  factors: {\n    diversification: diversificationScore,\n    concentration: concentrationRisk,\n    drawdown: totalPnLPercent < -5 ? 'high' : totalPnLPercent < -2 ? 'medium' : 'low'\n  }\n};\n\n// Generate alerts\nconst alerts = [];\nif (totalPnLPercent < -5) {\n  alerts.push({\n    type: 'portfolio_loss',\n    severity: 'high',\n    message: `Portfolio down ${totalPnLPercent.toFixed(2)}%`,\n    timestamp: new Date().toISOString()\n  });\n}\n\nhighRiskPositions.forEach(pos => {\n  alerts.push({\n    type: 'position_risk',\n    severity: 'high',\n    symbol: pos.symbol,\n    message: `${pos.symbol}: ${pos.riskFlags.join(', ')}`,\n    timestamp: new Date().toISOString()\n  });\n});\n\nif (concentrationRisk === 'high') {\n  alerts.push({\n    type: 'concentration_risk',\n    severity: 'medium',\n    message: `Largest position is ${(largestPosition * 100).toFixed(1)}% of portfolio`,\n    timestamp: new Date().toISOString()\n  });\n}\n\nconst enrichedPortfolio = {\n  timestamp: new Date().toISOString(),\n  portfolio: {\n    totalValue,\n    totalCost,\n    totalPnL,\n    totalPnLPercent,\n    positionCount: positions.length,\n    cash: portfolio.cash || 0\n  },\n  positions: riskAnalysis,\n  riskMetrics: overallRisk,\n  alerts,\n  shouldNotify: alerts.some(alert => alert.severity === 'high') || (alerts.length > 2 && mediumRiskPositions.length > 0)\n};\n\nreturn [enrichedPortfolio];"
+      }
+    },
+    {
+      "id": "check_alerts",
+      "name": "Check Alert Conditions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Check for alert conditions and determine actions needed\nconst data = $json;\nconst alerts = data.alerts || [];\nconst portfolio = data.portfolio;\nconst riskMetrics = data.riskMetrics;\n\n// Define alert thresholds\nconst ALERT_THRESHOLDS = {\n  portfolio_loss: -5,      // Portfolio down 5%\n  position_loss: -10,      // Individual position down 10%\n  concentration: 0.3,      // Single position > 30%\n  risk_score: 30          // Risk score below 30\n};\n\n// Critical alerts that require immediate action\nconst criticalAlerts = alerts.filter(alert => \n  alert.severity === 'high' || \n  (alert.type === 'portfolio_loss' && portfolio.totalPnLPercent < -10)\n);\n\n// Generate action recommendations\nconst recommendations = [];\n\nif (portfolio.totalPnLPercent < ALERT_THRESHOLDS.portfolio_loss) {\n  recommendations.push({\n    type: 'reduce_exposure',\n    priority: 'high',\n    message: `Consider reducing position sizes - portfolio down ${portfolio.totalPnLPercent.toFixed(2)}%`\n  });\n}\n\nif (riskMetrics.factors.concentration === 'high') {\n  recommendations.push({\n    type: 'diversify',\n    priority: 'medium',\n    message: 'Rebalance portfolio to reduce concentration risk'\n  });\n}\n\nif (riskMetrics.level === 'high') {\n  recommendations.push({\n    type: 'review_positions',\n    priority: 'high',\n    message: 'Review all high-risk positions immediately'\n  });\n}\n\n// Determine notification channels needed\nconst notificationChannels = [];\nif (criticalAlerts.length > 0) {\n  notificationChannels.push('slack', 'discord', 'email');\n} else if (alerts.length > 0) {\n  notificationChannels.push('slack');\n}\n\nconst result = {\n  ...data,\n  alertSummary: {\n    totalAlerts: alerts.length,\n    criticalAlerts: criticalAlerts.length,\n    riskLevel: riskMetrics.level,\n    riskScore: riskMetrics.score\n  },\n  recommendations,\n  actions: {\n    shouldNotify: criticalAlerts.length > 0 || alerts.length > 2,\n    shouldExecuteStopLoss: criticalAlerts.some(alert => alert.type === 'position_risk'),\n    shouldRebalance: riskMetrics.factors.concentration === 'high',\n    urgency: criticalAlerts.length > 0 ? 'immediate' : alerts.length > 0 ? 'high' : 'normal'\n  },\n  notifications: {\n    channels: notificationChannels,\n    message: `Portfolio Alert: ${criticalAlerts.length} critical, ${alerts.length} total alerts. Risk: ${riskMetrics.level}`,\n    timestamp: new Date().toISOString()\n  }\n};\n\nreturn [result];"
+      }
+    },
+    {
+      "id": "route_alerts",
+      "name": "Route Alerts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// Route based on alert conditions\nconst data = $json;\nconst shouldNotify = data.actions?.shouldNotify || false;\nconst urgency = data.actions?.urgency || 'normal';\n\n// Always output the processed data for logging\nconst output = {\n  ...data,\n  processed: true,\n  routingDecision: {\n    notify: shouldNotify,\n    urgency,\n    timestamp: new Date().toISOString()\n  }\n};\n\nreturn [output];"
+      }
+    }
+  ],
+  "connections": {
+    "Every 5 Minutes Monitor": {
+      "main": [
+        [
+          {
+            "node": "Get Portfolio Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Portfolio Data": {
+      "main": [
+        [
+          {
+            "node": "Process Portfolio Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Portfolio Data": {
+      "main": [
+        [
+          {
+            "node": "Check Alert Conditions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Alert Conditions": {
+      "main": [
+        [
+          {
+            "node": "Route Alerts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": null,
+  "versionId": "3353498b-6f1b-4dcc-a09f-64a0c2d5fb35",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-06T15:17:56.589Z",
+      "updatedAt": "2025-08-06T15:17:56.589Z",
+      "role": "workflow:owner",
+      "workflowId": "5jsH1WWzvjGrBxuM",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

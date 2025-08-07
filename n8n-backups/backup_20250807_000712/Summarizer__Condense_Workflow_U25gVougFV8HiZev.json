@@ -1,0 +1,233 @@
+{
+  "createdAt": "2025-07-23T03:39:37.970Z",
+  "updatedAt": "2025-07-23T12:33:44.000Z",
+  "id": "U25gVougFV8HiZev",
+  "name": "Summarizer & Condense Workflow",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Initialize summarization context\nconst text = $json.text || '';\nconst maxLength = $json.max_length || 1000;\nconst originalLength = text.length;\n\nreturn [{\n  json: {\n    text: text,\n    max_length: maxLength,\n    original_length: originalLength,\n    timestamp: new Date().toISOString(),\n    request_id: `summarize_${Date.now()}`\n  }\n}];"
+      },
+      "id": "init-summarizer",
+      "name": "Initialize Summarizer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        100,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a text summarization expert. Create a concise summary that captures the key points while staying within the specified length limit. Focus on the most important information and maintain clarity."
+          },
+          {
+            "role": "user",
+            "content": "={{ `Summarize this text in ${$json.max_length} characters or less:\\n\\n${$json.text}` }}"
+          }
+        ],
+        "options": {
+          "maxTokens": 500
+        }
+      },
+      "id": "summarize-text",
+      "name": "Summarize Text",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        300,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process summarization result\nconst summary = $json.content || $json.response || '';\nconst condensed = summary.substring(0, $json.max_length);\n\nreturn [{\n  json: {\n    ...$json,\n    summary: condensed,\n    summary_length: condensed.length,\n    compression_ratio: Math.round(($json.original_length / condensed.length) * 100) / 100,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-summary",
+      "name": "Process Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "1liAQknFquByT7BsvCBCxwLXTYzcyTnveIn74Vl8QM9s",
+        "range": "Summaries!A:F",
+        "options": {
+          "valueInputMode": "USER_ENTERED"
+        },
+        "dataMapping": {
+          "mapping": [
+            {
+              "column": "Timestamp",
+              "value": "={{ $now.format() }}"
+            },
+            {
+              "column": "Request_ID",
+              "value": "={{ $json.request_id }}"
+            },
+            {
+              "column": "Original_Length",
+              "value": "={{ $json.original_length }}"
+            },
+            {
+              "column": "Summary_Length",
+              "value": "={{ $json.summary_length }}"
+            },
+            {
+              "column": "Compression_Ratio",
+              "value": "={{ $json.compression_ratio }}"
+            },
+            {
+              "column": "Summary",
+              "value": "={{ $json.summary }}"
+            }
+          ]
+        }
+      },
+      "id": "log-summary",
+      "name": "Log Summary",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        700,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Final summarization output\nconst finalOutput = {\n  request_id: $json.request_id,\n  original_length: $json.original_length,\n  summary_length: $json.summary_length,\n  compression_ratio: $json.compression_ratio,\n  summary: $json.summary,\n  timestamp: $json.timestamp,\n  status: 'completed'\n};\n\nreturn [{\n  json: finalOutput\n}];"
+      },
+      "id": "final-summary",
+      "name": "Final Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Initialize Summarizer": {
+      "main": [
+        [
+          {
+            "node": "Summarize Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Text": {
+      "main": [
+        [
+          {
+            "node": "Process Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Summary": {
+      "main": [
+        [
+          {
+            "node": "Log Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Summary": {
+      "main": [
+        [
+          {
+            "node": "Final Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": null,
+  "versionId": "47966a12-a948-4d75-8c98-3d83665afa7f",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-23T03:39:37.973Z",
+      "updatedAt": "2025-07-23T03:39:37.973Z",
+      "role": "workflow:owner",
+      "workflowId": "U25gVougFV8HiZev",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

@@ -1,0 +1,260 @@
+{
+  "backup_timestamp": "2025-08-07T00:07:37.176867",
+  "n8n_instance": "https://n8n.srv850639.hstgr.cloud",
+  "total_workflows": 36,
+  "backed_up_workflows": 36,
+  "workflows": [
+    {
+      "id": "0XA5GMv2RZKr2cnH",
+      "name": "Engineer_SW",
+      "active": false,
+      "created_at": "2025-07-29T15:31:32.071Z",
+      "updated_at": "2025-07-29T19:02:57.000Z"
+    },
+    {
+      "id": "1CW9RIJIkvNKqO7i",
+      "name": "Marketing agent",
+      "active": true,
+      "created_at": "2025-08-02T01:54:33.690Z",
+      "updated_at": "2025-08-02T03:40:28.000Z"
+    },
+    {
+      "id": "4MZC6utMUuKMPewm",
+      "name": "My workflow 7",
+      "active": false,
+      "created_at": "2025-08-02T02:22:01.809Z",
+      "updated_at": "2025-08-02T02:22:01.000Z"
+    },
+    {
+      "id": "5jsH1WWzvjGrBxuM",
+      "name": "📊 Portfolio Monitor & Risk Management",
+      "active": false,
+      "created_at": "2025-08-06T15:17:56.586Z",
+      "updated_at": "2025-08-06T15:23:00.000Z"
+    },
+    {
+      "id": "5qGgycw6kU75q3I8",
+      "name": "Analyst_SW",
+      "active": false,
+      "created_at": "2025-07-29T15:32:12.083Z",
+      "updated_at": "2025-07-29T19:00:47.000Z"
+    },
+    {
+      "id": "6iUN61Fv1ByTM5Oo",
+      "name": "My workflow",
+      "active": false,
+      "created_at": "2025-07-19T15:50:00.863Z",
+      "updated_at": "2025-07-19T15:50:00.863Z"
+    },
+    {
+      "id": "9eIOTzdY4Sjx5t7y",
+      "name": "Node Factory MCP Integration",
+      "active": false,
+      "created_at": "2025-07-23T03:39:55.724Z",
+      "updated_at": "2025-07-23T12:33:36.000Z"
+    },
+    {
+      "id": "AGSHQSb0Pxz8etkP",
+      "name": "Safe LLM Call with Retry",
+      "active": false,
+      "created_at": "2025-07-23T03:31:57.213Z",
+      "updated_at": "2025-07-24T16:59:59.000Z"
+    },
+    {
+      "id": "CeE6rGNPlBWBovnD",
+      "name": "Brain-Hub v3 Main",
+      "active": false,
+      "created_at": "2025-07-29T14:47:15.300Z",
+      "updated_at": "2025-07-29T19:11:14.000Z"
+    },
+    {
+      "id": "Dkictv4jP0H6cTbj",
+      "name": "🔔 Multi-Channel Notification Hub",
+      "active": false,
+      "created_at": "2025-08-06T15:18:44.207Z",
+      "updated_at": "2025-08-06T15:22:58.000Z"
+    },
+    {
+      "id": "IMfYaRPSuI74c7Ep",
+      "name": "Cloud Sync Automation",
+      "active": false,
+      "created_at": "2025-07-23T03:38:52.971Z",
+      "updated_at": "2025-08-02T00:22:44.000Z"
+    },
+    {
+      "id": "JLBdqZXLV86aPjvz",
+      "name": "trading-signal",
+      "active": true,
+      "created_at": "2025-08-07T03:20:55.278Z",
+      "updated_at": "2025-08-07T03:21:12.000Z"
+    },
+    {
+      "id": "KTzJq0nW1ITLeB4Q",
+      "name": "N8N Workflows MCP Server",
+      "active": false,
+      "created_at": "2025-08-02T01:40:46.699Z",
+      "updated_at": "2025-08-02T01:41:14.000Z"
+    },
+    {
+      "id": "L2YHiej9gdkBdTTs",
+      "name": "Think tank",
+      "active": false,
+      "created_at": "2025-07-21T04:08:53.982Z",
+      "updated_at": "2025-07-21T17:08:48.000Z"
+    },
+    {
+      "id": "LZbmZSXjBOBUUsOq",
+      "name": "My workflow 3",
+      "active": false,
+      "created_at": "2025-07-22T15:24:50.278Z",
+      "updated_at": "2025-07-22T15:24:50.278Z"
+    },
+    {
+      "id": "M1UPNLmZ4t5EZcgD",
+      "name": "🤖 AI Trading Signal Processor",
+      "active": false,
+      "created_at": "2025-08-06T15:16:56.835Z",
+      "updated_at": "2025-08-06T18:42:06.000Z"
+    },
+    {
+      "id": "NxqtaVA2VFw23Q1T",
+      "name": "⚠️ Risk Management & Stop Loss Automation",
+      "active": false,
+      "created_at": "2025-08-06T15:20:45.895Z",
+      "updated_at": "2025-08-06T18:41:01.000Z"
+    },
+    {
+      "id": "OhA1drVDcAu155Du",
+      "name": "My workflow 4",
+      "active": false,
+      "created_at": "2025-07-22T15:17:47.355Z",
+      "updated_at": "2025-07-22T15:17:47.355Z"
+    },
+    {
+      "id": "SYuszgL99dJKMDv2",
+      "name": "trading-alerts",
+      "active": true,
+      "created_at": "2025-08-07T03:13:50.670Z",
+      "updated_at": "2025-08-07T03:45:06.000Z"
+    },
+    {
+      "id": "U25gVougFV8HiZev",
+      "name": "Summarizer & Condense Workflow",
+      "active": false,
+      "created_at": "2025-07-23T03:39:37.970Z",
+      "updated_at": "2025-07-23T12:33:44.000Z"
+    },
+    {
+      "id": "UHtroe6YlhRLxd3P",
+      "name": "My workflow 3",
+      "active": false,
+      "created_at": "2025-07-22T05:42:50.275Z",
+      "updated_at": "2025-07-22T05:42:50.275Z"
+    },
+    {
+      "id": "UqG7kjObyBwefmzi",
+      "name": "updated brain",
+      "active": false,
+      "created_at": "2025-07-24T17:23:44.040Z",
+      "updated_at": "2025-07-29T14:43:55.000Z"
+    },
+    {
+      "id": "YHf6IwCX94wkUMJd",
+      "name": "Clone a viral TikTok video",
+      "active": false,
+      "created_at": "2025-07-20T17:20:57.265Z",
+      "updated_at": "2025-07-23T12:32:29.000Z"
+    },
+    {
+      "id": "atNhnmyRT5GYv2Pc",
+      "name": "My workflow 7",
+      "active": false,
+      "created_at": "2025-08-02T01:46:12.689Z",
+      "updated_at": "2025-08-02T01:46:12.000Z"
+    },
+    {
+      "id": "cqmGxrtf7OBge4fn",
+      "name": "My workflow 2",
+      "active": false,
+      "created_at": "2025-07-19T23:40:01.588Z",
+      "updated_at": "2025-07-21T23:05:45.000Z"
+    },
+    {
+      "id": "dxZiSZzHx6kKL4ou",
+      "name": "MCP Boutique",
+      "active": false,
+      "created_at": "2025-07-24T20:06:06.627Z",
+      "updated_at": "2025-08-02T01:41:21.000Z"
+    },
+    {
+      "id": "gwN5uBm6WBODxmDY",
+      "name": "Scheduled video generator",
+      "active": false,
+      "created_at": "2025-07-20T05:07:37.978Z",
+      "updated_at": "2025-07-23T12:32:15.000Z"
+    },
+    {
+      "id": "kJhh6caYszfJwyaZ",
+      "name": "My workflow 6",
+      "active": false,
+      "created_at": "2025-07-29T19:00:23.516Z",
+      "updated_at": "2025-07-29T19:00:23.000Z"
+    },
+    {
+      "id": "ksg3fcQUeLBFdpcN",
+      "name": "Researcher_SW",
+      "active": false,
+      "created_at": "2025-07-29T15:30:24.227Z",
+      "updated_at": "2025-07-29T19:00:50.000Z"
+    },
+    {
+      "id": "lKGu7ra4ZKk2lqJZ",
+      "name": "Control Your n8n Instance Remotely with Telegram Bot Commands",
+      "active": false,
+      "created_at": "2025-07-21T17:08:32.236Z",
+      "updated_at": "2025-07-21T17:08:32.236Z"
+    },
+    {
+      "id": "lLOiPevOcAHJILQ8",
+      "name": "Safe_LLM_Call",
+      "active": false,
+      "created_at": "2025-07-29T14:44:53.881Z",
+      "updated_at": "2025-07-29T19:00:53.000Z"
+    },
+    {
+      "id": "mV7GvunlEFAUcqyu",
+      "name": "🧠 AI Market Analysis & News Monitor",
+      "active": false,
+      "created_at": "2025-08-06T15:19:37.841Z",
+      "updated_at": "2025-08-06T18:40:17.000Z"
+    },
+    {
+      "id": "pZYjYzP6u7cgjKPr",
+      "name": "AI Planning Workflow - Multi-Model Consensus (Fixed)",
+      "active": false,
+      "created_at": "2025-07-24T17:44:50.104Z",
+      "updated_at": "2025-07-29T19:00:57.000Z"
+    },
+    {
+      "id": "sHY2zuJlhLlPqJIf",
+      "name": "YouTube shorts",
+      "active": false,
+      "created_at": "2025-07-20T17:20:16.225Z",
+      "updated_at": "2025-07-23T12:32:45.000Z"
+    },
+    {
+      "id": "yaZJPAg3saRGaLfr",
+      "name": "My workflow 5",
+      "active": false,
+      "created_at": "2025-07-23T01:23:26.168Z",
+      "updated_at": "2025-07-23T01:56:48.000Z"
+    },
+    {
+      "id": "zbHuoCNnFwH05FFY",
+      "name": "Brain-Hub v3 - AI Orchestrator",
+      "active": false,
+      "created_at": "2025-07-23T03:33:20.053Z",
+      "updated_at": "2025-07-24T16:56:18.000Z"
+    }
+  ]
+}

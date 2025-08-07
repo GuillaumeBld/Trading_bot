@@ -1,0 +1,298 @@
+{
+  "createdAt": "2025-07-23T03:39:55.724Z",
+  "updatedAt": "2025-07-23T12:33:36.000Z",
+  "id": "9eIOTzdY4Sjx5t7y",
+  "name": "Node Factory MCP Integration",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Initialize MCP factory context\nconst userRequirement = $json.user_requirement || 'Create a basic webhook workflow';\nconst factoryId = `factory_${Date.now()}`;\n\nreturn [{\n  json: {\n    user_requirement: userRequirement,\n    factory_id: factoryId,\n    timestamp: new Date().toISOString(),\n    mcp_server: 'n8n-thinktank-mcp',\n    version: '1.0.0'\n  }\n}];"
+      },
+      "id": "init-factory",
+      "name": "Initialize Factory",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        100,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "AGSHQSb0Pxz8etkP",
+        "options": {}
+      },
+      "id": "generate-workflow",
+      "name": "Generate Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        320,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse and validate generated workflow\nconst workflowJson = $json.content || $json.response || '{}';\nlet workflow;\n\ntry {\n  workflow = typeof workflowJson === 'string' ? JSON.parse(workflowJson) : workflowJson;\n} catch (e) {\n  workflow = {\n    name: 'Generated Workflow',\n    nodes: [],\n    connections: {}\n  };\n}\n\nreturn [{\n  json: {\n    ...$json,\n    workflow: workflow,\n    validation_status: 'parsed',\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "parse-workflow",
+      "name": "Parse Workflow",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        540,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "AGSHQSb0Pxz8etkP",
+        "options": {}
+      },
+      "id": "validate-workflow",
+      "name": "Validate Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        760,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process validation results\nconst validation = $json.validation || {};\nconst isValid = validation.valid || false;\nconst errors = validation.errors || [];\n\nreturn [{\n  json: {\n    ...$json,\n    is_valid: isValid,\n    validation_errors: errors,\n    validation_status: isValid ? 'valid' : 'invalid',\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "process-validation",
+      "name": "Process Validation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        980,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "valid-check",
+              "operator": {
+                "type": "boolean",
+                "operation": "equals",
+                "value": true
+              },
+              "leftValue": "={{ $json.is_valid }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "valid-gate",
+      "name": "Valid Gate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "log-factory",
+      "name": "Log Factory",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1420,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Final factory output\nconst finalOutput = {\n  factory_id: $json.factory_id,\n  user_requirement: $json.user_requirement,\n  workflow: $json.workflow,\n  is_valid: $json.is_valid,\n  validation_errors: $json.validation_errors,\n  validation_status: $json.validation_status,\n  timestamp: new Date().toISOString(),\n  status: $json.is_valid ? 'created' : 'validation_failed'\n};\n\nreturn [{\n  json: finalOutput\n}];"
+      },
+      "id": "factory-output",
+      "name": "Factory Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        100
+      ]
+    }
+  ],
+  "connections": {
+    "Initialize Factory": {
+      "main": [
+        [
+          {
+            "node": "Generate Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Workflow": {
+      "main": [
+        [
+          {
+            "node": "Parse Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Workflow": {
+      "main": [
+        [
+          {
+            "node": "Validate Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Workflow": {
+      "main": [
+        [
+          {
+            "node": "Process Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Validation": {
+      "main": [
+        [
+          {
+            "node": "Valid Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Gate": {
+      "main": [
+        [
+          {
+            "node": "Log Factory",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Factory",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Log Factory": {
+      "main": [
+        [
+          {
+            "node": "Factory Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "de3d8c9e-e021-45e1-b35d-40e23a433608",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-23T03:39:55.726Z",
+      "updatedAt": "2025-07-23T03:39:55.726Z",
+      "role": "workflow:owner",
+      "workflowId": "9eIOTzdY4Sjx5t7y",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

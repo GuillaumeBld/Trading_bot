@@ -1,0 +1,1007 @@
+{
+  "createdAt": "2025-07-19T23:40:01.588Z",
+  "updatedAt": "2025-07-21T23:05:45.000Z",
+  "id": "cqmGxrtf7OBge4fn",
+  "name": "My workflow 2",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        1120
+      ],
+      "id": "add0c6ee-2d6c-4826-b198-80c6c51050eb"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pyragogy/process",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        600,
+        460
+      ],
+      "webhookId": "pyragogy-master-trigger",
+      "id": "ee293159-2106-45f2-b48d-f7d627396148"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT 1; -- Verifica connessione DB",
+        "additionalFields": {}
+      },
+      "name": "Check DB Connection",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        820,
+        460
+      ],
+      "id": "d8b74999-9d61-487e-9acf-38dec9d657a0"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Meta-Orchestrator",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        460
+      ],
+      "id": "f16e12fa-daa1-4632-82aa-e20afad4a4a8"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Analizza il piano di orchestrazione e imposta per il looping\nlet rawPlan = $json.choices[0].message.content;\nlet plan;\n\ntry {\n  plan = JSON.parse(rawPlan);\n} catch (e) {\n  // Se il parsing fallisce, assumi che sia una stringa di array grezza\n  plan = rawPlan;\n}\n\n// Estrai in modo sicuro la sequenza degli agenti:\n// Se 'plan' è un oggetto e ha una chiave 'agents', usala.\n// Altrimenti, se 'plan' è un array, usalo direttamente.\n// Altrimenti, predefinisci un array vuoto.\nconst agentSequence = Array.isArray(plan) ? plan : (plan && plan.agents && Array.isArray(plan.agents) ? plan.agents : []);\n\n// Memorizza la sequenza e l'indice corrente per il loop\n$workflow.agentSequence = agentSequence;\n$workflow.currentAgentIndex = 0;\n$workflow.redraftLoopCount = 0; // Inizializza il contatore dei cicli di rielaborazione\n\n// Passa i dati di input al primo agente, assicurandosi che $items[0].json.body esista\nconst initialInput = $items[0] && $items[0].json && $items[0].json.body ? $items[0].json.body : {};\n\nreturn [{ json: { ...initialInput, agentToRun: agentSequence[0] || null } }];"
+      },
+      "name": "Parse Orchestration Plan",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1260,
+        510
+      ],
+      "id": "580149c4-01b3-4575-8bfe-eafd01d30126"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $workflow.currentAgentIndex < $workflow.agentSequence.length }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "More Agents to Run?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        -60
+      ],
+      "id": "f0aa0256-1644-40b3-b4e0-7580aacb7a6c"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Ottieni il nome dell'agente corrente\nconst agentName = $workflow.agentSequence[$workflow.currentAgentIndex];\n\n// Prepara i dati per l'esecuzione dell'agente\n// Passa l'output del passo precedente (o l'input iniziale).\n// Se stiamo rielaborando, l'input dell'agente dovrebbe includere il feedback di rielaborazione.\nconst previousOutput = $json.output || $json.body.input; // Assumendo che l'output dell'agente sia memorizzato nella chiave 'output'\nconst agentInput = $json.redraftInput || previousOutput; // Usa redraftInput se presente, altrimenti previousOutput\n\nreturn [{ json: { ...$json, agentToRun: agentName, agentInput: agentInput } }];"
+      },
+      "name": "Prepare Agent Input",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        -290
+      ],
+      "id": "dc4190b3-22cf-465c-83ce-855164d0bf8a"
+    },
+    {
+      "parameters": {
+        "mode": "json"
+      },
+      "name": "Route Agents with Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -311
+      ],
+      "id": "29cf8a30-c7aa-4076-bbbb-2f0e6e8b8f05"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Summarizer Agent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        -290
+      ],
+      "id": "19462aeb-1385-4f26-b8ad-e1fd2752e809"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Synthesizer Agent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        660
+      ],
+      "id": "af904563-3ee1-48f6-822f-002584391d8c"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Peer Reviewer Agent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        -440,
+        -440
+      ],
+      "id": "e398b2cf-5485-4515-9504-53e00115e422"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Sensemaking Agent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        -380
+      ],
+      "id": "7c7c3237-25ea-49b3-a38b-f37655137d77"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Prompt Engineer Agent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        -400
+      ],
+      "id": "9da73a4b-7a1c-4440-8ac5-aebf11d8584f"
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4o",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "Onboarding/Explainer Agent",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        940
+      ],
+      "id": "3aca8bad-1a1f-4c8e-8813-8f631edaa49f"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepara i metadati per il contenuto dell'Handbook.\n// Assicurati che l'input originale contenga 'title' e 'tags' o imposta dei valori predefiniti.\nconst title = $json.body.title || 'Untitled Handbook Entry';\nconst tags = $json.body.tags || [];\nconst phase = $json.body.phase || 'draft'; // Fase iniziale, può essere 'final' dopo l'approvazione\nconst rhythm = $json.body.rhythm || 'on-demand'; // Ritmo cognitivo\n\nreturn [{ json: { ...$json, handbookTitle: title, handbookTags: tags, handbookPhase: phase, handbookRhythm: rhythm } }];"
+      },
+      "name": "Add Handbook Metadata",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -2900,
+        360
+      ],
+      "id": "98bb6dc6-3d64-4a52-a020-b66453aefd7d"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Prepara il contenuto proposto dall'Archivista per la revisione umana, inclusa la formattazione YAML.\n// Assicurati che l'input dell'agente (il contenuto generato) sia disponibile.\nconst proposedContent = $json.agentInput;\nconst title = $json.handbookTitle;\nconst tags = $json.handbookTags;\nconst phase = $json.handbookPhase;\nconst rhythm = $json.handbookRhythm;\n\n// Costruisci il front-matter YAML\nconst yamlFrontMatter = `---\ntitle: \"${title.replace(/\"/g, '\\\"')}\"\ntags: [${tags.map(t => `\"${t.replace(/\"/g, '\\\"')}\"`).join(', ')}]\nphase: \"${phase}\"\nrhythm: \"${rhythm}\"\n---\n\n`;\n\nconst finalMarkdownContent = yamlFrontMatter + proposedContent;\n\nreturn [{ json: { ...$json, proposedContent: proposedContent, reviewTitle: title, reviewTags: tags, finalMarkdownContent: finalMarkdownContent } }];"
+      },
+      "name": "Generate Content for Review",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -2680,
+        360
+      ],
+      "id": "e10afc60-09ac-4295-98dd-4b4b8e3f6c37"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Genera un ID univoco per questa richiesta di revisione.\n// Questo ID verrà usato per correlare la risposta del revisore con questa istanza del workflow.\nconst reviewId = crypto.randomUUID();\n\nreturn [{ json: { ...$json, reviewId: reviewId } }];"
+      },
+      "name": "Generate Review ID",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -2460,
+        360
+      ],
+      "id": "c3cd03f1-1a8f-49b1-a3b5-3cef371ce3b9"
+    },
+    {
+      "parameters": {
+        "fromEmail": "your-email@example.com",
+        "toEmail": "human-reviewer@example.com",
+        "subject": "Revisione Contenuto Pyragogy Handbook: {{ $json.reviewTitle }}",
+        "text": "Ciao revisore,\n\nÈ stato proposto un nuovo contenuto per l'Handbook:\n\n---\n{{ $json.proposedContent }}\n---\n\nTitolo: {{ $json.reviewTitle }}\nTags: {{ $json.reviewTags.join(', ') }}\n\nPer favore, clicca su uno dei seguenti link per approvare o rifiutare:\n\nApprova: your_n8n_url/webhook/pyragogy/review-feedback?reviewId={{ $json.reviewId }}&status=approved\nRifiuta: your_n8n_url/webhook/pyragogy/review-feedback?reviewId={{ $json.reviewId }}&status=rejected\n\nGrazie!",
+        "html": "<h3>Revisione Contenuto Pyragogy Handbook: {{ $json.reviewTitle }}</h3>\n<p>Ciao revisore,</p>\n<p>È stato proposto un nuovo contenuto per l'Handbook:</p>\n<hr>\n<pre>{{ $json.proposedContent }}</pre>\n<hr>\n<p><strong>Titolo:</strong> {{ $json.reviewTitle }}</p>\n<p><strong>Tags:</strong> {{ $json.reviewTags.join(', ') }}</p>\n<p>Per favore, clicca su uno dei seguenti link per approvare o rifiutare:</p>\n<p><a href=\"your_n8n_url/webhook/pyragogy/review-feedback?reviewId={{ $json.reviewId }}&status=approved\">Approva</a></p>\n<p><a href=\"your_n8n_url/webhook/pyragogy/review-feedback?reviewId={{ $json.reviewId }}&status=rejected\">Rifiuta</a></p>\n<p>Grazie!</p>",
+        "options": {}
+      },
+      "name": "Send Review Request Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        -2240,
+        360
+      ],
+      "id": "1a5bc183-a533-4bfa-bd3e-0b5d095f6d73"
+    },
+    {
+      "parameters": {},
+      "name": "Wait for Human Approval",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        -2020,
+        360
+      ],
+      "id": "098f109b-5dc6-4808-b68a-3ee0054fd087",
+      "webhookId": "5a8ce836-cc07-49d6-86a4-67a454cb27c4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.query.status === 'approved' }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Human Decision Split",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1800,
+        360
+      ],
+      "id": "c916e274-64a7-44f7-9199-c1134ca20498"
+    },
+    {
+      "parameters": {
+        "table": "handbook_entries",
+        "columns": "title, content, version, created_by, tags, phase, rhythm",
+        "additionalFields": {}
+      },
+      "name": "Save to handbook_entries",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -1500,
+        520
+      ],
+      "id": "ec33201d-b1cb-4b3f-aca2-c5878e3e0ff4"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Registra il contributo dell'agente dopo l'approvazione umana\nconst entryId = $json.id; // ID dall'inserimento in handbook_entries\nconst agentName = 'Archivist';\nconst contributionType = 'Archiving (Approved)';\nconst details = { input: $json.proposedContent, metadata: { title: $json.reviewTitle, version: $json.version, tags: $json.reviewTags, phase: $json.handbookPhase, rhythm: $json.handbookRhythm }, reviewStatus: 'approved' };\n\n$items[0].json.contribution = { entryId, agentName, contributionType, details };\nreturn $items;"
+      },
+      "name": "Prepare Approved Contribution Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        520
+      ],
+      "id": "584dd31f-630c-4b06-9387-e308b1fe1bf8"
+    },
+    {
+      "parameters": {
+        "table": "agent_contributions",
+        "columns": "entry_id, agent_name, contribution_type, details",
+        "additionalFields": {}
+      },
+      "name": "Save Agent Contribution (Approved)",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        -1060,
+        520
+      ],
+      "id": "9a50f2dd-b545-4f07-8b02-e0747ed4fbb2"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Genera il percorso del file GitHub con slug e timestamp per il versioning.\nconst chapterSlug = ($json.reviewTitle || 'untitled').replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();\nconst timestamp = new Date().toISOString().replace(/[:.-]/g, ''); // Rimuove caratteri non validi per i nomi di file\nconst filePathWithVersion = `content/${chapterSlug}_v${timestamp}.md`;\n\nreturn [{ json: { ...$json, githubFilePath: filePathWithVersion } }];"
+      },
+      "name": "Generate GitHub File Path",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -840,
+        520
+      ],
+      "id": "bd065da7-df28-45b6-b059-aa4ecf7c4ffd"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $env.GITHUB_ACCESS_TOKEN }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "GitHub Enabled?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        520
+      ],
+      "id": "9bd4dc78-bac2-4506-bb2c-9cc6c9635983"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "createUpdate",
+        "owner": "={{ $env.GITHUB_REPOSITORY_OWNER }}",
+        "repository": "={{ $env.GITHUB_REPOSITORY_NAME }}",
+        "filePath": "={{ $json.githubFilePath }}"
+      },
+      "name": "Commit to GitHub (Approved)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        -500,
+        260
+      ],
+      "id": "719c5f85-5e3c-4228-9c64-7d2fdf02a244",
+      "webhookId": "2b5fafd1-e475-454a-acb3-ca464cbf3375"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Registra il rifiuto umano del contenuto\nconst agentName = 'Archivist';\nconst reviewId = $json.reviewId;\nconst reviewStatus = 'rejected';\nconst reviewComments = $json.query.comments || 'Nessun commento fornito.';\nconst proposedContent = $json.proposedContent;\nconst title = $json.reviewTitle;\n\nconsole.log(`Contenuto proposto dall'Archivista (ID: ${reviewId}, Titolo: ${title}) rifiutato dall'umano. Commenti: ${reviewComments}`);\n\n// Prepara l'output per indicare il rifiuto e consentire al flusso di continuare.\nreturn [{ json: { ...$json, reviewStatus: reviewStatus, reviewComments: reviewComments, output: { message: `Archivista: Contenuto rifiutato dall'umano.`, status: 'rejected', comments: reviewComments } } }];"
+      },
+      "name": "Log Human Rejection",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1160,
+        120
+      ],
+      "id": "78d9a40f-4358-4fde-8e32-55247deff44a"
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPropertyName"
+      },
+      "name": "Merge Archivist Paths",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        220,
+        80
+      ],
+      "id": "31fbe798-4634-4a89-b3fa-6f0c5f669c91"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Valuta i flag 'major_issue' dagli agenti di revisione per determinare se è necessaria una rielaborazione.\nlet majorIssueCount = 0;\nlet redraftFeedback = '';\n\n// Assumi che gli output degli agenti di revisione siano accessibili tramite $node\n// (Ad esempio, se Peer Reviewer -> Sensemaking -> Prompt Engineer sono sequenziali prima di questo nodo)\n\nif ($node[\"Peer Reviewer Agent\"] && $node[\"Peer Reviewer Agent\"].json && $node[\"Peer Reviewer Agent\"].json.choices && $node[\"Peer Reviewer Agent\"].json.choices[0] && $node[\"Peer Reviewer Agent\"].json.choices[0].message && $node[\"Peer Reviewer Agent\"].json.choices[0].message.content) {\n    const peerReviewOutput = JSON.parse($node[\"Peer Reviewer Agent\"].json.choices[0].message.content);\n    if (peerReviewOutput.major_issue) majorIssueCount++;\n    redraftFeedback += `Peer Reviewer: ${peerReviewOutput.suggestions || ''}\\n`;\n}\n\nif ($node[\"Sensemaking Agent\"] && $node[\"Sensemaking Agent\"].json && $node[\"Sensemaking Agent\"].json.choices && $node[\"Sensemaking Agent\"].json.choices[0] && $node[\"Sensemaking Agent\"].json.choices[0].message && $node[\"Sensemaking Agent\"].json.choices[0].message.content) {\n    const sensemakingOutput = JSON.parse($node[\"Sensemaking Agent\"].json.choices[0].message.content);\n    if (sensemakingOutput.major_issue) majorIssueCount++;\n    redraftFeedback += `Sensemaking Agent: ${sensemakingOutput.suggestions || ''}\\n`;\n}\n\nif ($node[\"Prompt Engineer Agent\"] && $node[\"Prompt Engineer Agent\"].json && $node[\"Prompt Engineer Agent\"].json.choices && $node[\"Prompt Engineer Agent\"].json.choices[0] && $node[\"Prompt Engineer Agent\"].json.choices[0].message && $node[\"Prompt Engineer Agent\"].json.choices[0].message.content) {\n    const promptEngineerOutput = JSON.parse($node[\"Prompt Engineer Agent\"].json.choices[0].message.content);\n    if (promptEngineerOutput.major_issue) majorIssueCount++;\n    redraftFeedback += `Prompt Engineer: ${promptEngineerOutput.suggestions || ''}\\n`;\n}\n\nconst redraftNeeded = majorIssueCount >= 2; // Voto a maggioranza\n\nreturn [{ json: { ...$json, redraftNeeded: redraftNeeded, redraftFeedback: redraftFeedback } }];"
+      },
+      "name": "Evaluate Board Consensus",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        200,
+        -360
+      ],
+      "id": "9d4a22a8-5bf5-412d-b34f-c34e7e4f15ea"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.redraftNeeded && $workflow.redraftLoopCount < 2 }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check Redraft Needed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -340
+      ],
+      "id": "05b80e37-3f53-4786-b94a-c1080c2e54e0"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Gestisce la logica di rielaborazione: incrementa il contatore e reindirizza al Synthesizer.\n\n$workflow.redraftLoopCount += 1; // Incrementa il contatore del ciclo di rielaborazione\n\n// Trova l'indice del Synthesizer nella sequenza degli agenti\nconst synthesizerIndex = $workflow.agentSequence.indexOf(\"Synthesizer\");\n\n// Se il Synthesizer non è il prossimo agente, imposta l'indice corrente per farlo ripartire dal Synthesizer.\n// Questo garantisce che il Synthesizer venga eseguito successivamente per la rielaborazione.\nif ($workflow.currentAgentIndex !== synthesizerIndex) {\n    $workflow.currentAgentIndex = synthesizerIndex;\n} else {\n    // Se siamo già sul Synthesizer (es. dopo il primo passaggio del loop), assicurati che l'indice vada avanti normalmente nel prossimo ciclo.\n    // Questo è un caso limite, di solito il Prepare Agent Input lo gestirà.\n}\n\n// Passa il feedback di rielaborazione come input per il Synthesizer.\n// Il nodo 'Prepare Agent Input' utilizzerà questo campo per aggiornare 'agentInput'.\nreturn [{ json: { ...$json, redraftInput: $json.output + \"\\n\\nFeedback per la rielaborazione dal Peer Review Board:\\n\" + $json.redraftFeedback } }];"
+      },
+      "name": "Handle Redraft",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        -400
+      ],
+      "id": "1c264b87-a956-4a31-95e4-29c5a8a0e7de"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Ottieni il nome dell'agente appena eseguito\nconst agentName = $json.agentToRun;\nlet agentOutput = '';\n\n// Costruisci dinamicamente il nome del nodo per il recupero dell'output\nlet actualNodeName;\n\n// Gestione speciale per l'Archivista dopo la revisione umana\nif (agentName === 'Archivist') {\n    if ($json.query && $json.query.status === 'approved') {\n        agentOutput = { message: 'Contenuto archiviato con successo dopo l'approvazione umana.', entryId: $json.id || 'N/A', handbookMetadata: { title: $json.reviewTitle, tags: $json.reviewTags, phase: $json.handbookPhase, rhythm: $json.handbookRhythm } };\n    } else if ($json.query && $json.query.status === 'rejected') {\n        agentOutput = { message: 'Archiviazione rifiutata dall'umano.', reviewComments: $json.query.comments || 'Nessun commento' };\n    } else if ($json.reviewStatus === 'rejected') {\n        // Caso in cui la revisione umana è stata rifiutata e si proviene dal ramo di rifiuto\n        agentOutput = { message: 'Archiviazione rifiutata dall'umano (tramite ramo di rifiuto).', reviewComments: $json.reviewComments || 'Nessun commento' };\n    } else {\n        agentOutput = { message: 'Processo Archivista: Attesa revisione umana o stato inatteso.', status: 'pending_review' };\n    }\n} else {\n    // Logica originale per gli altri agenti OpenAI\n    if (agentName === 'Onboarding/Explainer') {\n        actualNodeName = 'Onboarding/Explainer Agent';\n    } else {\n        actualNodeName = agentName + ' Agent';\n    }\n\n    // Tenta in modo sicuro di recuperare l'output dal nodo determinato dinamicamente\n    // Tenta anche di analizzare il JSON se l'output dell'agente è un oggetto JSON (come per gli agenti di revisione)\n    let rawContent = '';\n    if ($node[actualNodeName] && $node[actualNodeName].json && $node[actualNodeName].json.choices && $node[actualNodeName].json.choices[0] && $node[actualNodeName].json.choices[0].message && $node[actualNodeName].json.choices[0].message.content) {\n        rawContent = $node[actualNodeName].json.choices[0].message.content;\n    } else {\n        console.warn(`Impossibile trovare l'output chat OpenAI standard per il nodo: ${actualNodeName}. Ritorno al JSON grezzo.`);\n        agentOutput = $node[actualNodeName] ? $node[actualNodeName].json : `Nessun output specifico trovato per ${agentName}`;\n    }\n\n    // Tenta di analizzare il contenuto come JSON se l'agente è un agente di revisione\n    if (agentName === 'Peer Reviewer' || agentName === 'Sensemaking Agent' || agentName === 'Prompt Engineer') {\n        try {\n            agentOutput = JSON.parse(rawContent);\n        } catch (e) {\n            console.warn(`Impossibile analizzare l'output di ${agentName} come JSON. Trattato come stringa.`);\n            agentOutput = rawContent;\n        }\n    } else {\n        agentOutput = rawContent;\n    }\n}\n\n// Registra il contributo\nconst contribution = {\n    agent: agentName,\n    output: agentOutput,\n    timestamp: new Date().toISOString()\n};\n\n// Assicurati che l'array dei contributi esista e aggiungi il nuovo contributo\nconst existingContributions = Array.isArray($json.contributions) ? $json.contributions : [];\n\n// Incrementa l'indice dell'agente per il loop (solo se non siamo in rielaborazione e questo non è un agente di revisione che porta a rielaborazione)\n// Questo è gestito dalla logica di 'Handle Redraft' che forza l'indice per il riavvio.\nif (!($json.redraftNeeded && $workflow.redraftLoopCount < 2 && agentName !== 'Synthesizer')) { // Evita doppio incremento se riavvia il Synthesizer\n    $workflow.currentAgentIndex += 1;\n}\n\n// Restituisce l'elemento aggiornato, preservando l'input originale, aggiungendo l'output corrente e tutti i contributi\nreturn [{ json: { ...$items[0].json, output: agentOutput, contributions: [...existingContributions, contribution] } }];"
+      },
+      "name": "Process Agent Output",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        60
+      ],
+      "id": "1f6dead9-9566-4b16-8f51-5cb4e180111b"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $env.SLACK_WEBHOOK_URL }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Slack Enabled?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1700,
+        -65
+      ],
+      "id": "bd30c6ea-2a99-4ef4-9ee2-03e31c25dba7"
+    },
+    {
+      "parameters": {
+        "text": "Pyragogy AI Village Workflow Completato!\nInput: {{ $json.body.input }}\nOutput Finale: {{ JSON.stringify($json.output) }}\nAgenti Eseguiti: {{ $workflow.agentSequence.join(', ') }}",
+        "otherOptions": {},
+        "attachments": []
+      },
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        60
+      ],
+      "id": "eb174050-3bc3-4c0d-8860-53743af2b5be"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { finalOutput: $json.output, contributions: $json.contributions, agentSequence: $workflow.agentSequence } }}",
+        "options": {}
+      },
+      "name": "Final Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        2140,
+        -65
+      ],
+      "id": "ddddf51a-808f-4ba1-a764-49e5aed24cb7"
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Check DB Connection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check DB Connection": {
+      "main": [
+        [
+          {
+            "node": "Meta-Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Meta-Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Parse Orchestration Plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Orchestration Plan": {
+      "main": [
+        [
+          {
+            "node": "More Agents to Run?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "More Agents to Run?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Agent Input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Slack Enabled?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Agent Input": {
+      "main": [
+        [
+          {
+            "node": "Route Agents with Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Agents with Switch": {
+      "main": [
+        [
+          {
+            "node": "Summarizer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarizer Agent": {
+      "main": [
+        [
+          {
+            "node": "Process Agent Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Synthesizer Agent": {
+      "main": [
+        [
+          {
+            "node": "Process Agent Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Peer Reviewer Agent": {
+      "main": [
+        [
+          {
+            "node": "Sensemaking Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sensemaking Agent": {
+      "main": [
+        [
+          {
+            "node": "Prompt Engineer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prompt Engineer Agent": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Board Consensus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Onboarding/Explainer Agent": {
+      "main": [
+        [
+          {
+            "node": "Process Agent Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Handbook Metadata": {
+      "main": [
+        [
+          {
+            "node": "Generate Content for Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Content for Review": {
+      "main": [
+        [
+          {
+            "node": "Generate Review ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Review ID": {
+      "main": [
+        [
+          {
+            "node": "Send Review Request Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Review Request Email": {
+      "main": [
+        [
+          {
+            "node": "Wait for Human Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Human Approval": {
+      "main": [
+        [
+          {
+            "node": "Human Decision Split",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Decision Split": {
+      "main": [
+        [
+          {
+            "node": "Save to handbook_entries",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Human Rejection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to handbook_entries": {
+      "main": [
+        [
+          {
+            "node": "Prepare Approved Contribution Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Approved Contribution Data": {
+      "main": [
+        [
+          {
+            "node": "Save Agent Contribution (Approved)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Agent Contribution (Approved)": {
+      "main": [
+        [
+          {
+            "node": "Generate GitHub File Path",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate GitHub File Path": {
+      "main": [
+        [
+          {
+            "node": "GitHub Enabled?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Enabled?": {
+      "main": [
+        [
+          {
+            "node": "Commit to GitHub (Approved)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge Archivist Paths",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Commit to GitHub (Approved)": {
+      "main": [
+        [
+          {
+            "node": "Merge Archivist Paths",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Human Rejection": {
+      "main": [
+        [
+          {
+            "node": "Merge Archivist Paths",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Archivist Paths": {
+      "main": [
+        [
+          {
+            "node": "Process Agent Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Board Consensus": {
+      "main": [
+        [
+          {
+            "node": "Check Redraft Needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Redraft Needed": {
+      "main": [
+        [
+          {
+            "node": "Handle Redraft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Agent Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Handle Redraft": {
+      "main": [
+        [
+          {
+            "node": "More Agents to Run?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Agent Output": {
+      "main": [
+        [
+          {
+            "node": "More Agents to Run?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Enabled?": {
+      "main": [
+        [
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Slack": {
+      "main": [
+        [
+          {
+            "node": "Final Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b1500d5f-bff3-4bd1-9d9b-a90033ad3a4e",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-19T23:40:01.644Z",
+      "updatedAt": "2025-07-19T23:40:01.644Z",
+      "role": "workflow:owner",
+      "workflowId": "cqmGxrtf7OBge4fn",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

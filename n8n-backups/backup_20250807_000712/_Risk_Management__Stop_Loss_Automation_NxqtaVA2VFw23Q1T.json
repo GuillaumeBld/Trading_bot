@@ -1,0 +1,226 @@
+{
+  "createdAt": "2025-08-06T15:20:45.895Z",
+  "updatedAt": "2025-08-06T18:41:01.000Z",
+  "id": "NxqtaVA2VFw23Q1T",
+  "name": "⚠️ Risk Management & Stop Loss Automation",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "id": "risk_trigger",
+      "name": "Every 2 Minutes Risk Check",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        20,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://your-trading-bot-api.com/api/positions",
+        "authentication": "genericCredentialType",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $env.TRADING_BOT_API_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get_positions",
+      "name": "Get Current Positions",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check stop loss conditions for all positions\nconst positions = $json.positions || [];\n\nif (!Array.isArray(positions)) {\n  throw new Error('Invalid positions data');\n}\n\nconst riskActions = [];\nconst alerts = [];\nconst currentTime = new Date().toISOString();\n\npositions.forEach(position => {\n  const {\n    symbol,\n    quantity,\n    averagePrice,\n    currentPrice,\n    stopLoss,\n    takeProfit,\n    positionType, // 'long' or 'short'\n    openedAt\n  } = position;\n\n  // Calculate P&L\n  const unrealizedPnL = positionType === 'long' \n    ? (currentPrice - averagePrice) * quantity\n    : (averagePrice - currentPrice) * quantity;\n  const unrealizedPnLPercent = ((currentPrice - averagePrice) / averagePrice) * 100;\n  \n  // Position value and risk calculations\n  const positionValue = Math.abs(quantity * currentPrice);\n  const riskAmount = Math.abs(quantity * (averagePrice - stopLoss));\n  const riskPercent = (riskAmount / positionValue) * 100;\n\n  // Time-based risk (position age)\n  const positionAge = (new Date() - new Date(openedAt)) / (1000 * 60 * 60); // hours\n  const isOldPosition = positionAge > 24; // More than 24 hours\n\n  // Risk flags\n  const riskFlags = [];\n  let riskLevel = 'low';\n  let actionRequired = false;\n\n  // Stop Loss Triggered\n  if (positionType === 'long' && currentPrice <= stopLoss) {\n    riskFlags.push('stop_loss_triggered');\n    actionRequired = true;\n    riskLevel = 'critical';\n  } else if (positionType === 'short' && currentPrice >= stopLoss) {\n    riskFlags.push('stop_loss_triggered');\n    actionRequired = true;\n    riskLevel = 'critical';\n  }\n\n  // Take Profit Triggered\n  if (takeProfit) {\n    if (positionType === 'long' && currentPrice >= takeProfit) {\n      riskFlags.push('take_profit_triggered');\n      actionRequired = true;\n      riskLevel = 'high';\n    } else if (positionType === 'short' && currentPrice <= takeProfit) {\n      riskFlags.push('take_profit_triggered');\n      actionRequired = true;\n      riskLevel = 'high';\n    }\n  }\n\n  // Large unrealized loss (more than 15%)\n  if (Math.abs(unrealizedPnLPercent) > 15) {\n    riskFlags.push('large_unrealized_loss');\n    if (riskLevel !== 'critical') riskLevel = 'high';\n  }\n\n  // High risk percentage (more than 3% of account)\n  if (riskPercent > 3) {\n    riskFlags.push('high_risk_exposure');\n    if (riskLevel === 'low') riskLevel = 'medium';\n  }\n\n  // Old losing position\n  if (isOldPosition && unrealizedPnL < 0) {\n    riskFlags.push('old_losing_position');\n    if (riskLevel === 'low') riskLevel = 'medium';\n  }\n\n  // Volatile price movement (price moved more than 5% in either direction)\n  const priceChangePercent = Math.abs(unrealizedPnLPercent);\n  if (priceChangePercent > 5) {\n    riskFlags.push('high_volatility');\n  }\n\n  const positionRisk = {\n    symbol,\n    quantity,\n    averagePrice,\n    currentPrice,\n    stopLoss,\n    takeProfit,\n    positionType,\n    unrealizedPnL,\n    unrealizedPnLPercent,\n    positionValue,\n    riskAmount,\n    riskPercent,\n    positionAge,\n    riskFlags,\n    riskLevel,\n    actionRequired,\n    timestamp: currentTime\n  };\n\n  // Generate actions for positions requiring immediate attention\n  if (actionRequired) {\n    riskActions.push({\n      action: riskFlags.includes('stop_loss_triggered') ? 'execute_stop_loss' : \n              riskFlags.includes('take_profit_triggered') ? 'execute_take_profit' : 'review_position',\n      symbol,\n      quantity,\n      currentPrice,\n      reason: riskFlags.join(', '),\n      urgency: riskLevel,\n      estimatedPnL: unrealizedPnL,\n      timestamp: currentTime\n    });\n  }\n\n  // Generate alerts for high-risk positions\n  if (riskLevel === 'critical' || riskLevel === 'high') {\n    alerts.push({\n      type: 'position_risk',\n      severity: riskLevel === 'critical' ? 'critical' : 'high',\n      symbol,\n      message: `${symbol}: ${riskFlags.join(', ')} - P&L: ${unrealizedPnL.toFixed(2)} (${unrealizedPnLPercent.toFixed(2)}%)`,\n      data: positionRisk,\n      timestamp: currentTime\n    });\n  }\n\n  return positionRisk;\n});\n\n// Portfolio-level risk assessment\nconst totalPositions = positions.length;\nconst riskPositions = positions.filter(p => p.riskLevel === 'high' || p.riskLevel === 'critical').length;\nconst totalValue = positions.reduce((sum, p) => sum + Math.abs(p.quantity * p.currentPrice), 0);\nconst totalPnL = positions.reduce((sum, p) => {\n  const pnl = p.positionType === 'long' \n    ? (p.currentPrice - p.averagePrice) * p.quantity\n    : (p.averagePrice - p.currentPrice) * p.quantity;\n  return sum + pnl;\n}, 0);\n\nconst portfolioRisk = {\n  totalPositions,\n  riskPositions,\n  totalValue,\n  totalPnL,\n  totalPnLPercent: totalValue > 0 ? (totalPnL / totalValue) * 100 : 0,\n  riskLevel: riskPositions > totalPositions * 0.5 ? 'high' : \n             riskPositions > 0 ? 'medium' : 'low',\n  actionsRequired: riskActions.length,\n  alertsGenerated: alerts.length\n};\n\nconst result = {\n  timestamp: currentTime,\n  positions: positions.map(p => ({\n    symbol: p.symbol,\n    riskLevel: p.riskLevel,\n    riskFlags: p.riskFlags,\n    actionRequired: p.actionRequired,\n    unrealizedPnL: p.unrealizedPnL,\n    unrealizedPnLPercent: p.unrealizedPnLPercent\n  })),\n  portfolioRisk,\n  riskActions,\n  alerts,\n  summary: {\n    totalChecked: totalPositions,\n    riskPositions,\n    actionsRequired: riskActions.length,\n    criticalActions: riskActions.filter(a => a.urgency === 'critical').length,\n    alertsGenerated: alerts.length\n  }\n};\n\nreturn [result];"
+      },
+      "id": "check_stop_loss",
+      "name": "Check Stop Loss Conditions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process and prioritize risk management actions\nconst data = $json;\nconst { riskActions, alerts, portfolioRisk } = data;\n\n// Sort actions by urgency and potential impact\nconst sortedActions = riskActions.sort((a, b) => {\n  const urgencyOrder = { critical: 3, high: 2, medium: 1, low: 0 };\n  if (urgencyOrder[a.urgency] !== urgencyOrder[b.urgency]) {\n    return urgencyOrder[b.urgency] - urgencyOrder[a.urgency];\n  }\n  return Math.abs(b.estimatedPnL) - Math.abs(a.estimatedPnL);\n});\n\n// Determine execution strategy\nconst criticalActions = sortedActions.filter(action => action.urgency === 'critical');\nconst highPriorityActions = sortedActions.filter(action => action.urgency === 'high');\n\n// Generate execution plan\nconst executionPlan = {\n  immediate: criticalActions, // Execute immediately\n  scheduled: highPriorityActions.slice(0, 3), // Execute within 5 minutes\n  review: sortedActions.filter(action => !criticalActions.includes(action) && !highPriorityActions.slice(0, 3).includes(action))\n};\n\n// Risk management decisions\nconst decisions = {\n  shouldExecuteStopLoss: criticalActions.some(action => action.action === 'execute_stop_loss'),\n  shouldExecuteTakeProfit: criticalActions.some(action => action.action === 'execute_take_profit'),\n  shouldSendAlerts: alerts.length > 0,\n  shouldNotifyManager: criticalActions.length > 0 || portfolioRisk.riskLevel === 'high',\n  shouldHaltTrading: criticalActions.length > 2 || portfolioRisk.totalPnLPercent < -10,\n  riskLevel: portfolioRisk.riskLevel\n};\n\n// Prepare notifications\nconst notifications = [];\n\n// Critical actions notification\nif (criticalActions.length > 0) {\n  notifications.push({\n    type: 'critical_risk_action',\n    severity: 'critical',\n    title: 'URGENT: Risk Management Action Required',\n    message: `${criticalActions.length} critical actions needed. Immediate intervention required.`,\n    data: {\n      actions: criticalActions,\n      portfolioRisk: portfolioRisk.riskLevel,\n      totalPnL: portfolioRisk.totalPnL\n    },\n    channels: ['slack', 'discord', 'email']\n  });\n}\n\n// Portfolio risk alert\nif (portfolioRisk.riskLevel === 'high') {\n  notifications.push({\n    type: 'portfolio_risk',\n    severity: 'high',\n    title: 'Portfolio Risk Alert',\n    message: `Portfolio risk level: ${portfolioRisk.riskLevel}. ${portfolioRisk.riskPositions}/${portfolioRisk.totalPositions} positions at risk.`,\n    data: portfolioRisk,\n    channels: ['slack', 'discord']\n  });\n}\n\n// Individual position alerts\nalerts.forEach(alert => {\n  if (alert.severity === 'critical') {\n    notifications.push({\n      ...alert,\n      channels: ['slack', 'discord']\n    });\n  }\n});\n\nconst result = {\n  ...data,\n  executionPlan,\n  decisions,\n  notifications,\n  processing: {\n    timestamp: new Date().toISOString(),\n    actionsProcessed: riskActions.length,\n    immediateActions: criticalActions.length,\n    scheduledActions: executionPlan.scheduled.length,\n    notificationsGenerated: notifications.length\n  }\n};\n\nreturn [result];"
+      },
+      "id": "process_actions",
+      "name": "Process Risk Actions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Execute critical risk management actions\nconst data = $json;\nconst criticalActions = data.executionPlan?.immediate || [];\n\nif (criticalActions.length === 0) {\n  return [];\n}\n\n// Prepare execution requests\nconst executionRequests = criticalActions.map(action => {\n  const baseRequest = {\n    symbol: action.symbol,\n    quantity: Math.abs(action.quantity),\n    price: action.currentPrice,\n    type: 'market',\n    reason: action.reason,\n    timestamp: new Date().toISOString(),\n    source: 'risk_management_automation'\n  };\n\n  switch (action.action) {\n    case 'execute_stop_loss':\n      return {\n        ...baseRequest,\n        side: action.quantity > 0 ? 'sell' : 'buy',\n        orderType: 'stop_loss_execution',\n        urgency: 'critical'\n      };\n    \n    case 'execute_take_profit':\n      return {\n        ...baseRequest,\n        side: action.quantity > 0 ? 'sell' : 'buy',\n        orderType: 'take_profit_execution',\n        urgency: 'critical'\n      };\n    \n    default:\n      return {\n        ...baseRequest,\n        side: 'review',\n        orderType: 'manual_review_required',\n        urgency: 'high'\n      };\n  }\n});\n\nconst executionSummary = {\n  timestamp: new Date().toISOString(),\n  totalActions: criticalActions.length,\n  stopLossExecutions: executionRequests.filter(req => req.orderType === 'stop_loss_execution').length,\n  takeProfitExecutions: executionRequests.filter(req => req.orderType === 'take_profit_execution').length,\n  reviewRequired: executionRequests.filter(req => req.orderType === 'manual_review_required').length,\n  executionRequests\n};\n\nreturn [{\n  ...data,\n  executionSummary,\n  criticalActionsExecuted: true\n}];"
+      },
+      "id": "execute_critical",
+      "name": "Execute Critical Actions",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Route risk notifications to appropriate channels\nconst data = $json;\nconst notifications = data.notifications || [];\n\nif (notifications.length === 0) {\n  return [];\n}\n\n// Filter and format notifications\nconst urgentNotifications = notifications.filter(n => n.severity === 'critical');\nconst routedNotifications = notifications.map(notification => ({\n  ...notification,\n  id: `risk_notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n  source: 'risk_management',\n  routing: {\n    immediate: notification.severity === 'critical',\n    channels: notification.channels || ['slack'],\n    priority: notification.severity === 'critical' ? 'immediate' : 'high'\n  }\n}));\n\nreturn [{\n  ...data,\n  routedNotifications,\n  summary: {\n    totalNotifications: notifications.length,\n    urgentNotifications: urgentNotifications.length,\n    channelsUsed: [...new Set(notifications.flatMap(n => n.channels || []))],\n    routing: 'completed'\n  }\n}];"
+      },
+      "id": "route_notifications",
+      "name": "Route Risk Notifications",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        420
+      ]
+    }
+  ],
+  "connections": {
+    "Every 2 Minutes Risk Check": {
+      "main": [
+        [
+          {
+            "node": "Get Current Positions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Current Positions": {
+      "main": [
+        [
+          {
+            "node": "Check Stop Loss Conditions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Stop Loss Conditions": {
+      "main": [
+        [
+          {
+            "node": "Process Risk Actions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Risk Actions": {
+      "main": [
+        [
+          {
+            "node": "Execute Critical Actions",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Route Risk Notifications",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "0074acbe-40aa-4500-840a-9713fb962d1f",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-06T15:20:45.898Z",
+      "updatedAt": "2025-08-06T15:20:45.898Z",
+      "role": "workflow:owner",
+      "workflowId": "NxqtaVA2VFw23Q1T",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

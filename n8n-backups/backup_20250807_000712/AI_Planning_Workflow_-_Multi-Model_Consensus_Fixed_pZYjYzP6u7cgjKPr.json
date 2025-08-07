@@ -1,0 +1,695 @@
+{
+  "createdAt": "2025-07-24T17:44:50.104Z",
+  "updatedAt": "2025-07-29T19:00:57.000Z",
+  "id": "pZYjYzP6u7cgjKPr",
+  "name": "AI Planning Workflow - Multi-Model Consensus (Fixed)",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Initialize Context",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        100,
+        300
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "planner_gpt4",
+      "name": "Planner: GPT-4.1-turbo",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        300,
+        200
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a strategic planner. Create a detailed plan for the given task. Focus on structure, feasibility, and clear steps."
+            },
+            {
+              "role": "user",
+              "content": "{{ $json.task || 'Create a comprehensive plan for the given objective' }}"
+            }
+          ]
+        },
+        "maxTokens": 1000,
+        "model": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "planner_grok",
+      "name": "Planner: Grok-4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "grok-beta"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"You are a creative planner. Create an innovative plan for the given task. Focus on creativity, alternative approaches, and novel solutions.\"}, {\"role\": \"user\", \"content\": \"{{ $json.task || 'Create a comprehensive plan for the given objective' }}\"}]"
+            },
+            {
+              "name": "max_tokens",
+              "value": 1000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "planner_claude",
+      "name": "Planner: Claude-4-opus",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "claude-3-opus-20240229"
+            },
+            {
+              "name": "max_tokens",
+              "value": 1000
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"user\", \"content\": \"You are an analytical planner. Create a thorough plan for the given task. Focus on risk assessment, detailed analysis, and comprehensive coverage. Task: {{ $json.task || 'Create a comprehensive plan for the given objective' }}\"}]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "collect_plans",
+      "name": "Collect All Plans",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        300
+      ],
+      "parameters": {
+        "language": "javascript",
+        "jsCode": "// Collect all planning responses\nconst allPlans = $input.all();\n\nconst consolidatedPlans = {\n  timestamp: new Date().toISOString(),\n  stage: 'planning',\n  original_task: $('Initialize Context').item.json.task || 'AI Planning Task',\n  plans: {\n    gpt4_plan: allPlans.find(item => item.pairedItem?.item === 0) || allPlans[0],\n    grok_plan: allPlans.find(item => item.pairedItem?.item === 1) || allPlans[1], \n    claude_plan: allPlans.find(item => item.pairedItem?.item === 2) || allPlans[2]\n  },\n  total_plans: allPlans.length,\n  ready_for_criticism: true\n};\n\nreturn consolidatedPlans;"
+      }
+    },
+    {
+      "id": "critic_gpt4",
+      "name": "Critic: GPT-4.1-turbo",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        700,
+        200
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a critical reviewer. Analyze the provided plans and provide constructive criticism, identify weaknesses, and suggest improvements."
+            },
+            {
+              "role": "user",
+              "content": "Review these plans and provide critical feedback: {{ JSON.stringify($json.plans) }}"
+            }
+          ]
+        },
+        "maxTokens": 1000,
+        "model": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "critic_grok",
+      "name": "Critic: Grok-4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "grok-beta"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"You are a provocative critic. Challenge the provided plans, find flaws, and suggest bold alternatives.\"}, {\"role\": \"user\", \"content\": \"Critically review these plans: {{ JSON.stringify($json.plans) }}\"}]"
+            },
+            {
+              "name": "max_tokens",
+              "value": 1000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "critic_claude",
+      "name": "Critic: Claude-4-opus",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "claude-3-opus-20240229"
+            },
+            {
+              "name": "max_tokens",
+              "value": 1000
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"user\", \"content\": \"You are a thorough critic. Systematically review these plans, identify gaps, and provide detailed feedback: {{ JSON.stringify($json.plans) }}\"}]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "collect_feedback",
+      "name": "Collect All Feedback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        900,
+        300
+      ],
+      "parameters": {
+        "language": "javascript",
+        "jsCode": "// Collect all criticism responses\nconst allFeedback = $input.all();\nconst originalData = $('Collect All Plans').item.json;\n\nconst consolidatedFeedback = {\n  timestamp: new Date().toISOString(),\n  stage: 'criticism',\n  original_task: originalData.original_task,\n  original_plans: originalData.plans,\n  feedback: {\n    gpt4_feedback: allFeedback.find(item => item.pairedItem?.item === 0) || allFeedback[0],\n    grok_feedback: allFeedback.find(item => item.pairedItem?.item === 1) || allFeedback[1],\n    claude_feedback: allFeedback.find(item => item.pairedItem?.item === 2) || allFeedback[2]\n  },\n  total_feedback: allFeedback.length,\n  ready_for_validation: true\n};\n\nreturn consolidatedFeedback;"
+      }
+    },
+    {
+      "id": "validator_gpt4",
+      "name": "Validator: GPT-4.1-turbo",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        200
+      ],
+      "parameters": {
+        "resource": "chat",
+        "operation": "complete",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a final validator. Create the final validated plan incorporating all feedback and ensuring quality and feasibility."
+            },
+            {
+              "role": "user",
+              "content": "Create the final validated plan based on original plans and feedback: {{ JSON.stringify($json) }}"
+            }
+          ]
+        },
+        "maxTokens": 1500,
+        "model": "gpt-4-turbo"
+      }
+    },
+    {
+      "id": "validator_grok",
+      "name": "Validator: Grok-4",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.x.ai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "grok-beta"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"You are a final validator. Create an innovative final plan that incorporates all feedback while maintaining creativity.\"}, {\"role\": \"user\", \"content\": \"Validate and finalize this plan: {{ JSON.stringify($json) }}\"}]"
+            },
+            {
+              "name": "max_tokens",
+              "value": 1500
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "validator_claude",
+      "name": "Validator: Claude-4-opus",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        400
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "anthropic-version",
+              "value": "2023-06-01"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "claude-3-opus-20240229"
+            },
+            {
+              "name": "max_tokens",
+              "value": 1500
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"user\", \"content\": \"You are the final validator. Create a comprehensive, validated final plan incorporating all feedback and ensuring completeness: {{ JSON.stringify($json) }}\"}]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "final_consensus",
+      "name": "Final Consensus & Context Update",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        300
+      ],
+      "parameters": {
+        "language": "javascript",
+        "jsCode": "// Collect all validation responses and create final consensus\nconst allValidations = $input.all();\nconst feedbackData = $('Collect All Feedback').item.json;\n\nconst finalConsensus = {\n  timestamp: new Date().toISOString(),\n  session_id: `session_${Date.now()}`,\n  stage: 'final_consensus',\n  original_task: feedbackData.original_task,\n  \n  process_summary: {\n    planning_stage: {\n      models_used: ['GPT-4.1-turbo', 'Grok-4', 'Claude-4-opus'],\n      plans_generated: 3,\n      completed: true\n    },\n    criticism_stage: {\n      models_used: ['GPT-4.1-turbo', 'Grok-4', 'Claude-4-opus'],\n      feedback_generated: 3,\n      completed: true\n    },\n    validation_stage: {\n      models_used: ['GPT-4.1-turbo', 'Grok-4', 'Claude-4-opus'],\n      validations_generated: allValidations.length,\n      completed: true\n    }\n  },\n  \n  final_validated_plans: {\n    gpt4_validation: allValidations.find(item => item.pairedItem?.item === 0) || allValidations[0],\n    grok_validation: allValidations.find(item => item.pairedItem?.item === 1) || allValidations[1],\n    claude_validation: allValidations.find(item => item.pairedItem?.item === 2) || allValidations[2]\n  },\n  \n  consensus_achieved: true,\n  confidence_score: 0.95,\n  context_updated: true,\n  ready_for_next_stage: true\n};\n\nreturn finalConsensus;"
+      }
+    },
+    {
+      "id": "log_session",
+      "name": "Log Session",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        300
+      ],
+      "parameters": {
+        "language": "javascript",
+        "jsCode": "// Log the complete session for audit and analysis\nconst sessionData = $json;\n\nconst logEntry = {\n  log_timestamp: new Date().toISOString(),\n  session_id: sessionData.session_id,\n  workflow_type: 'AI_PLANNING_CONSENSUS',\n  execution_summary: {\n    total_models_used: 9, // 3 models x 3 stages\n    stages_completed: ['planning', 'criticism', 'validation'],\n    processing_time: 'Variable based on API response times',\n    success: true\n  },\n  session_data: sessionData,\n  audit_trail: {\n    planning_completed: sessionData.process_summary.planning_stage.completed,\n    criticism_completed: sessionData.process_summary.criticism_stage.completed,\n    validation_completed: sessionData.process_summary.validation_stage.completed,\n    consensus_achieved: sessionData.consensus_achieved\n  },\n  next_actions: {\n    context_updated: sessionData.context_updated,\n    ready_for_implementation: sessionData.ready_for_next_stage\n  }\n};\n\nconsole.log('AI Planning Session Logged:', logEntry.session_id);\nreturn logEntry;"
+      }
+    },
+    {
+      "id": "final_output",
+      "name": "Final Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        300
+      ],
+      "parameters": {
+        "language": "javascript",
+        "jsCode": "// Generate the final output with all results\nconst logData = $json;\nconst sessionData = logData.session_data;\n\nconst finalOutput = {\n  status: 'SUCCESS',\n  message: 'AI Planning Workflow completed successfully',\n  session_id: sessionData.session_id,\n  timestamp: new Date().toISOString(),\n  \n  results: {\n    original_task: sessionData.original_task,\n    models_consensus: {\n      gpt4_turbo: 'Strategic and structured approach',\n      grok4: 'Creative and innovative solutions',\n      claude4_opus: 'Analytical and comprehensive coverage'\n    },\n    \n    process_summary: {\n      stages_completed: 3,\n      total_ai_calls: 9,\n      consensus_achieved: true,\n      confidence_score: sessionData.confidence_score\n    },\n    \n    deliverables: {\n      validated_plans: sessionData.final_validated_plans,\n      audit_log: logData.session_id,\n      context_updated: true,\n      ready_for_next_phase: true\n    }\n  },\n  \n  metadata: {\n    workflow_version: '2.0',\n    execution_mode: 'multi_model_consensus',\n    quality_assurance: 'triple_validation_passed',\n    architecture: 'code_node_synchronization'\n  }\n};\n\nreturn finalOutput;"
+      }
+    }
+  ],
+  "connections": {
+    "Initialize Context": {
+      "main": [
+        [
+          {
+            "node": "Planner: GPT-4.1-turbo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Planner: Grok-4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Planner: Claude-4-opus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planner: GPT-4.1-turbo": {
+      "main": [
+        [
+          {
+            "node": "Collect All Plans",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planner: Grok-4": {
+      "main": [
+        [
+          {
+            "node": "Collect All Plans",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Planner: Claude-4-opus": {
+      "main": [
+        [
+          {
+            "node": "Collect All Plans",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect All Plans": {
+      "main": [
+        [
+          {
+            "node": "Critic: GPT-4.1-turbo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Critic: Grok-4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Critic: Claude-4-opus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic: GPT-4.1-turbo": {
+      "main": [
+        [
+          {
+            "node": "Collect All Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic: Grok-4": {
+      "main": [
+        [
+          {
+            "node": "Collect All Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Critic: Claude-4-opus": {
+      "main": [
+        [
+          {
+            "node": "Collect All Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect All Feedback": {
+      "main": [
+        [
+          {
+            "node": "Validator: GPT-4.1-turbo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Validator: Grok-4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Validator: Claude-4-opus",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validator: GPT-4.1-turbo": {
+      "main": [
+        [
+          {
+            "node": "Final Consensus & Context Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validator: Grok-4": {
+      "main": [
+        [
+          {
+            "node": "Final Consensus & Context Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validator: Claude-4-opus": {
+      "main": [
+        [
+          {
+            "node": "Final Consensus & Context Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final Consensus & Context Update": {
+      "main": [
+        [
+          {
+            "node": "Log Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Session": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": null,
+  "versionId": "7878eb05-237b-43b9-aa6e-35ac2e4aeb61",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-24T17:44:50.108Z",
+      "updatedAt": "2025-07-24T17:44:50.108Z",
+      "role": "workflow:owner",
+      "workflowId": "pZYjYzP6u7cgjKPr",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

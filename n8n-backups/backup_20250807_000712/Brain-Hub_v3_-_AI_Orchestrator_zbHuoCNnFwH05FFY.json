@@ -1,0 +1,486 @@
+{
+  "createdAt": "2025-07-23T03:33:20.053Z",
+  "updatedAt": "2025-07-24T16:56:18.000Z",
+  "id": "zbHuoCNnFwH05FFY",
+  "name": "Brain-Hub v3 - AI Orchestrator",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "daily-trigger",
+      "name": "Daily 07:00 Trigger",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1.1,
+      "position": [
+        -120,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1) grab the global static-data bucket\nconst staticData = $getWorkflowStaticData('global');\n\n// 2) define your daily budget and today’s date\nconst dailyBudget = 100000;\nconst today       = new Date().toISOString().split('T')[0];\n\n// 3) if this is the first run ever, initialize all budget fields\nif (!staticData.budget_used) {\n  staticData.budget_used  = 0;\n  staticData.daily_budget = dailyBudget;\n  staticData.last_reset   = today;\n}\n\n// 4) if it’s a new day, reset the counter\nif (staticData.last_reset !== today) {\n  staticData.budget_used  = 0;\n  staticData.last_reset   = today;\n  staticData.daily_budget = dailyBudget;\n}\n\n// 5) now emit your initial context object\nreturn [{\n  json: {\n    session_id:      `session_${Date.now()}`,\n    iteration:        1,\n    messages:         [],                                // empty chat history\n    budget_remaining: staticData.daily_budget - staticData.budget_used,\n    budget_used:      staticData.budget_used,\n    daily_budget:     staticData.daily_budget,\n    user_prompt:     'Process daily tasks',\n    timestamp:        new Date().toISOString(),\n  }\n}];"
+      },
+      "id": "init-context",
+      "name": "Initialize Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        100,
+        430
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "AGSHQSb0Pxz8etkP",
+        "options": {}
+      },
+      "id": "safe-llm-planner",
+      "name": "Safe LLM Call - Planner",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        320,
+        430
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "AGSHQSb0Pxz8etkP",
+        "options": {}
+      },
+      "id": "safe-llm-critic",
+      "name": "Safe LLM Call - Critic",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        540,
+        355
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Preserve critic feedback\nconst criticFeedback = $json.content || $json.response || '';\n\nreturn [{\n  json: {\n    ...$json,\n    critic_feedback: criticFeedback,\n    agent: 'critic'\n  }\n}];"
+      },
+      "id": "preserve-feedback",
+      "name": "Preserve Feedback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        355
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "AGSHQSb0Pxz8etkP",
+        "options": {}
+      },
+      "id": "safe-llm-validator",
+      "name": "Safe LLM Call - Validator",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        980,
+        355
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "message-count",
+              "operator": {
+                "type": "number",
+                "operation": "larger",
+                "value": 15
+              },
+              "leftValue": "={{ $json.messages.length }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "summarize-gate",
+      "name": "Summarize Gate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        355
+      ]
+    },
+    {
+      "parameters": {
+        "workflowId": "AGSHQSb0Pxz8etkP",
+        "options": {}
+      },
+      "id": "execute-summarizer",
+      "name": "Execute Summarizer",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1,
+      "position": [
+        1480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Update context with new messages and budget\nconst newMessages = [\n  ...$json.messages,\n  {\n    role: 'assistant',\n    content: $json.content || $json.response,\n    timestamp: new Date().toISOString(),\n    tokens: $json.tokens_used || 0,\n    agent: $json.agent || 'unknown'\n  }\n];\n\n// Update budget tracking\nconst totalTokens = ($json.tokens_used || 0) + ($json.prompt_tokens || 0) + ($json.completion_tokens || 0);\nconst currentUsed = $('StaticData').get('budget_used');\nconst newUsed = currentUsed + totalTokens;\n$('StaticData').set('budget_used', newUsed);\n\n// Handle summarization - replace messages with summary\nlet finalMessages = newMessages.slice(-5);\nif ($json.summary) {\n  finalMessages = [{\n    role: 'system',\n    content: `Previous conversation summarized: ${$json.summary}`,\n    timestamp: new Date().toISOString(),\n    tokens: 0\n  }];\n}\n\nreturn [{\n  json: {\n    ...$json,\n    messages: finalMessages,\n    iteration: $json.iteration + 1,\n    budget_remaining: $('StaticData').get('daily_budget') - newUsed,\n    budget_used: newUsed,\n    summary: $json.summary || null,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "update-context",
+      "name": "Update Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1700,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "budget-check",
+              "operator": {
+                "type": "number",
+                "operation": "larger",
+                "value": 0
+              },
+              "leftValue": "={{ $json.budget_remaining }}",
+              "rightValue": ""
+            },
+            {
+              "id": "iteration-limit",
+              "operator": {
+                "type": "number",
+                "operation": "smaller",
+                "value": 10
+              },
+              "leftValue": "={{ $json.iteration }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "continue-gate",
+      "name": "Continue Gate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1860,
+        430
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "log-session",
+      "name": "Log Session",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        2080,
+        430
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Final output preparation\nconst finalOutput = {\n  session_id: $json.session_id,\n  total_iterations: $json.iteration,\n  final_budget_remaining: $json.budget_remaining,\n  total_tokens_used: $json.budget_used,\n  messages_processed: $json.messages.length,\n  summary: $json.summary,\n  timestamp: new Date().toISOString(),\n  status: $json.budget_remaining > 0 ? 'completed' : 'budget_exceeded'\n};\n\nreturn [{\n  json: finalOutput\n}];"
+      },
+      "id": "final-output",
+      "name": "Final Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2300,
+        430
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -220,
+        380
+      ],
+      "id": "308595dd-eb44-44bf-826a-029722e48870",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -120,
+        20
+      ],
+      "id": "713e0203-55ab-4963-b763-0756559cfcc2",
+      "name": "Execute Workflow Trigger"
+    }
+  ],
+  "connections": {
+    "Daily 07:00 Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Initialize Context": {
+      "main": [
+        [
+          {
+            "node": "Safe LLM Call - Planner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Safe LLM Call - Planner": {
+      "main": [
+        [
+          {
+            "node": "Safe LLM Call - Critic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Safe LLM Call - Critic": {
+      "main": [
+        [
+          {
+            "node": "Preserve Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preserve Feedback": {
+      "main": [
+        [
+          {
+            "node": "Safe LLM Call - Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Safe LLM Call - Validator": {
+      "main": [
+        [
+          {
+            "node": "Summarize Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize Gate": {
+      "main": [
+        [
+          {
+            "node": "Execute Summarizer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Context",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Execute Summarizer": {
+      "main": [
+        [
+          {
+            "node": "Update Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Context": {
+      "main": [
+        [
+          {
+            "node": "Continue Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Gate": {
+      "main": [
+        [
+          {
+            "node": "Safe LLM Call - Planner",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Session",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Log Session": {
+      "main": [
+        [
+          {
+            "node": "Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    },
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Initialize Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {
+    "Initialize Context": [
+      {
+        "json": {
+          "session_id": "session_1753376108571",
+          "iteration": 1,
+          "messages": [],
+          "budget_remaining": 100000,
+          "budget_used": 0,
+          "daily_budget": 100000,
+          "user_prompt": "Process daily tasks",
+          "timestamp": "2025-07-24T16:55:08.572Z"
+        }
+      }
+    ]
+  },
+  "versionId": "01881288-6a60-41df-93c0-f6b1ee01da34",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-23T03:33:20.055Z",
+      "updatedAt": "2025-07-23T03:33:20.055Z",
+      "role": "workflow:owner",
+      "workflowId": "zbHuoCNnFwH05FFY",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

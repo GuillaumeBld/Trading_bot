@@ -1,0 +1,4932 @@
+{
+  "createdAt": "2025-07-21T17:08:32.236Z",
+  "updatedAt": "2025-07-21T17:08:32.236Z",
+  "id": "lKGu7ra4ZKk2lqJZ",
+  "name": "Control Your n8n Instance Remotely with Telegram Bot Commands",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "chatIds": "123456789",
+          "userIds": "123456789"
+        }
+      },
+      "id": "47ad5e66-5368-4db4-b913-afe45df490ee",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        140,
+        1100
+      ],
+      "webhookId": "0eea20d1-fab3-416e-8f22-6f975f79650b",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ce8eebdd-c313-4444-a1bd-dcde56619a0d",
+              "name": "command",
+              "type": "string",
+              "value": "={{\n  $json.message.text\n    .toLowerCase()\n    .replace(/^\\//, '')\n    .split(/ (.+)/)[0]\n  || ''\n}}"
+            },
+            {
+              "id": "834f7369-52f1-4df3-bfcb-754be0bb11e0",
+              "name": "arg1",
+              "type": "string",
+              "value": "={{\n  $json.message.text\n    .toLowerCase()\n    .replace(/^\\//, '')\n    .split(/ (.+)/)[1]\n  || ''\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "79eee5c1-174a-4073-b46b-94559baed649",
+      "name": "Cmd Parse",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        360,
+        1100
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "d5b702ed-dcaf-461a-a148-04b231d55617",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "start"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "start"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "e9ac521f-9416-4756-9f3c-9be5dd5a5ccb",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "help"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "help"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "e20bdf17-2418-43ad-8b37-a4a5f4e46b2a",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "backup"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "backup"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "b1dfbc98-aac0-483c-a386-79180e96d0bb",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "cleanup"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "cleanup"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "2524d410-a971-4a1f-b8a1-c30d363c6be6",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "workflows"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "workflows"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "a27bd761-d2d6-4768-9449-ca5380db38ce",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "execute"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "execute"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "593d46f5-40ce-468a-b834-c2376dca1684",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "activate"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "activate"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "0ff85afd-02f8-42ad-b892-59b3dcf025a9",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "deactivate"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "deactivate"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "f5dee847-2c55-427f-a1f9-3f038f19e30e",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse').item.json.command }}",
+                    "rightValue": "executions"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "executions"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": true,
+          "renameFallbackOutput": "Error"
+        }
+      },
+      "id": "ec021a12-3cc5-42fb-9b6a-3bef1ea76f6c",
+      "name": "Cmd Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        580,
+        960
+      ],
+      "executeOnce": false,
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f9189043-5f36-4222-bdaa-14dad575187d",
+      "name": "Execute Arg",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        940,
+        1120
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "operation": "activate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "requestOptions": {}
+      },
+      "id": "4441c569-b12f-450b-b76e-6d275d948602",
+      "name": "Activate Workflow",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        2540,
+        1300
+      ],
+      "typeVersion": 1,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "deactivate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "requestOptions": {}
+      },
+      "id": "34b84556-3ea1-4c33-b3ea-4b82dbdc8626",
+      "name": "Deactivate Workflow",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        2540,
+        1480
+      ],
+      "typeVersion": 1,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "16b4034a-70d2-4c97-9867-17d07552268b",
+      "name": "Activate Arg",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        940,
+        1300
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "57108383-8874-47f1-b2f4-b3875b248cf1",
+      "name": "Deactivate Arg",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        940,
+        1480
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ This command requires an argument!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "08102171-861f-44f2-921c-5752d7f5837d",
+      "name": "Arg Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1240,
+        1940
+      ],
+      "webhookId": "d1b9cd05-5507-45aa-8ee8-5c19eccfc76d",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Invalid command!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "b193a41e-a02f-4ef2-a6a7-982649275c2f",
+      "name": "Cmd Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        940,
+        1940
+      ],
+      "webhookId": "033ee218-b4e1-420b-bf73-592029ba53a1",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=✅ Workflow executed.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "48fffde7-a082-4379-a7f7-1685a8d5221e",
+      "name": "Executed",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        1120
+      ],
+      "webhookId": "93483e2c-71d5-4733-9572-b205551fff74",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=✅ Workflow activated.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "cd9dfef7-d0a5-491e-bbf9-afa47ba22127",
+      "name": "Activated",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        1300
+      ],
+      "webhookId": "a26128ae-81be-4d1a-bf6d-bf38ef54816b",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=✅ Workflow deactivated.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "1d9a4648-f386-4e26-9bec-2b90d00489c9",
+      "name": "Deactivated",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        1480
+      ],
+      "webhookId": "51e51fa0-93b9-4c39-8896-f9d72df898e4",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow name not found!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "7aa13bfa-178b-4ed1-bb0c-eadee6e1bbba",
+      "name": "Workflow Name Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2020,
+        1940
+      ],
+      "webhookId": "76b885b4-302a-4033-89f5-2e3b5c9f6f8c",
+      "executeOnce": true,
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "ef20753b-cc2c-45d4-99a4-3526ef52c65a",
+      "name": "List Workflows 1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1240,
+        1120
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "472bf245-a5b8-4301-b7eb-ffa6e695ef1d",
+      "name": "List Workflows 2",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1240,
+        1300
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "80bf1280-dde8-47b3-983e-f63549eaf1c6",
+      "name": "List Workflows 3",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1240,
+        1480
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "43882ae1-cf25-46d2-9702-7035590b517c",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.active }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "438bc556-8cf3-4bc1-8baf-22a5a6508dbb",
+      "name": "If Inactive",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2020,
+        1300
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "43882ae1-cf25-46d2-9702-7035590b517c",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.active }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6d8cf781-ec2a-4ffe-8b00-3777b5f29303",
+      "name": "If Active",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2020,
+        1480
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow is already active!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "bf686ab5-16dd-4613-ad7b-5765bd5e57b4",
+      "name": "Workflow Active Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2320,
+        1940
+      ],
+      "webhookId": "0d7e6070-983e-47c1-8713-39359d6a41db",
+      "executeOnce": true,
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow is already inactive!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ea9c0fe7-497f-4c5f-bb69-bde3485a047d",
+      "name": "Workflow Inactive Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2320,
+        2120
+      ],
+      "webhookId": "be3c092d-c053-4d15-9c64-4f8bb38ddf5c",
+      "executeOnce": true,
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "e5127d15-67bc-4ada-a748-1eef9bf6125d",
+      "name": "List Workflows ",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        940,
+        940
+      ],
+      "executeOnce": true,
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=My commands are:\n\n\n➖ help\nList of commands.\n\n➖ cleanup\nDeletes all archived workflows.\n\n➖ backup\nBackup workflows and credentials.\n\n➖ workflows\nList all workflows.\n\n➖ execute <workflow-name>\nExecute a workflow.\n\n➖ activate <workflow-name>\nActivate a workflow.\n\n➖ deactivate <workflow-name>\nDeactivate a workflow.\n\n➖ executions <workflow-name>\nList last executions.\n\n\n💡 To execute a workflow, it must have a trigger node of type \"When Executed by Another Workflow\". To activate a workflow, it must have a trigger node that supports activation.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "e8f4053e-3996-44a9-b02e-20a5c567520e",
+      "name": "Help",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        940,
+        380
+      ],
+      "webhookId": "2f993ec0-a72e-4bf3-a5c0-8d31742d80e1",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43a779d0-acf5-49d8-920a-590af435b7d1",
+              "name": "name",
+              "type": "string",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "id": "09a74ca9-26fe-490f-b4db-c9c40200e2a5",
+              "name": "active",
+              "type": "boolean",
+              "value": "={{ $json.active }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c6a42819-a3a0-4989-932a-acdc246049fa",
+      "name": "Workflow List",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1480,
+        940
+      ],
+      "typeVersion": 3.4,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "={{ $json.msg }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "6d4ca3ed-d2af-405e-98fe-3c95cc043262",
+      "name": "Workflows",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        940
+      ],
+      "webhookId": "5ae7f6bf-d7b9-4f2a-8a99-2b93109779ff",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "af223a82-e30a-4aa2-ab7a-75e838298914",
+      "name": "Workflow Found 1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1720,
+        1120
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "37bbaafd-457b-42aa-9dc9-30d2ee354c7e",
+      "name": "Workflow Found 2",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1720,
+        1300
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ee6c838b-03fa-4b71-b902-e405044a9dff",
+      "name": "Workflow Found 3",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1720,
+        1480
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "075dd1e2-2580-4016-ba11-3b271049a718",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "60a1cb44-272e-49cf-b386-d4f5cdac2542",
+      "name": "Not Archived",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1240,
+        940
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Execute Arg').item.json.arg1 }}"
+            },
+            {
+              "id": "83bc1669-a58f-45c9-a6f3-4d3a94d72fa5",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "74abbe84-b122-4dac-9588-9dadd57c4216",
+      "name": "Find Workflow 1",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1480,
+        1120
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Activate Arg').item.json.arg1 }}"
+            },
+            {
+              "id": "ca761ff5-d7ac-4c11-b844-c10d34062fc4",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cb5c4faf-026f-49ba-a9e4-b5863e82cf79",
+      "name": "Find Workflow 2",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1480,
+        1300
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Deactivate Arg').item.json.arg1 }}"
+            },
+            {
+              "id": "6eec9d79-2ad2-40af-8baf-38ab772f6f0b",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "900837e2-f583-45a2-a049-9cfbdb63f614",
+      "name": "Find Workflow 3",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1480,
+        1480
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "84394a0c-7311-44e8-92d9-b4dc70428171",
+      "name": "Executions Arg",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        940,
+        1660
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "c67b5414-2f6a-4255-aaa4-8e3a24364c9c",
+      "name": "List Workflows 4",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1240,
+        1660
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Executions Arg').item.json.arg1 }}"
+            },
+            {
+              "id": "6eec9d79-2ad2-40af-8baf-38ab772f6f0b",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "977cacc6-af9b-48a0-b3e9-45de767276d6",
+      "name": "Find Workflow 4",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1480,
+        1660
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "79356312-a168-40a4-8f1b-86be5459e53a",
+      "name": "Workflow Found 4",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1720,
+        1660
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "resource": "execution",
+        "limit": 50,
+        "filters": {
+          "workflowId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $json.id }}"
+          }
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "40dc7b87-7da7-4d42-b041-f6bda932b2be",
+      "name": "List Workflow Executions",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        2020,
+        1660
+      ],
+      "executeOnce": true,
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ec10b59-a57e-4b6d-a13a-9d2674fb39b3",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "18038ae8-3a18-4c6b-b97a-1f222bbe2547",
+              "name": "mode",
+              "type": "string",
+              "value": "={{ $json.mode }}"
+            },
+            {
+              "id": "90484316-e73a-41ff-9cb0-dbdfeaf6da11",
+              "name": "started",
+              "type": "string",
+              "value": "={{ $json.startedAt?.toDateTime().toLocal().format(\"dd/MM/yyyy HH:mm\") }}"
+            },
+            {
+              "id": "a56880cb-3c81-48fc-bd96-ec018e43ec5e",
+              "name": "workflow",
+              "type": "string",
+              "value": "={{ $('Workflow Found 4').item.json.name }}"
+            },
+            {
+              "id": "d89a11d0-2abd-4fad-ba64-510e9d922158",
+              "name": "finished",
+              "type": "boolean",
+              "value": "={{ $json.finished }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f1d0f77d-54e9-4e03-b887-8e69df879072",
+      "name": "Executions Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2320,
+        1660
+      ],
+      "typeVersion": 3.4,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "={{ $json.msg }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3e40eca3-82fc-4567-b652-5fa1b4505008",
+      "name": "Executions",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        1660
+      ],
+      "webhookId": "43b75945-8442-4e0a-b848-afae7a4d0d35",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg = \"Executions:\\n\\n\"\nif ($input.first().json.id === null) {\n  return {\n    json: {\n      msg: \"No executions.\"\n    }\n  }\n}\nfor (const item of $input.all()) {\n  let status = item.json.finished ? '✅' : '❌'\n  let mode = item.json.mode === 'manual' ? ' (manual)' : ''\n  msg = msg + (status + \" \" + item.json.workflow + \" - \" + item.json.id + \" - \" + item.json.started + mode + \"\\n\")\n}\nreturn {\n  json: {\n    msg: msg\n  }\n}"
+      },
+      "id": "fe34925d-897b-4dd6-9bb8-5526e4491d9f",
+      "name": "Executions Message",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2540,
+        1660
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg = \"Workflows:\\n\\n\"\nif ($input.first().json.name === null) {\n  return {\n    json: {\n      msg: \"No workflows.\"\n    }\n  }\n}\nfor (const item of $input.all()) {\n  let status = item.json.active ? '🟢' : '⚫'\n  msg = msg + (status + \"  \" + item.json.name + \"\\n\")\n}\nreturn {\n  json: {\n    msg: msg\n  }\n}"
+      },
+      "id": "3580dc0f-2304-4671-90dc-75ddb5c1fb1f",
+      "name": "Workflows Message",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2540,
+        940
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}",
+          "cachedResultName": "={{ $json.id }}"
+        },
+        "workflowInputs": {
+          "value": {},
+          "schema": [],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "d5157df0-33cc-4ee8-9108-9c932d16b7cf",
+      "name": "Execute Workflow",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        2540,
+        1120
+      ],
+      "typeVersion": 1.2,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow execution failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "52a25c65-4e4a-4419-a7cb-70c23fa7a5b7",
+      "name": "Execution Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        2120
+      ],
+      "webhookId": "8a5b39fb-80d6-474f-810a-7d3151647e8c",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow activation failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "d19b8ef7-b317-4d89-add1-9642955ad7c4",
+      "name": "Activation Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        2300
+      ],
+      "webhookId": "b38649fe-98bf-4b71-80cd-e800952e95b2",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow deactivation failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "e5e14dae-84e0-49c9-ad81-734c5f507123",
+      "name": "Deactivation Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        2480
+      ],
+      "webhookId": "516b2616-387f-4059-881c-1f41fe8a54de",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "filters": {
+          "activeWorkflows": false
+        },
+        "requestOptions": {}
+      },
+      "id": "fb6b35ed-e9ce-43a7-8e20-7c72c9761b74",
+      "name": "List Archived",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        940,
+        760
+      ],
+      "executeOnce": true,
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "075dd1e2-2580-4016-ba11-3b271049a718",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "935a0231-f6fc-479c-8918-281177c19695",
+      "name": "Only Archived",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1240,
+        760
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg = \"Archived Workflows Deleted:\\n\\n\"\nif ($('Archived List').first().json.name === null) {\n  return {\n    json: {\n      msg: \"No archived workflows.\"\n    }\n  }\n}\nfor (const item of $('Archived List').all()) {\n  msg = msg + (\"🗑\" + \"  \" + item.json.name + \"\\n\")\n}\nreturn {\n  json: {\n    msg: msg\n  }\n}"
+      },
+      "id": "0371d5e1-e077-4383-89e1-1eadd3d89b7a",
+      "name": "Archived Message",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2540,
+        760
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "={{ $('Archived Message').item.json.msg }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "40a5fb7d-e39c-4ec5-a7ad-c69a6b8620bb",
+      "name": "Cleanup",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        760
+      ],
+      "webhookId": "a48ea4b2-39a4-44d5-be6f-97c0029d9f3b",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0da97ee-d423-48a7-8c79-58c43969a539",
+              "name": "name",
+              "type": "string",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "id": "cba865ac-9909-4a1a-a6ae-58958135920c",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5f92da93-e9f0-4d92-a215-f52dbf0c7443",
+      "name": "Archived List",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1480,
+        760
+      ],
+      "typeVersion": 3.4,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Archived List').item.json.id }}"
+        },
+        "requestOptions": {}
+      },
+      "id": "5431f802-4817-4a41-9944-9a3763da79c9",
+      "name": "Delete Archived",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1720,
+        760
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "n8n export:workflow --backup --output=/home/node/backup/workflows"
+      },
+      "id": "9b6288ba-c96e-4ecd-91c8-07893ae923aa",
+      "name": "Backup Workflows",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        940,
+        580
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "n8n export:credentials --backup --decrypted --output=/home/node/backup/credentials"
+      },
+      "id": "1431ccf3-f174-4aba-816c-9af0d0680c36",
+      "name": "Backup Credentials",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        1240,
+        580
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "tar -czf /home/node/backup.tar.gz -C /home/node/backup workflows credentials"
+      },
+      "id": "395f9ae1-a37b-4f83-9dec-0cd926e459b3",
+      "name": "Backup Tarball",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        1480,
+        580
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "123456789",
+        "binaryData": true,
+        "additionalFields": {
+          "fileName": "backup.tar.gz"
+        }
+      },
+      "id": "e48a3bbe-aa35-48f3-8e41-2dac4505d579",
+      "name": "Backup",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        580
+      ],
+      "webhookId": "abecda49-24f5-4928-b98a-c4d850d0d2d6",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "rm -rf /home/node/backup /home/node/backup.tar.gz"
+      },
+      "id": "976fc7a0-1cb5-44ce-9562-ae4be714c287",
+      "name": "Cleanup Files",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        2840,
+        420
+      ],
+      "typeVersion": 1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/backup.tar.gz",
+        "options": {}
+      },
+      "id": "2a4410da-b5e3-4020-aa8c-1f4cc97fffaf",
+      "name": "Read File",
+      "type": "n8n-nodes-base.readWriteFile",
+      "position": [
+        2540,
+        580
+      ],
+      "typeVersion": 1,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Backup failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "9bf31a51-ee7e-4549-b5f5-4802083b48cb",
+      "name": "Backup Error",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2840,
+        1940
+      ],
+      "webhookId": "4c62b914-7d68-4520-bd82-0d169d1d84fa",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "# Telegram n8n Commander\nRemotely manage and operate your n8n instance from Telegram with powerful admin commands.\n\nThis workflow connects your n8n instance with a Telegram Bot, giving you remote control over key admin operations through simple chat commands.\n\n## Commands\n- List your workflows (**workflows**)\n\n- Execute a workflow (**execute** [name])\n\n- Activate/deactivate workflows (**activate** [name], **deactivate** [name])\n\n- List past executions (**executions** [name])\n\n- Permanently delete archived workflows (**cleanup**)\n\n- Create backups of all your workflows and credentials (**backup**)\n\n- Get help (**help**)\n\n- Get notified when a workflow fails and when n8n instance starts.\n\n## Notes\n- **execute**, **activate**, **deactivate**, and **executions** require the workflow name as argument.\n\n- To **execute** a workflow, it must have a trigger node of type \"When Executed by Another Workflow\".\n\n- To **activate** a workflow, it must have a trigger node that supports activation.\n\n- **backup** only works on self-hosted setups.\n\n- Your credentials will be decrypted in the backup file. Please take security precautions when using this file.\n\n- In each workflow that fails and you want to receive a warning, configure this workflow as Error Workflow in its settings.\n\n\n\n*(See the Setup note for instructions on how to set up this workflow.)*",
+        "height": 940,
+        "width": 680
+      },
+      "id": "5dd6b5e0-a78a-442e-aafd-4a71ad94423e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Setup\nTo set up this workflow you will need credentials for your Telegram bot and for your n8n API. You will need to edit all Telegram Nodes and n8n Nodes.\n\n## Credentials\nFirst of all, let's create the necessary credentials.\nYou can see instructions on how to create credentials [here.](https://docs.n8n.io/credentials/)\n\n### n8n API\n- Go to your n8n settings, in the sidebar go to n8n API.\n- Click on the Create an API Key button. Then you must give the key a name and save it. Your key will only be displayed at this point; copy it for the next steps.\n- Now we can create a credential for the n8n nodes. Create a new n8n API credential and use the key we just created. You will need to configure your server address as well.\n\n### Telegram Bot\n- First you need to have a Telegram bot and its token.\n- In your Telegram application, start a conversation with @BotFather and send him the command /newbot, follow the steps and then he will create your bot and present your token.\n- You will also need your Telegram user's ChatID/UserID. This way we can protect this workflow so that it only responds to you on Telegram. You can use @userinfobot for this, see instructions [here.](https://bigone.zendesk.com/hc/en-us/articles/360008014894-How-to-get-the-Telegram-user-ID#:~:text=1.,The%20Number%20ID)\n- Now in your n8n create a Telegram API type credential using your bot's token.\n\n## Nodes\nNow you have what you need to configure the nodes for this workflow.\n\n### n8n Nodes\n\n\n\n\n\n\n\n\n\n\n\n\n\nEdit each of these nodes and in the \"Credentials to connect with\" field select your n8n credential.\n\n### Telegram Nodes\n\n\n\n\n\n\n\n\n\n\n\n\n\nEdit each of these nodes and in the \"Credentials to connect with\" field select your telegram credential.\nIn the \"Chat ID\", \"Restrict to Chat IDs\" or \"Restrict to User IDs\" fields, enter your ChatID.\n\n\n\n**Your workflow is ready! Activate it and interact with your bot on Telegram!**",
+        "height": 1260,
+        "width": 680
+      },
+      "id": "8aaf652a-1a8c-4075-8951-5d9c2fc5eebd",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        1420
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": ".",
+        "additionalFields": {}
+      },
+      "id": "e63268d8-423e-4461-9154-329dd43c8f2d",
+      "name": "Telegram Nodes",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        40,
+        2380
+      ],
+      "webhookId": "5f1283bb-cd9f-4c4d-a062-0b7c939f855e",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1"
+        },
+        "requestOptions": {}
+      },
+      "id": "5f9b4003-9ee4-459b-b4b1-6bc12e7041c4",
+      "name": "n8n Nodes",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        40,
+        2120
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "f6a788ba-ddf3-4ff5-8a8f-82f9a6b6c5b0",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "position": [
+        940,
+        2300
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "732da136-33e9-47fa-9729-65afd9670f4d",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": "={{ $json.execution.mode }}",
+              "rightValue": "manual"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6cf8f89e-13ea-4d82-93ec-6329e2965c9f",
+      "name": "If not manual exec",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1160,
+        2300
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "events": [
+          "init"
+        ]
+      },
+      "id": "3094b74f-f64d-46db-8365-e230902774ba",
+      "name": "n8n Started Trigger",
+      "type": "n8n-nodes-base.n8nTrigger",
+      "position": [
+        940,
+        2480
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Execution failed!\n{{ $now.format(\"dd/MM/yyyy HH:mm:ss\") }}\n\n\nWorkflow: \n{{ $json.workflow.name }}\n\nExecution Id:\n{{ $json.execution.id }}\n\nNode: \n{{ $json.execution.lastNodeExecuted }}\n\nError: \n{{ $json.execution.error.message }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "56037d2a-d11e-4947-a973-fae1b0d305d4",
+      "name": "Workflow Error Msg",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1420,
+        2300
+      ],
+      "webhookId": "a2fee1cf-d8f5-4c51-aed4-9fa30e0251c5",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❗ Instance started!\n{{ $now.format(\"dd/MM/yyyy HH:mm:ss\") }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3e2d4b5d-6633-4b27-8725-bfe2730a0dd0",
+      "name": "n8n Started Msg",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1420,
+        2480
+      ],
+      "webhookId": "a2fee1cf-d8f5-4c51-aed4-9fa30e0251c5",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "chatIds": "123456789",
+          "userIds": "123456789"
+        }
+      },
+      "id": "cbb2305a-1b63-4d30-8b79-0902e6c67d18",
+      "name": "Telegram Trigger1",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -1880,
+        -1220
+      ],
+      "webhookId": "0eea20d1-fab3-416e-8f22-6f975f79650b",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ce8eebdd-c313-4444-a1bd-dcde56619a0d",
+              "name": "command",
+              "type": "string",
+              "value": "={{\n  $json.message.text\n    .toLowerCase()\n    .replace(/^\\//, '')\n    .split(/ (.+)/)[0]\n  || ''\n}}"
+            },
+            {
+              "id": "834f7369-52f1-4df3-bfcb-754be0bb11e0",
+              "name": "arg1",
+              "type": "string",
+              "value": "={{\n  $json.message.text\n    .toLowerCase()\n    .replace(/^\\//, '')\n    .split(/ (.+)/)[1]\n  || ''\n}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "10ee1af7-f97e-48a3-8f43-9f1b58e5ea16",
+      "name": "Cmd Parse1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1660,
+        -1220
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "d5b702ed-dcaf-461a-a148-04b231d55617",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "start"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "start"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "e9ac521f-9416-4756-9f3c-9be5dd5a5ccb",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "help"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "help"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "e20bdf17-2418-43ad-8b37-a4a5f4e46b2a",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "backup"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "backup"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "b1dfbc98-aac0-483c-a386-79180e96d0bb",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "cleanup"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "cleanup"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "2524d410-a971-4a1f-b8a1-c30d363c6be6",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "workflows"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "workflows"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "a27bd761-d2d6-4768-9449-ca5380db38ce",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "execute"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "execute"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "593d46f5-40ce-468a-b834-c2376dca1684",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "activate"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "activate"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "0ff85afd-02f8-42ad-b892-59b3dcf025a9",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "deactivate"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "deactivate"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": false,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "f5dee847-2c55-427f-a1f9-3f038f19e30e",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Cmd Parse1').item.json.command }}",
+                    "rightValue": "executions"
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "executions"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "ignoreCase": true,
+          "renameFallbackOutput": "Error"
+        }
+      },
+      "id": "41788cf5-884f-49eb-af70-f0b2f4346d27",
+      "name": "Cmd Switch1",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -1440,
+        -1360
+      ],
+      "executeOnce": false,
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse1').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ea1b47d8-0970-45ae-9d32-180cdcb6ce3d",
+      "name": "Execute Arg1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -1080,
+        -1200
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "operation": "activate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "requestOptions": {}
+      },
+      "id": "6578f9b0-3294-4344-8d8e-f0868f636827",
+      "name": "Activate Workflow1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        520,
+        -1020
+      ],
+      "typeVersion": 1,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "deactivate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "requestOptions": {}
+      },
+      "id": "29c82899-62d2-4ee4-91ba-24e5df62f325",
+      "name": "Deactivate Workflow1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        520,
+        -840
+      ],
+      "typeVersion": 1,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse1').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "15bf40c9-a010-4e16-a98e-00870f4ebce8",
+      "name": "Activate Arg1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -1080,
+        -1020
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse1').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ffdc5db5-bcfc-43b0-a349-7f2d4387a134",
+      "name": "Deactivate Arg1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -1080,
+        -840
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ This command requires an argument!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "5b405c90-923c-4308-b6e2-61521e2a7397",
+      "name": "Arg Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -780,
+        -380
+      ],
+      "webhookId": "d1b9cd05-5507-45aa-8ee8-5c19eccfc76d",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Invalid command!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "bb47de0d-668f-4660-88ee-3623023fac6f",
+      "name": "Cmd Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -1080,
+        -380
+      ],
+      "webhookId": "033ee218-b4e1-420b-bf73-592029ba53a1",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=✅ Workflow executed.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "c8469c02-54c5-44b0-8b58-fafd0121fccf",
+      "name": "Executed1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -1200
+      ],
+      "webhookId": "93483e2c-71d5-4733-9572-b205551fff74",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=✅ Workflow activated.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "4291ee75-1cbc-4861-bb6a-2f0f99575fcc",
+      "name": "Activated1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -1020
+      ],
+      "webhookId": "a26128ae-81be-4d1a-bf6d-bf38ef54816b",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=✅ Workflow deactivated.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ffaf1ed2-4579-456e-852b-469d0f351854",
+      "name": "Deactivated1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -840
+      ],
+      "webhookId": "51e51fa0-93b9-4c39-8896-f9d72df898e4",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow name not found!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "bc346bf0-e94f-4957-8600-7f36979c2483",
+      "name": "Workflow Name Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        0,
+        -380
+      ],
+      "webhookId": "76b885b4-302a-4033-89f5-2e3b5c9f6f8c",
+      "executeOnce": true,
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "fafd6172-5e59-4d63-9e17-71d71af6c084",
+      "name": "List Workflows 5",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -780,
+        -1200
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "7a858f24-3902-47bb-8852-dfd95bb2eb03",
+      "name": "List Workflows 6",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -780,
+        -1020
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "7f975c00-90dd-47f6-9e27-4be0d432e387",
+      "name": "List Workflows 7",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -780,
+        -840
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "43882ae1-cf25-46d2-9702-7035590b517c",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.active }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "32fb6d8e-9c62-45b0-9d74-d2fcf931c044",
+      "name": "If Inactive1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        0,
+        -1020
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "43882ae1-cf25-46d2-9702-7035590b517c",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.active }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7923e519-cddb-4240-859b-4d60ce047fe2",
+      "name": "If Active1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        0,
+        -840
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow is already active!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "a41db8f0-6cad-4060-9279-e1b37b66bc9b",
+      "name": "Workflow Active Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        300,
+        -380
+      ],
+      "webhookId": "0d7e6070-983e-47c1-8713-39359d6a41db",
+      "executeOnce": true,
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow is already inactive!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "6cbdbbe0-f80c-4d83-b0f3-69a0b4e51293",
+      "name": "Workflow Inactive Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        300,
+        -200
+      ],
+      "webhookId": "be3c092d-c053-4d15-9c64-4f8bb38ddf5c",
+      "executeOnce": true,
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "f9a50baf-1600-417a-8e03-60e955751d9d",
+      "name": "List Workflows 8",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -1080,
+        -1380
+      ],
+      "executeOnce": true,
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=My commands are:\n\n\n➖ help\nList of commands.\n\n➖ cleanup\nDeletes all archived workflows.\n\n➖ backup\nBackup workflows and credentials.\n\n➖ workflows\nList all workflows.\n\n➖ execute <workflow-name>\nExecute a workflow.\n\n➖ activate <workflow-name>\nActivate a workflow.\n\n➖ deactivate <workflow-name>\nDeactivate a workflow.\n\n➖ executions <workflow-name>\nList last executions.\n\n\n💡 To execute a workflow, it must have a trigger node of type \"When Executed by Another Workflow\". To activate a workflow, it must have a trigger node that supports activation.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "5058ca88-3f27-4879-88c9-d0dba48aaa6c",
+      "name": "Help1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -1080,
+        -1940
+      ],
+      "webhookId": "2f993ec0-a72e-4bf3-a5c0-8d31742d80e1",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "43a779d0-acf5-49d8-920a-590af435b7d1",
+              "name": "name",
+              "type": "string",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "id": "09a74ca9-26fe-490f-b4db-c9c40200e2a5",
+              "name": "active",
+              "type": "boolean",
+              "value": "={{ $json.active }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "57e82d68-43cb-4953-a279-cf527536e76b",
+      "name": "Workflow List1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -540,
+        -1380
+      ],
+      "typeVersion": 3.4,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "={{ $json.msg }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "b8521670-4563-44e5-be77-acb0421f065c",
+      "name": "Workflows1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -1380
+      ],
+      "webhookId": "5ae7f6bf-d7b9-4f2a-8a99-2b93109779ff",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e212409c-a112-456d-930a-33cab47de466",
+      "name": "Workflow Found ",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -300,
+        -1200
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3aa64b97-ca38-44b3-8f3e-f48972c41bb1",
+      "name": "Workflow Found 5",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -300,
+        -1020
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "69de8aae-4fb8-4367-b5dc-bcfd943e27e5",
+      "name": "Workflow Found 6",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -300,
+        -840
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "075dd1e2-2580-4016-ba11-3b271049a718",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6813b8f6-676f-4450-875a-e44099446917",
+      "name": "Not Archived1",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -780,
+        -1380
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Execute Arg1').item.json.arg1 }}"
+            },
+            {
+              "id": "83bc1669-a58f-45c9-a6f3-4d3a94d72fa5",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9c20fe46-2b41-4a7c-af02-152c853e4efc",
+      "name": "Find Workflow ",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -540,
+        -1200
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Activate Arg1').item.json.arg1 }}"
+            },
+            {
+              "id": "ca761ff5-d7ac-4c11-b844-c10d34062fc4",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "18ceaec8-fb39-4cf2-9d3d-9dd3a3f6f7c3",
+      "name": "Find Workflow 5",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -540,
+        -1020
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Deactivate Arg1').item.json.arg1 }}"
+            },
+            {
+              "id": "6eec9d79-2ad2-40af-8baf-38ab772f6f0b",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0e7e2a45-80f6-4e90-9ee4-afc0836950d0",
+      "name": "Find Workflow 6",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -540,
+        -840
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d760c8fa-65bc-4ef5-a0b0-9bf1ef711db6",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $('Cmd Parse1').item.json.arg1 }}",
+              "rightValue": "="
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7dae5e48-f8de-4d55-a835-5fc777782a06",
+      "name": "Executions Arg1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -1080,
+        -660
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "filters": {},
+        "requestOptions": {}
+      },
+      "id": "f82921e2-a0d1-4807-9f05-529ad8cae685",
+      "name": "List Workflows 9",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -780,
+        -660
+      ],
+      "executeOnce": true,
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "278fa2d1-3d8a-48b3-b898-0d81779bcb11",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.name.toLowerCase() }}",
+              "rightValue": "={{ $('Executions Arg1').item.json.arg1 }}"
+            },
+            {
+              "id": "6eec9d79-2ad2-40af-8baf-38ab772f6f0b",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7abdadf6-441c-4be0-8e39-6f5910149cd2",
+      "name": "Find Workflow 7",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -540,
+        -660
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "18dab2ca-c722-4d2f-8d91-f24a12e28d91",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isEmpty() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1c401426-6231-43ad-9a91-868ce23e9fad",
+      "name": "Workflow Found 7",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -300,
+        -660
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "resource": "execution",
+        "limit": 50,
+        "filters": {
+          "workflowId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $json.id }}"
+          }
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "6f440ee0-8252-44e2-9b59-0608131dd59e",
+      "name": "List Workflow Executions1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        0,
+        -660
+      ],
+      "executeOnce": true,
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ec10b59-a57e-4b6d-a13a-9d2674fb39b3",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "18038ae8-3a18-4c6b-b97a-1f222bbe2547",
+              "name": "mode",
+              "type": "string",
+              "value": "={{ $json.mode }}"
+            },
+            {
+              "id": "90484316-e73a-41ff-9cb0-dbdfeaf6da11",
+              "name": "started",
+              "type": "string",
+              "value": "={{ $json.startedAt?.toDateTime().toLocal().format(\"dd/MM/yyyy HH:mm\") }}"
+            },
+            {
+              "id": "a56880cb-3c81-48fc-bd96-ec018e43ec5e",
+              "name": "workflow",
+              "type": "string",
+              "value": "={{ $('Workflow Found 7').item.json.name }}"
+            },
+            {
+              "id": "d89a11d0-2abd-4fad-ba64-510e9d922158",
+              "name": "finished",
+              "type": "boolean",
+              "value": "={{ $json.finished }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1b7baa29-b53c-477a-9b08-fbc614ab2899",
+      "name": "Executions Fields1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        300,
+        -660
+      ],
+      "typeVersion": 3.4,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "={{ $json.msg }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "41c4fa6b-15ca-4888-b389-61c3760dfae5",
+      "name": "Executions1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -660
+      ],
+      "webhookId": "43b75945-8442-4e0a-b848-afae7a4d0d35",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg = \"Executions:\\n\\n\"\nif ($input.first().json.id === null) {\n  return {\n    json: {\n      msg: \"No executions.\"\n    }\n  }\n}\nfor (const item of $input.all()) {\n  let status = item.json.finished ? '✅' : '❌'\n  let mode = item.json.mode === 'manual' ? ' (manual)' : ''\n  msg = msg + (status + \" \" + item.json.workflow + \" - \" + item.json.id + \" - \" + item.json.started + mode + \"\\n\")\n}\nreturn {\n  json: {\n    msg: msg\n  }\n}"
+      },
+      "id": "e826e876-4855-4b72-aed8-09b7d7699b92",
+      "name": "Executions Message1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        520,
+        -660
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg = \"Workflows:\\n\\n\"\nif ($input.first().json.name === null) {\n  return {\n    json: {\n      msg: \"No workflows.\"\n    }\n  }\n}\nfor (const item of $input.all()) {\n  let status = item.json.active ? '🟢' : '⚫'\n  msg = msg + (status + \"  \" + item.json.name + \"\\n\")\n}\nreturn {\n  json: {\n    msg: msg\n  }\n}"
+      },
+      "id": "6bcdf5dd-2627-4b2e-ad40-e13d1e03d51d",
+      "name": "Workflows Message1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        520,
+        -1380
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}",
+          "cachedResultName": "={{ $json.id }}"
+        },
+        "workflowInputs": {
+          "value": {},
+          "schema": [],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "93e35817-79ac-4cf9-bd32-5b75c72e56ca",
+      "name": "Execute Workflow1",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        520,
+        -1200
+      ],
+      "typeVersion": 1.2,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow execution failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "6b5974ae-95e3-4899-8de5-934d7682b5d4",
+      "name": "Execution Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -200
+      ],
+      "webhookId": "8a5b39fb-80d6-474f-810a-7d3151647e8c",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow activation failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "282f88a9-4264-4886-b006-7abd04b0d0c1",
+      "name": "Activation Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -20
+      ],
+      "webhookId": "b38649fe-98bf-4b71-80cd-e800952e95b2",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Workflow deactivation failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "cee0a1c9-ed0d-442e-9d4f-56e4be6d93f3",
+      "name": "Deactivation Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        160
+      ],
+      "webhookId": "516b2616-387f-4059-881c-1f41fe8a54de",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "filters": {
+          "activeWorkflows": false
+        },
+        "requestOptions": {}
+      },
+      "id": "e6453da0-1eaa-438c-afa3-6471b7b73152",
+      "name": "List Archived1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -1080,
+        -1560
+      ],
+      "executeOnce": true,
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "075dd1e2-2580-4016-ba11-3b271049a718",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isArchived }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "34ef29bd-6e66-4004-853e-284e02894954",
+      "name": "Only Archived1",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        -780,
+        -1560
+      ],
+      "typeVersion": 2.2,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "let msg = \"Archived Workflows Deleted:\\n\\n\"\nif ($('Archived List1').first().json.name === null) {\n  return {\n    json: {\n      msg: \"No archived workflows.\"\n    }\n  }\n}\nfor (const item of $('Archived List1').all()) {\n  msg = msg + (\"🗑\" + \"  \" + item.json.name + \"\\n\")\n}\nreturn {\n  json: {\n    msg: msg\n  }\n}"
+      },
+      "id": "355a3541-fadc-4f45-ad34-fbeb8cb10a98",
+      "name": "Archived Message1",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        520,
+        -1560
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "={{ $('Archived Message1').item.json.msg }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "66de0ca7-f0e9-49d0-8acf-938973de553a",
+      "name": "Cleanup1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -1560
+      ],
+      "webhookId": "a48ea4b2-39a4-44d5-be6f-97c0029d9f3b",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c0da97ee-d423-48a7-8c79-58c43969a539",
+              "name": "name",
+              "type": "string",
+              "value": "={{ $json.name }}"
+            },
+            {
+              "id": "cba865ac-9909-4a1a-a6ae-58958135920c",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ca4be3c1-a000-440a-a726-56e0c6664da9",
+      "name": "Archived List1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -540,
+        -1560
+      ],
+      "typeVersion": 3.4,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Archived List1').item.json.id }}"
+        },
+        "requestOptions": {}
+      },
+      "id": "63e1cb4c-f992-4f86-8a7b-8ac1886bf615",
+      "name": "Delete Archived1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -300,
+        -1560
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "n8n export:workflow --backup --output=/home/node/backup/workflows"
+      },
+      "id": "7093ab20-83aa-4a1a-9223-f5bd58c613a8",
+      "name": "Backup Workflows1",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        -1080,
+        -1740
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "n8n export:credentials --backup --decrypted --output=/home/node/backup/credentials"
+      },
+      "id": "0d67a157-9241-48e0-b48d-95c8f500013b",
+      "name": "Backup Credentials1",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        -780,
+        -1740
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "tar -czf /home/node/backup.tar.gz -C /home/node/backup workflows credentials"
+      },
+      "id": "08c81e9f-bed8-42cf-b30d-57507d377ee2",
+      "name": "Backup Tarball1",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        -540,
+        -1740
+      ],
+      "typeVersion": 1,
+      "alwaysOutputData": false,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "123456789",
+        "binaryData": true,
+        "additionalFields": {
+          "fileName": "backup.tar.gz"
+        }
+      },
+      "id": "32cf34c4-a966-4af9-9e0d-8e011a501766",
+      "name": "Backup1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -1740
+      ],
+      "webhookId": "abecda49-24f5-4928-b98a-c4d850d0d2d6",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "command": "rm -rf /home/node/backup /home/node/backup.tar.gz"
+      },
+      "id": "adba01f1-f755-47cc-ad4a-bd172f2c4fce",
+      "name": "Cleanup Files1",
+      "type": "n8n-nodes-base.executeCommand",
+      "position": [
+        820,
+        -1900
+      ],
+      "typeVersion": 1,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/backup.tar.gz",
+        "options": {}
+      },
+      "id": "7c29a5c6-67f7-4796-bd5f-398db0b65e7a",
+      "name": "Read File1",
+      "type": "n8n-nodes-base.readWriteFile",
+      "position": [
+        520,
+        -1740
+      ],
+      "typeVersion": 1,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Backup failed!",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "bfefd85c-55a6-41d8-90fb-601fcc20bd70",
+      "name": "Backup Error1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        820,
+        -380
+      ],
+      "webhookId": "4c62b914-7d68-4520-bd82-0d169d1d84fa",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "# Telegram n8n Commander\nRemotely manage and operate your n8n instance from Telegram with powerful admin commands.\n\nThis workflow connects your n8n instance with a Telegram Bot, giving you remote control over key admin operations through simple chat commands.\n\n## Commands\n- List your workflows (**workflows**)\n\n- Execute a workflow (**execute** [name])\n\n- Activate/deactivate workflows (**activate** [name], **deactivate** [name])\n\n- List past executions (**executions** [name])\n\n- Permanently delete archived workflows (**cleanup**)\n\n- Create backups of all your workflows and credentials (**backup**)\n\n- Get help (**help**)\n\n- Get notified when a workflow fails and when n8n instance starts.\n\n## Notes\n- **execute**, **activate**, **deactivate**, and **executions** require the workflow name as argument.\n\n- To **execute** a workflow, it must have a trigger node of type \"When Executed by Another Workflow\".\n\n- To **activate** a workflow, it must have a trigger node that supports activation.\n\n- **backup** only works on self-hosted setups.\n\n- Your credentials will be decrypted in the backup file. Please take security precautions when using this file.\n\n- In each workflow that fails and you want to receive a warning, configure this workflow as Error Workflow in its settings.\n\n\n\n*(See the Setup note for instructions on how to set up this workflow.)*",
+        "height": 940,
+        "width": 680
+      },
+      "id": "4ce82d6b-92c9-4a77-8570-c8c2115c98c3",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2020,
+        -2320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "# Setup\nTo set up this workflow you will need credentials for your Telegram bot and for your n8n API. You will need to edit all Telegram Nodes and n8n Nodes.\n\n## Credentials\nFirst of all, let's create the necessary credentials.\nYou can see instructions on how to create credentials [here.](https://docs.n8n.io/credentials/)\n\n### n8n API\n- Go to your n8n settings, in the sidebar go to n8n API.\n- Click on the Create an API Key button. Then you must give the key a name and save it. Your key will only be displayed at this point; copy it for the next steps.\n- Now we can create a credential for the n8n nodes. Create a new n8n API credential and use the key we just created. You will need to configure your server address as well.\n\n### Telegram Bot\n- First you need to have a Telegram bot and its token.\n- In your Telegram application, start a conversation with @BotFather and send him the command /newbot, follow the steps and then he will create your bot and present your token.\n- You will also need your Telegram user's ChatID/UserID. This way we can protect this workflow so that it only responds to you on Telegram. You can use @userinfobot for this, see instructions [here.](https://bigone.zendesk.com/hc/en-us/articles/360008014894-How-to-get-the-Telegram-user-ID#:~:text=1.,The%20Number%20ID)\n- Now in your n8n create a Telegram API type credential using your bot's token.\n\n## Nodes\nNow you have what you need to configure the nodes for this workflow.\n\n### n8n Nodes\n\n\n\n\n\n\n\n\n\n\n\n\n\nEdit each of these nodes and in the \"Credentials to connect with\" field select your n8n credential.\n\n### Telegram Nodes\n\n\n\n\n\n\n\n\n\n\n\n\n\nEdit each of these nodes and in the \"Credentials to connect with\" field select your telegram credential.\nIn the \"Chat ID\", \"Restrict to Chat IDs\" or \"Restrict to User IDs\" fields, enter your ChatID.\n\n\n\n**Your workflow is ready! Activate it and interact with your bot on Telegram!**",
+        "height": 1260,
+        "width": 680
+      },
+      "id": "87b1042f-0359-4d1a-b776-ec97d33e680e",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2020,
+        -900
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": ".",
+        "additionalFields": {}
+      },
+      "id": "bfab2873-0cf7-4a69-a07e-f650541ab089",
+      "name": "Telegram Nodes1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -1980,
+        60
+      ],
+      "webhookId": "5f1283bb-cd9f-4c4d-a062-0b7c939f855e",
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1"
+        },
+        "requestOptions": {}
+      },
+      "id": "72588d66-c3e7-4ea9-b010-25c59d34b4ec",
+      "name": "n8n Nodes1",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        -1980,
+        -200
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "732da136-33e9-47fa-9729-65afd9670f4d",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": "={{ $json.execution.mode }}",
+              "rightValue": "manual"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ea7b6f43-1911-48bf-b747-a6cb1732e237",
+      "name": "If not manual exec1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -860,
+        -20
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "events": [
+          "init"
+        ]
+      },
+      "id": "23ffd36c-7e97-4e4c-9435-8b925677b884",
+      "name": "n8n Started Trigger1",
+      "type": "n8n-nodes-base.n8nTrigger",
+      "position": [
+        -1080,
+        160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❌ Execution failed!\n{{ $now.format(\"dd/MM/yyyy HH:mm:ss\") }}\n\n\nWorkflow: \n{{ $json.workflow.name }}\n\nExecution Id:\n{{ $json.execution.id }}\n\nNode: \n{{ $json.execution.lastNodeExecuted }}\n\nError: \n{{ $json.execution.error.message }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "ea944d1b-c48d-4649-9e9e-304d41cd80fa",
+      "name": "Workflow Error Msg1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -600,
+        -20
+      ],
+      "webhookId": "a2fee1cf-d8f5-4c51-aed4-9fa30e0251c5",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "chatId": "123456789",
+        "text": "=❗ Instance started!\n{{ $now.format(\"dd/MM/yyyy HH:mm:ss\") }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "10855eb9-ca32-4d4e-8aee-48c413c8e8b8",
+      "name": "n8n Started Msg1",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -600,
+        160
+      ],
+      "webhookId": "a2fee1cf-d8f5-4c51-aed4-9fa30e0251c5",
+      "typeVersion": 1.2,
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Cmd Parse": {
+      "main": [
+        [
+          {
+            "node": "Cmd Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Active": {
+      "main": [
+        [
+          {
+            "node": "Deactivate Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Inactive Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read File": {
+      "main": [
+        [
+          {
+            "node": "Backup",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cleanup Files",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cmd Switch": {
+      "main": [
+        [
+          {
+            "node": "Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Archived",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Workflows ",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Arg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Activate Arg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deactivate Arg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Executions Arg",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cmd Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Arg": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Inactive": {
+      "main": [
+        [
+          {
+            "node": "Activate Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Active Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Activate Arg": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not Archived": {
+      "main": [
+        [
+          {
+            "node": "Workflow List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archived List": {
+      "main": [
+        [
+          {
+            "node": "Delete Archived",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "If not manual exec",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Archived": {
+      "main": [
+        [
+          {
+            "node": "Only Archived",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Only Archived": {
+      "main": [
+        [
+          {
+            "node": "Archived List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow List": {
+      "main": [
+        [
+          {
+            "node": "Workflows Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Tarball": {
+      "main": [
+        [
+          {
+            "node": "Read File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deactivate Arg": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executions Arg": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Archived": {
+      "main": [
+        [
+          {
+            "node": "Archived Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow 1": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow 2": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow 3": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow 4": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows ": {
+      "main": [
+        [
+          {
+            "node": "Not Archived",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archived Message": {
+      "main": [
+        [
+          {
+            "node": "Cleanup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Workflows": {
+      "main": [
+        [
+          {
+            "node": "Backup Credentials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow": {
+      "main": [
+        [
+          {
+            "node": "Executed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execution Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 1": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 2": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 3": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 4": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow 4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Cmd Parse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found 1": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found 2": {
+      "main": [
+        [
+          {
+            "node": "If Inactive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found 3": {
+      "main": [
+        [
+          {
+            "node": "If Active",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found 4": {
+      "main": [
+        [
+          {
+            "node": "List Workflow Executions",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Activate Workflow": {
+      "main": [
+        [
+          {
+            "node": "Activated",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Activation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executions Fields": {
+      "main": [
+        [
+          {
+            "node": "Executions Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflows Message": {
+      "main": [
+        [
+          {
+            "node": "Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Credentials": {
+      "main": [
+        [
+          {
+            "node": "Backup Tarball",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executions Message": {
+      "main": [
+        [
+          {
+            "node": "Executions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If not manual exec": {
+      "main": [
+        [
+          {
+            "node": "Workflow Error Msg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deactivate Workflow": {
+      "main": [
+        [
+          {
+            "node": "Deactivated",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deactivation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n Started Trigger": {
+      "main": [
+        [
+          {
+            "node": "n8n Started Msg",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflow Executions": {
+      "main": [
+        [
+          {
+            "node": "Executions Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Cmd Parse1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cmd Parse1": {
+      "main": [
+        [
+          {
+            "node": "Cmd Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cmd Switch1": {
+      "main": [
+        [
+          {
+            "node": "Help1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Help1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup Workflows1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Archived1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "List Workflows 8",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execute Arg1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Activate Arg1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deactivate Arg1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Executions Arg1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cmd Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Arg1": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Activate Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Activated1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Activation Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deactivate Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Deactivated1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Deactivation Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Activate Arg1": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Deactivate Arg1": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 7",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 5": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 6": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 7": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow 6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Inactive1": {
+      "main": [
+        [
+          {
+            "node": "Activate Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Active Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If Active1": {
+      "main": [
+        [
+          {
+            "node": "Deactivate Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Inactive Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 8": {
+      "main": [
+        [
+          {
+            "node": "Not Archived1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow List1": {
+      "main": [
+        [
+          {
+            "node": "Workflows Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found ": {
+      "main": [
+        [
+          {
+            "node": "Execute Workflow1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found 5": {
+      "main": [
+        [
+          {
+            "node": "If Inactive1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found 6": {
+      "main": [
+        [
+          {
+            "node": "If Active1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Not Archived1": {
+      "main": [
+        [
+          {
+            "node": "Workflow List1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow ": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow 5": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow 6": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found 6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executions Arg1": {
+      "main": [
+        [
+          {
+            "node": "List Workflows 9",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Arg Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflows 9": {
+      "main": [
+        [
+          {
+            "node": "Find Workflow 7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Workflow 7": {
+      "main": [
+        [
+          {
+            "node": "Workflow Found 7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Found 7": {
+      "main": [
+        [
+          {
+            "node": "List Workflow Executions1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Workflow Name Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Workflow Executions1": {
+      "main": [
+        [
+          {
+            "node": "Executions Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executions Fields1": {
+      "main": [
+        [
+          {
+            "node": "Executions Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executions Message1": {
+      "main": [
+        [
+          {
+            "node": "Executions1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflows Message1": {
+      "main": [
+        [
+          {
+            "node": "Workflows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Workflow1": {
+      "main": [
+        [
+          {
+            "node": "Executed1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Execution Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Archived1": {
+      "main": [
+        [
+          {
+            "node": "Only Archived1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Only Archived1": {
+      "main": [
+        [
+          {
+            "node": "Archived List1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archived Message1": {
+      "main": [
+        [
+          {
+            "node": "Cleanup1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archived List1": {
+      "main": [
+        [
+          {
+            "node": "Delete Archived1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Archived1": {
+      "main": [
+        [
+          {
+            "node": "Archived Message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Workflows1": {
+      "main": [
+        [
+          {
+            "node": "Backup Credentials1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Credentials1": {
+      "main": [
+        [
+          {
+            "node": "Backup Tarball1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Tarball1": {
+      "main": [
+        [
+          {
+            "node": "Read File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read File1": {
+      "main": [
+        [
+          {
+            "node": "Backup1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Cleanup Files1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup Error1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If not manual exec1": {
+      "main": [
+        [
+          {
+            "node": "Workflow Error Msg1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n Started Trigger1": {
+      "main": [
+        [
+          {
+            "node": "n8n Started Msg1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "b98b4a92-2b74-4b13-9afb-6d5abde0e086",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-21T17:08:32.249Z",
+      "updatedAt": "2025-07-21T17:08:32.249Z",
+      "role": "workflow:owner",
+      "workflowId": "lKGu7ra4ZKk2lqJZ",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

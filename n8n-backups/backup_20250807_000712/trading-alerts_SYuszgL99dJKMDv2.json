@@ -1,0 +1,527 @@
+{
+  "createdAt": "2025-08-07T03:13:50.670Z",
+  "updatedAt": "2025-08-07T03:45:06.000Z",
+  "id": "SYuszgL99dJKMDv2",
+  "name": "trading-alerts",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trading-alerts",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "c2deb33e-459a-4d96-8de4-c16dfda096ed",
+      "name": "Trading Bot Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -840,
+        700
+      ],
+      "webhookId": "trading-bot-alerts"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event_type}}",
+              "value2": "trade_executed"
+            }
+          ]
+        }
+      },
+      "id": "5981ae21-9316-492b-b361-bce9c6b26310",
+      "name": "Trade Executed Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event_type}}",
+              "value2": "portfolio_alert"
+            }
+          ]
+        }
+      },
+      "id": "5bc53663-0b90-44f8-a315-d0a7ace9c3bc",
+      "name": "Portfolio Alert Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -580,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#trading-alerts",
+        "text": "🚀 **Trade Executed**\n\n📊 **Symbol:** {{$json.data.symbol}}\n💰 **Action:** {{$json.data.action | upper}}\n📈 **Shares:** {{$json.data.shares}}\n💵 **Price:** ${{$json.data.price}}\n⏰ **Time:** {{$json.data.timestamp}}\n\n{{$json.data.reasoning ? \"🤖 **AI Reasoning:** \" + $json.data.reasoning : \"\"}}",
+        "otherOptions": {},
+        "attachments": []
+      },
+      "id": "3afd9779-f747-4336-a865-98f2f6940761",
+      "name": "Slack Trade Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        140,
+        100
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "ruE6Soqc8nwbIh56",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#trading-alerts",
+        "text": "⚠️ **Portfolio Alert**\n\n🎯 **Alert Type:** {{$json.data.alert_type}}\n📊 **Message:** {{$json.data.message}}\n🔥 **Severity:** {{$json.data.severity}}/5\n⏰ **Time:** {{$json.timestamp}}\n\n{{$json.data.affected_positions ? \"📈 **Affected Positions:** \" + $json.data.affected_positions.join(\", \") : \"\"}}",
+        "otherOptions": {},
+        "attachments": []
+      },
+      "id": "eab312f4-837f-4a42-a2ab-e561f3f712b9",
+      "name": "Slack Portfolio Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        600
+      ],
+      "credentials": {
+        "slackApi": {
+          "id": "ruE6Soqc8nwbIh56",
+          "name": "Slack account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "webhookUri": "{{$node[\"Discord Webhook URL\"].json[\"webhook_url\"]}}",
+        "text": "🚀 **Trade Executed**\\n\\n📊 **Symbol:** {{$json.data.symbol}}\\n💰 **Action:** {{$json.data.action | upper}}\\n📈 **Shares:** {{$json.data.shares}}\\n💵 **Price:** ${{$json.data.price}}\\n⏰ **Time:** {{$json.data.timestamp}}",
+        "options": {}
+      },
+      "id": "7f3cd9ab-d34d-4e08-b581-df25cfb43100",
+      "name": "Discord Trade Alert",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1,
+      "position": [
+        140,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "webhookUri": "{{$node[\"Discord Webhook URL\"].json[\"webhook_url\"]}}",
+        "text": "⚠️ **Portfolio Alert**\\n\\n🎯 **Alert Type:** {{$json.data.alert_type}}\\n📊 **Message:** {{$json.data.message}}\\n🔥 **Severity:** {{$json.data.severity}}/5\\n⏰ **Time:** {{$json.timestamp}}",
+        "options": {}
+      },
+      "id": "c28cd10a-a243-4f3b-b508-491410b53baf",
+      "name": "Discord Portfolio Alert",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        1000
+      ]
+    },
+    {
+      "parameters": {
+        "fromEmail": "guillaumebolivard@gmail.com",
+        "toEmail": "guillaumebolivard@gmail.com",
+        "subject": "Trading Bot Alert: {{$json.data.symbol ? $json.data.symbol + \" Trade\" : \"Portfolio Alert\"}}",
+        "text": "Trading Bot Alert\n\nEvent Type: {{$json.event_type}}\nTimestamp: {{$json.timestamp}}\n\n{{$json.data.symbol ? \"Symbol: \" + $json.data.symbol + \"\\n\" : \"\"}}{{$json.data.action ? \"Action: \" + $json.data.action + \"\\n\" : \"\"}}{{$json.data.shares ? \"Shares: \" + $json.data.shares + \"\\n\" : \"\"}}{{$json.data.price ? \"Price: $\" + $json.data.price + \"\\n\" : \"\"}}{{$json.data.message ? \"Message: \" + $json.data.message + \"\\n\" : \"\"}}{{$json.data.reasoning ? \"AI Reasoning: \" + $json.data.reasoning : \"\"}}",
+        "options": {}
+      },
+      "id": "606ff650-0980-4e12-9223-567cc45f5daf",
+      "name": "Email Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [
+        -60,
+        1200
+      ],
+      "webhookId": "3407827c-35cb-423d-847b-ca9a3bbb0994",
+      "credentials": {
+        "smtp": {
+          "id": "yhSoOI5Ew9dqvjsT",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{$node[\"Telegram Config\"].json[\"chat_id\"]}}",
+        "text": "🚀 *Trade Executed*\\n\\n📊 *Symbol:* {{$json.data.symbol}}\\n💰 *Action:* {{$json.data.action | upper}}\\n📈 *Shares:* {{$json.data.shares}}\\n💵 *Price:* ${{$json.data.price}}\\n⏰ *Time:* {{$json.data.timestamp}}\\n\\n{{$json.data.reasoning ? \"🤖 *AI Reasoning:* \" + $json.data.reasoning : \"\"}}",
+        "additionalFields": {}
+      },
+      "id": "d6ee8739-44fb-4896-94ca-6287ce1d3910",
+      "name": "Telegram Trade Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        140,
+        300
+      ],
+      "webhookId": "70fcad0d-f251-4645-814e-67f975fd8a34",
+      "credentials": {
+        "telegramApi": {
+          "id": "o8wPC2tglpgGkQ5J",
+          "name": "trading"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{$node[\"Telegram Config\"].json[\"chat_id\"]}}",
+        "text": "⚠️ *Portfolio Alert*\\n\\n🎯 *Alert Type:* {{$json.data.alert_type}}\\n📊 *Message:* {{$json.data.message}}\\n🔥 *Severity:* {{$json.data.severity}}/5\\n⏰ *Time:* {{$json.timestamp}}",
+        "additionalFields": {}
+      },
+      "id": "0e1a1b45-6191-4fae-9b70-1b1a8363ee0b",
+      "name": "Telegram Portfolio Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        800
+      ],
+      "webhookId": "d897e70d-9512-499e-816d-b5d9f41b769e",
+      "credentials": {
+        "telegramApi": {
+          "id": "o8wPC2tglpgGkQ5J",
+          "name": "trading"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{$node[\"Trading Bot API\"].json[\"base_url\"]}}/api/notifications/acknowledge",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node[\"Trading Bot API\"].json[\"api_key\"]}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "={{$json.event_type}}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{$json.timestamp}}"
+            },
+            {
+              "name": "acknowledged_at",
+              "value": "={{new Date().toISOString()}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c2c2d933-0cfc-4252-85b6-c55830259c3d",
+      "name": "Acknowledge Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        640,
+        660
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pGjf5G1B4ohFX6Qx",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "cd97c62f-e0d2-4788-b457-68fe6585c567",
+      "name": "Discord Webhook URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -840,
+        1420
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ab4a2710-ad03-4a44-b630-6c62011769d8",
+      "name": "Telegram Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -440,
+        1720
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b454407e-8792-49cb-bb6d-9bc4d27165df",
+      "name": "Email Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -440,
+        1980
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "9b84b77d-7ee9-4a81-afc6-5bf98d4a24f7",
+      "name": "Trading Bot API",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        -440,
+        2240
+      ]
+    }
+  ],
+  "connections": {
+    "Trading Bot Webhook": {
+      "main": [
+        [
+          {
+            "node": "Trade Executed Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Portfolio Alert Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trade Executed Filter": {
+      "main": [
+        [
+          {
+            "node": "Slack Trade Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord Trade Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Trade Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portfolio Alert Filter": {
+      "main": [
+        [
+          {
+            "node": "Slack Portfolio Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord Portfolio Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Portfolio Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Trade Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Portfolio Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord Trade Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord Portfolio Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trade Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Portfolio Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "46da699c-3357-4cda-9f03-d97b539cc0c2",
+  "triggerCount": 1,
+  "shared": [
+    {
+      "createdAt": "2025-08-07T03:13:50.676Z",
+      "updatedAt": "2025-08-07T03:13:50.676Z",
+      "role": "workflow:owner",
+      "workflowId": "SYuszgL99dJKMDv2",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [
+    {
+      "createdAt": "2025-08-07T03:14:24.245Z",
+      "updatedAt": "2025-08-07T03:14:24.245Z",
+      "id": "ENiQML08ptkaEHQ5",
+      "name": "latest"
+    }
+  ]
+}

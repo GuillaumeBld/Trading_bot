@@ -1,0 +1,1464 @@
+{
+  "createdAt": "2025-08-02T01:54:33.690Z",
+  "updatedAt": "2025-08-02T03:40:28.000Z",
+  "id": "1CW9RIJIkvNKqO7i",
+  "name": "Marketing agent",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "891caa62-e74b-48dc-8fe8-696d720728f0",
+      "name": "Incoming Message",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        40,
+        180
+      ],
+      "webhookId": "75921955-c8ed-4ff6-8de2-e436c6bbe69d",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "bearerAuth",
+        "path": "562ffc95-cf8e-4d4d-8f5b-29b3ff22d5ee"
+      },
+      "id": "8705400a-fefa-4466-8f88-bd714f60c108",
+      "name": "MCP Server Trigger",
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "position": [
+        200,
+        740
+      ],
+      "webhookId": "562ffc95-cf8e-4d4d-8f5b-29b3ff22d5ee",
+      "typeVersion": 1,
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "mhOI5gM5FFmlE2vx",
+          "name": "Bearer Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful assistant. Whenever askes to update a task, call the get_tasks tools first to retrieve the appropriate task ids then use that to update the tasks.\n\nToday's date: {{ $now }}\n"
+        }
+      },
+      "id": "708a51e3-bd87-457a-8d83-d33ad98b0e05",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1400,
+        180
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://n8n.srv850639.hstgr.cloud/mcp/562ffc95-cf8e-4d4d-8f5b-29b3ff22d5ee/sse",
+        "authentication": "bearerAuth"
+      },
+      "id": "1eb29a82-84d0-4bf9-940b-a0e698508e4b",
+      "name": "MCP Client",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        1600,
+        400
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "mhOI5gM5FFmlE2vx",
+          "name": "Bearer Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab70dc2d-35d0-4742-988f-ed7077633467",
+              "name": "chatInput",
+              "type": "string",
+              "value": "={{ $json.message.text }}"
+            },
+            {
+              "id": "6439fc2c-dc2d-41fc-b8a3-b33ef80d2878",
+              "name": "id",
+              "type": "number",
+              "value": "={{ $json.message.from.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ce3ba595-115e-416c-b9e0-4b6956c886d9",
+      "name": "chatInput",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1140,
+        280
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "task": "MmJJeUxZMjYxRXF0N3ZrWg",
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', `Title summary of the task to be done`, 'string') }}",
+        "additionalFields": {
+          "completed": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Completion_Date', `Date the task was completed`, 'string') }}",
+          "dueDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Due_Date', `Date the task should be completed`, 'string') }}",
+          "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', `Detailed description of the task`, 'string') }}"
+        }
+      },
+      "id": "f7b7e734-c2a4-4c95-93a8-62b0e923a9de",
+      "name": "create_todays_task",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        40,
+        960
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "xjEz1TzqJRXn1GKh",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "df6bd510-e63f-41b1-b5b4-d2c612d5b8d0",
+              "name": "chatOutput",
+              "type": "string",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "43cf9cfa-377f-4def-b9c5-0abcee5028e2",
+      "name": "chatOutput",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1800,
+        180
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Incoming Message').item.json.message.chat.id }}",
+        "text": "={{ $json.chatOutput }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_notification": false
+        }
+      },
+      "id": "00fac4a0-f5c6-4b35-b50c-b8f34f5ac184",
+      "name": "sendMessage",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2020,
+        180
+      ],
+      "webhookId": "c5eb133f-338f-4918-8e49-83ac339d841b",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "task": "MmJJeUxZMjYxRXF0N3ZrWg",
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', `Title summary of the task to be done`, 'string') }}",
+        "additionalFields": {
+          "completed": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Completion_Date', `Date the task was completed`, 'string') }}",
+          "dueDate": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Due_Date', `Date the task should be completed`, 'string') }}",
+          "notes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Notes', `Detailed description of the task`, 'string') }}"
+        }
+      },
+      "id": "f8192068-e877-405e-89be-74841195019a",
+      "name": "create_upcoming_task",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        160,
+        960
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "xjEz1TzqJRXn1GKh",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "task": "MmJJeUxZMjYxRXF0N3ZrWg",
+        "taskId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Task_ID', `The task id tom be marked as completed. Get it from the get tasks tool`, 'string') }}",
+        "updateFields": {}
+      },
+      "id": "83aeb3ad-f70f-4196-a5fc-eaacdfaaa023",
+      "name": "complete_task",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        280,
+        960
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "xjEz1TzqJRXn1GKh",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "task": "MmJJeUxZMjYxRXF0N3ZrWg",
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "id": "3178fcf8-0fdd-40b7-9b78-b923cf05e56d",
+      "name": "get_todays_tasks",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        400,
+        960
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "xjEz1TzqJRXn1GKh",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "task": "MmJJeUxZMjYxRXF0N3ZrWg",
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "id": "a12680fc-825c-42ae-b778-2bc132b996d8",
+      "name": "get_upcoming_tasks",
+      "type": "n8n-nodes-base.googleTasksTool",
+      "position": [
+        520,
+        960
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "xjEz1TzqJRXn1GKh",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "8415cc8d-65a2-448e-a106-1ceb54634dfd",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "Voice Note"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "aac44481-23c8-4a48-8954-b210c943ad1f",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        260,
+        180
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "eb7f5d62-e4f3-4b4e-9f1b-6c329feafb3e",
+              "name": "file_id",
+              "type": "string",
+              "value": "={{ $json.message.voice.file_id }}"
+            },
+            {
+              "id": "803031b8-6b21-47fa-b339-ad674ccbbb1e",
+              "name": "file_unique_id",
+              "type": "string",
+              "value": "={{ $json.message.voice.file_unique_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "39ceddd1-c0f3-47cb-affa-f4207a3edd3e",
+      "name": "audio_id",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        480,
+        80
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.file_id }}"
+      },
+      "id": "be6907d8-3bd1-4fa5-a4d9-ec8338717b37",
+      "name": "download_audio",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        700,
+        80
+      ],
+      "webhookId": "c2dbc0eb-0f3a-4f11-9525-804bd5bef4b1",
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "4fc89b1b-5b36-46bf-8853-7a250a409eb8",
+      "name": "transcribeAudio",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        960,
+        80
+      ],
+      "typeVersion": 1.8,
+      "credentials": {
+        "openAiApi": {
+          "id": "bL198KSVK2N3SXb8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d57b4fc2-10f7-46cd-a89c-0021a92f41d1",
+              "name": "chatInput",
+              "type": "string",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8793a10a-53a6-476a-a26e-677c58341f17",
+      "name": "audioInput",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1200,
+        80
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "## Main Function to Receive and Send Telegram Messages\n",
+        "height": 540,
+        "width": 2180,
+        "color": 4
+      },
+      "id": "750e5274-8847-42b9-80d4-a76bc73168f7",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -20,
+        -20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## MCP Server to Carry Out Actions",
+        "height": 480,
+        "width": 640,
+        "color": 3
+      },
+      "id": "1ddeb445-ddbc-4354-84ac-53d13f1ef579",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.2,
+      "position": [
+        1060,
+        960
+      ],
+      "id": "694f6821-c71f-4ed3-906f-357752d719bb",
+      "name": "Code Tool"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        960
+      ],
+      "id": "3c085e19-32f1-4bbe-a1f7-b27e58118af3",
+      "name": "Think"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        1320,
+        960
+      ],
+      "id": "f354fc23-1505-4587-b70f-4c678f37eb3e",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('URL', ``, 'string') }}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Items_per_Batch', ``, 'number') }}",
+              "batchInterval": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Batch_Interval__ms_', ``, 'number') }}"
+            }
+          }
+        },
+        "optimizeResponse": true,
+        "dataField": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Field_Containing_Data', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        920,
+        960
+      ],
+      "id": "b88a9ea2-39af-42bd-be36-6c0dc5a1a7dc",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "authentication": "bearerAuth",
+        "path": "882c29cf-105d-43e7-9082-c87a6fa95d30"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        740
+      ],
+      "id": "d190701f-5384-4d62-bab2-ce2110d08ac3",
+      "name": "MCP - Must have",
+      "webhookId": "882c29cf-105d-43e7-9082-c87a6fa95d30",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "rRbyzY5BL1yCg7EP",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## MCP - Must have\n\n",
+        "height": 480,
+        "width": 640,
+        "color": 3
+      },
+      "id": "c09f9ff4-e784-424e-a4a1-77793c14bb05",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        820,
+        640
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        380
+      ],
+      "id": "01ad9973-50d7-4ae2-a237-3ea562bb279d",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "DgQSQ6OnWRyMfHDV",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "8e56b1c3-8b13-4320-a109-a7ea27f2630e"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryZep",
+      "typeVersion": 1.3,
+      "position": [
+        1480,
+        400
+      ],
+      "id": "d7254834-6ccb-4a04-8043-824626b6fc48",
+      "name": "Zep",
+      "credentials": {
+        "zepApi": {
+          "id": "p6HC42quhWesIaTh",
+          "name": "Zep Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://n8n.srv850639.hstgr.cloud/mcp/882c29cf-105d-43e7-9082-c87a6fa95d30/sse",
+        "authentication": "bearerAuth"
+      },
+      "id": "7a9c7481-baf0-4aff-b66c-bcf61ccd453b",
+      "name": "MCP Client1",
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "position": [
+        1720,
+        400
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "rRbyzY5BL1yCg7EP",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        840
+      ],
+      "id": "565b1f97-e1ea-4820-aed6-9d30a8b3f25d",
+      "name": "Telegram",
+      "webhookId": "94a4c6c8-0974-4e6c-a28c-55f50521535a",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1840,
+        840
+      ],
+      "id": "01e6b405-89b4-433c-92ca-f6638b4510ca",
+      "name": "Telegram1",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## MCP - Telegram\n\n",
+        "height": 860,
+        "width": 640,
+        "color": 3
+      },
+      "id": "0b7d22e4-a067-4b17-8a0c-9c0017e9e7c9",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1600,
+        620
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "sendSticker",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}",
+        "binaryData": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binary_File', ``, 'boolean') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        840
+      ],
+      "id": "73cf8c50-ec52-4988-9539-26a3e20a1bfc",
+      "name": "Telegram2",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('File_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        840
+      ],
+      "id": "387cf531-3e49-4f1e-86c5-368894e4ab61",
+      "name": "Telegram3",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        1000
+      ],
+      "id": "6b8e9cb8-a7e7-4d71-9d34-a9fff35ae46e",
+      "name": "Telegram4",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "queryId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query_ID', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1840,
+        1000
+      ],
+      "id": "548f5568-01c7-48c2-83aa-0a38a76921d0",
+      "name": "Telegram5",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendChatAction",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        1000
+      ],
+      "id": "c72e0e00-7f61-461c-b709-9c3e9e88796e",
+      "name": "Telegram6",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}",
+        "binaryData": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binary_File', ``, 'boolean') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        1000
+      ],
+      "id": "6fe9ee12-b83e-433e-b728-8c124eee2298",
+      "name": "Telegram7",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "operation": "answerInlineQuery",
+        "queryId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Query_ID', ``, 'string') }}",
+        "results": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Results', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        1180
+      ],
+      "id": "80616e85-2944-48c7-9ac0-ce6f1e1a7a1f",
+      "name": "Telegram8",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "messageType": "inlineMessage",
+        "inlineMessageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Inline_Message_ID', ``, 'string') }}",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1860,
+        1180
+      ],
+      "id": "7aa2a82b-816b-455f-9a75-aeb356dd90b9",
+      "name": "Telegram9",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pinChatMessage",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        2020,
+        1180
+      ],
+      "id": "8b5864c6-5240-4d41-87de-519314e1897f",
+      "name": "Telegram10",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendVideo",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}",
+        "binaryData": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Binary_File', ``, 'boolean') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        2160,
+        1180
+      ],
+      "id": "21126fad-b4c6-4f0f-a14f-f50e1d03c4ac",
+      "name": "Telegram11",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "unpinChatMessage",
+        "chatId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Chat_ID', ``, 'string') }}",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1920,
+        1360
+      ],
+      "id": "7cb6b569-b7ce-4d9d-b703-31fbddffcf95",
+      "name": "Telegram13",
+      "webhookId": "e3e0e88b-dc6f-4b0d-a4db-31accd6345af",
+      "credentials": {
+        "telegramApi": {
+          "id": "yxkXKAiuLOLXLRLW",
+          "name": "Marketing Agent"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://n8n.srv850639.hstgr.cloud/mcp/563adb60-8597-4388-ac00-9a3000651392/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        1860,
+        400
+      ],
+      "id": "6eae4e3b-dc80-42f7-b4ca-2b76cc6c8548",
+      "name": "MCP Client2"
+    },
+    {
+      "parameters": {
+        "path": "563adb60-8597-4388-ac00-9a3000651392"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        640
+      ],
+      "id": "ab00e176-9ec8-493e-a90c-73051b80482a",
+      "name": "MCP Server Trigger1",
+      "webhookId": "563adb60-8597-4388-ac00-9a3000651392"
+    }
+  ],
+  "connections": {
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "audio_id",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "chatInput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "chatOutput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "audio_id": {
+      "main": [
+        [
+          {
+            "node": "download_audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "chatInput": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "audioInput": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "chatOutput": {
+      "main": [
+        [
+          {
+            "node": "sendMessage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "complete_task": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "download_audio": {
+      "main": [
+        [
+          {
+            "node": "transcribeAudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "transcribeAudio": {
+      "main": [
+        [
+          {
+            "node": "audioInput",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Incoming Message": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_todays_tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_todays_task": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_upcoming_tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_upcoming_task": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP - Must have",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP - Must have",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP - Must have",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP - Must have",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Zep": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram1": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram5": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram8": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram3": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram4": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram9": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram10": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram6": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram7": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram2": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram11": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram13": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Incoming Message": [
+      {
+        "json": {
+          "update_id": 186399167,
+          "message": {
+            "message_id": 31,
+            "from": {
+              "id": 1782143398,
+              "is_bot": false,
+              "first_name": "Guillaume",
+              "username": "Gblock1",
+              "language_code": "en"
+            },
+            "chat": {
+              "id": 1782143398,
+              "first_name": "Guillaume",
+              "username": "Gblock1",
+              "type": "private"
+            },
+            "date": 1754103926,
+            "reply_to_message": {
+              "message_id": 29,
+              "from": {
+                "id": 8463266349,
+                "is_bot": true,
+                "first_name": "Marketing agent",
+                "username": "TikTokAgent0_bot"
+              },
+              "chat": {
+                "id": 1782143398,
+                "first_name": "Guillaume",
+                "username": "Gblock1",
+                "type": "private"
+              },
+              "date": 1754103833,
+              "text": "The slate is empty — no tasks are scheduled for today or later.  \nHere’s how I’ll fill it (and prove the prompt is working):\n\n1. Today (Sat 08-02 05:03 UTC)  \n   - Trend Sweep: Scan TikTok & IG APIs for fastest-growing hashtags/sounds in the last 4 h.  \n   - Hook Test: Drop a 7-second loop on TikTok at 06:00 UTC using top rising sound; target 8 % CTR.  \n   - Reel Remix: Cross-adapt winning TikTok hook to IG Reel with same caption format; post 09:00 UTC.  \n   - Live Comment Sprint: Engage 10 creator accounts that match our buyer persona within 2 h of their post.  \n\n2. Upcoming 3-Day Sprint  \n   - Mon 08-05: Launch collab DM outreach to 20 micro-creators (10–100 k followers) in the high-conversion niche.  \n   - Tue 08-06: Batch-create 6 evergreen “save-worthy” tips videos using the top hooks from weekend tests.  \n   - Wed 08-07: A/B test thumbnail styles on Reels; allocate $50 boost to winner.  \n\nEach action auto-logs back to Google Tasks with the format:  \n{ActionName | Platform | KPI | $$Goal | Go/No-Go Threshold}.  \n\nYou’ll see tasks appear live as I execute them—first entry in ≈ 57 minutes.",
+              "entities": [
+                {
+                  "offset": 970,
+                  "length": 59,
+                  "type": "code"
+                }
+              ]
+            },
+            "text": "Add in the system prompt the fact that you can ask me to update it whenever you think it is necessary"
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "09b7b963-4e75-443b-b9fc-48c033ebb89a",
+  "triggerCount": 4,
+  "shared": [
+    {
+      "createdAt": "2025-08-02T01:54:33.697Z",
+      "updatedAt": "2025-08-02T01:54:33.697Z",
+      "role": "workflow:owner",
+      "workflowId": "1CW9RIJIkvNKqO7i",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

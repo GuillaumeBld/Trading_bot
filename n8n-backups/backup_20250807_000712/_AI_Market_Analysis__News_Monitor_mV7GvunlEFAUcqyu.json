@@ -1,0 +1,313 @@
+{
+  "createdAt": "2025-08-06T15:19:37.841Z",
+  "updatedAt": "2025-08-06T18:40:17.000Z",
+  "id": "mV7GvunlEFAUcqyu",
+  "name": "🧠 AI Market Analysis & News Monitor",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "id": "schedule_news",
+      "name": "Every 15 Minutes News Check",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        20,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://feeds.finance.yahoo.com/rss/2.0/headline",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (compatible; TradingBot/1.0)"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get_market_news",
+      "name": "Fetch Market News",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse RSS/XML news feed\nconst xml = $json;\n\n// Simple XML parsing for news items\nconst newsItems = [];\n\n// This is a simplified parser - in production you'd use a proper XML parser\nconst itemMatches = xml.match(/<item[^>]*>[\\s\\S]*?<\\/item>/g) || [];\n\nitemMatches.forEach((item, index) => {\n  const titleMatch = item.match(/<title><!\\[CDATA\\[(.*?)\\]\\]><\\/title>/) || item.match(/<title>(.*?)<\\/title>/);\n  const linkMatch = item.match(/<link>(.*?)<\\/link>/);\n  const descMatch = item.match(/<description><!\\[CDATA\\[(.*?)\\]\\]><\\/description>/) || item.match(/<description>(.*?)<\\/description>/);\n  const pubDateMatch = item.match(/<pubDate>(.*?)<\\/pubDate>/);\n  \n  if (titleMatch && linkMatch) {\n    const title = titleMatch[1].trim();\n    const description = descMatch ? descMatch[1].trim() : '';\n    \n    // Extract potential stock symbols from title and description\n    const symbolPattern = /\\b[A-Z]{1,5}\\b/g;\n    const titleSymbols = title.match(symbolPattern) || [];\n    const descSymbols = description.match(symbolPattern) || [];\n    const potentialSymbols = [...new Set([...titleSymbols, ...descSymbols])]\n      .filter(symbol => symbol.length >= 2 && symbol.length <= 5);\n    \n    newsItems.push({\n      id: `news_${Date.now()}_${index}`,\n      title,\n      description,\n      link: linkMatch[1],\n      pubDate: pubDateMatch ? pubDateMatch[1] : new Date().toISOString(),\n      symbols: potentialSymbols,\n      timestamp: new Date().toISOString()\n    });\n  }\n});\n\n// Filter for recent news (last 2 hours)\nconst twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);\nconst recentNews = newsItems.filter(item => {\n  const itemDate = new Date(item.pubDate);\n  return itemDate > twoHoursAgo;\n});\n\n// Prioritize news with stock symbols\nconst relevantNews = recentNews\n  .filter(item => item.symbols.length > 0 || \n    item.title.toLowerCase().includes('market') ||\n    item.title.toLowerCase().includes('stock') ||\n    item.title.toLowerCase().includes('trading')\n  )\n  .slice(0, 10); // Limit to 10 most relevant items\n\nreturn [{\n  totalNews: newsItems.length,\n  recentNews: recentNews.length,\n  relevantNews: relevantNews.length,\n  news: relevantNews,\n  timestamp: new Date().toISOString()\n}];"
+      },
+      "id": "parse_news",
+      "name": "Parse News Feed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        460,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "prompt": {
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a financial news analyst AI. Analyze the provided news headlines and descriptions for market sentiment, potential stock impacts, and trading opportunities. Respond with a JSON object containing: overallSentiment (bullish/bearish/neutral), confidence (0-1), keyThemes (array), potentialImpacts (array with symbol, impact, reasoning), and tradingSignals (array with symbol, action, confidence, reasoning)."
+            },
+            {
+              "content": "Analyze these market news items:\\n\\n{{ $json.news.map(item => `TITLE: ${item.title}\\nDESCRIPTION: ${item.description}\\nSYMBOLS: ${item.symbols.join(', ')}\\n---`).join('\\n') }}\\n\\nProvide your analysis focusing on:\\n1. Overall market sentiment\\n2. Specific stock impacts\\n3. Trading opportunities\\n4. Risk factors"
+            }
+          ]
+        },
+        "options": {},
+        "requestOptions": {}
+      },
+      "id": "analyze_news",
+      "name": "AI News Analysis",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        360
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "bL198KSVK2N3SXb8",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process AI analysis and generate actionable insights\nconst newsData = $('Parse News Feed').first().json;\nconst aiResponse = $json.choices[0].message.content;\n\ntry {\n  // Extract JSON from AI response\n  const jsonMatch = aiResponse.match(/\\{[\\s\\S]*\\}/);  \n  const analysis = jsonMatch ? JSON.parse(jsonMatch[0]) : null;\n  \n  if (!analysis) {\n    throw new Error('No valid JSON found in AI response');\n  }\n  \n  // Validate analysis structure\n  const requiredFields = ['overallSentiment', 'confidence'];\n  const missingFields = requiredFields.filter(field => !analysis[field]);\n  \n  if (missingFields.length > 0) {\n    throw new Error(`Analysis missing fields: ${missingFields.join(', ')}`);\n  }\n  \n  // Process trading signals\n  const tradingSignals = (analysis.tradingSignals || []).map(signal => ({\n    ...signal,\n    id: `signal_news_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n    source: 'news_analysis',\n    timestamp: new Date().toISOString(),\n    newsCount: newsData.news.filter(n => n.symbols.includes(signal.symbol)).length\n  }));\n  \n  // Determine alert level based on sentiment and confidence\n  const alertLevel = analysis.confidence > 0.8 && \n    (analysis.overallSentiment === 'bullish' || analysis.overallSentiment === 'bearish') \n    ? 'high' : 'medium';\n  \n  // Generate market summary\n  const marketSummary = {\n    timestamp: new Date().toISOString(),\n    newsAnalyzed: newsData.relevantNews,\n    sentiment: analysis.overallSentiment,\n    confidence: analysis.confidence,\n    themes: analysis.keyThemes || [],\n    signals: tradingSignals.length,\n    alertLevel,\n    impacts: analysis.potentialImpacts || []\n  };\n  \n  // Determine if immediate action is needed\n  const shouldAlert = alertLevel === 'high' || tradingSignals.length > 2;\n  const shouldTrade = tradingSignals.some(s => s.confidence > 0.75);\n  \n  const result = {\n    ...newsData,\n    analysis,\n    marketSummary,\n    tradingSignals,\n    actions: {\n      shouldAlert,\n      shouldTrade,\n      alertLevel,\n      signalsGenerated: tradingSignals.length\n    },\n    processedAt: new Date().toISOString(),\n    aiModel: 'gpt-3.5-turbo'\n  };\n  \n  return [result];\n  \n} catch (error) {\n  // Fallback if analysis fails\n  const fallbackResult = {\n    ...newsData,\n    analysis: {\n      overallSentiment: 'neutral',\n      confidence: 0.3,\n      keyThemes: ['news_analysis_failed'],\n      error: error.message,\n      rawResponse: aiResponse\n    },\n    marketSummary: {\n      timestamp: new Date().toISOString(),\n      newsAnalyzed: newsData.relevantNews,\n      sentiment: 'neutral',\n      confidence: 0.3,\n      alertLevel: 'low',\n      error: 'Analysis failed'\n    },\n    tradingSignals: [],\n    actions: {\n      shouldAlert: false,\n      shouldTrade: false,\n      alertLevel: 'low',\n      signalsGenerated: 0\n    },\n    processedAt: new Date().toISOString(),\n    error: error.message\n  };\n  \n  return [fallbackResult];\n}"
+      },
+      "id": "process_analysis",
+      "name": "Process AI Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Check if any trading signals should be forwarded to the main trading system\nconst data = $json;\nconst signals = data.tradingSignals || [];\nconst CONFIDENCE_THRESHOLD = 0.7;\n\n// Filter high-confidence signals\nconst highConfidenceSignals = signals.filter(signal => signal.confidence >= CONFIDENCE_THRESHOLD);\n\n// Generate notifications for important market changes\nconst notifications = [];\n\nif (data.actions.shouldAlert) {\n  notifications.push({\n    type: 'market_analysis',\n    severity: data.actions.alertLevel === 'high' ? 'high' : 'medium',\n    title: 'Market News Analysis Alert',\n    message: `Market sentiment: ${data.analysis.overallSentiment} (${(data.analysis.confidence * 100).toFixed(0)}% confidence). ${highConfidenceSignals.length} trading signals generated.`,\n    data: {\n      sentiment: data.analysis.overallSentiment,\n      confidence: data.analysis.confidence,\n      themes: data.analysis.keyThemes,\n      signalCount: highConfidenceSignals.length\n    },\n    channels: data.actions.alertLevel === 'high' ? ['slack', 'discord'] : ['slack']\n  });\n}\n\n// Individual signal notifications\nhighConfidenceSignals.forEach(signal => {\n  notifications.push({\n    type: 'news_trading_signal',\n    severity: signal.confidence > 0.85 ? 'high' : 'medium',\n    title: `News-Based Trading Signal: ${signal.symbol}`,\n    message: `${signal.action.toUpperCase()} ${signal.symbol} - ${signal.reasoning}`,\n    symbol: signal.symbol,\n    value: `Confidence: ${(signal.confidence * 100).toFixed(0)}%`,\n    data: signal,\n    channels: ['slack']\n  });\n});\n\nconst result = {\n  ...data,\n  filteredSignals: highConfidenceSignals,\n  notifications,\n  summary: {\n    totalNews: data.totalNews,\n    relevantNews: data.relevantNews,\n    sentiment: data.analysis.overallSentiment,\n    confidence: data.analysis.confidence,\n    signalsGenerated: signals.length,\n    highConfidenceSignals: highConfidenceSignals.length,\n    notificationsCreated: notifications.length\n  }\n};\n\nreturn [result];"
+      },
+      "id": "check_signals",
+      "name": "Check Trading Signals",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1276,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a financial news analyst AI. Analyze the provided news headlines and descriptions for market sentiment, potential stock impacts, and trading opportunities. Respond with a JSON object containing: overallSentiment (bullish/bearish/neutral), confidence (0-1), keyThemes (array), potentialImpacts (array with symbol, impact, reasoning), and tradingSignals (array with symbol, action, confidence, reasoning)."
+            },
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "=Analyze these market news items:\\n\\n{{ $json.news.map(item => `TITLE: ${item.title}\\nDESCRIPTION: ${item.description}\\nSYMBOLS: ${item.symbols.join(', ')}\\n---`).join('\\n') }}\\n\\nProvide your analysis focusing on:\\n1. Overall market sentiment\\n2. Specific stock impacts\\n3. Trading opportunities\\n4. Risk factors"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        680,
+        540
+      ],
+      "id": "8b898e51-4685-48a7-9fa6-7dc8c52cf81d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        780,
+        760
+      ],
+      "id": "f312d20e-7ecd-4ae6-8b44-c814db18b21f",
+      "name": "AI News Analysis1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "DgQSQ6OnWRyMfHDV",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Every 15 Minutes News Check": {
+      "main": [
+        [
+          {
+            "node": "Fetch Market News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Market News": {
+      "main": [
+        [
+          {
+            "node": "Parse News Feed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse News Feed": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI News Analysis": {
+      "main": [
+        []
+      ]
+    },
+    "Process AI Analysis": {
+      "main": [
+        [
+          {
+            "node": "Check Trading Signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI News Analysis1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Process AI Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "saveExecutionProgress": true
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "38acf738-fcab-451d-b1e3-d959e07c5bdd",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-08-06T15:19:37.844Z",
+      "updatedAt": "2025-08-06T15:19:37.844Z",
+      "role": "workflow:owner",
+      "workflowId": "mV7GvunlEFAUcqyu",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}

@@ -1,0 +1,1778 @@
+{
+  "createdAt": "2025-07-23T01:23:26.168Z",
+  "updatedAt": "2025-07-23T01:56:48.000Z",
+  "id": "yaZJPAg3saRGaLfr",
+  "name": "My workflow 5",
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## | Step 1: Generate Clips (Wavespeed AI)\n",
+        "height": 240,
+        "width": 880,
+        "color": 2
+      },
+      "id": "175fae10-8e50-422e-ad24-8c40be1ee6b0",
+      "name": "Sticky Note10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        600
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## | Step 2: Generate Sounds (Fal AI)\n",
+        "height": 240,
+        "width": 640,
+        "color": 2
+      },
+      "id": "82bcd229-005b-476c-8ff6-cbe25d474f99",
+      "name": "Sticky Note13",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        760,
+        600
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## | INPUT: Starting Idea Section",
+        "height": 540,
+        "width": 1560,
+        "color": 7
+      },
+      "id": "4ed33863-32da-46de-bcbf-76030f4a8469",
+      "name": "Sticky Note14",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        40
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## | Step 3: Stitch Video (Fal AI)",
+        "height": 260,
+        "width": 1560,
+        "color": 3
+      },
+      "id": "6a20c94c-6585-4f38-bed4-ea2c2c458b37",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        880
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## | Step 4 — Publish Video to Social Media\n",
+        "height": 760,
+        "width": 1560,
+        "color": 4
+      },
+      "id": "6ac50131-9288-406d-9b16-edbea3ff6786",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        1180
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "id": "822e409b-5492-48c9-8fb5-ea3e0d05668d",
+      "name": "Trigger: Start Daily Content Generation",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -100,
+        140
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate a creative concept involving:\n\n[[\nA solid, hard material or element being sliced cleanly with a sharp blade. Your response must follow this structure:\n\n\"(Color) (Material) shaped like a (random everyday object)\"\n\nFor inspiration, imagine examples like: obsidian shaped like a chess piece, quartz shaped like a coffee mug, sapphire shaped like a seashell, or titanium shaped like a leaf.\n\n]]\n\nReflect carefully before answering to ensure originality and visual appeal.\n\nUse the Think tool to review your output",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=**Role:**  \nYou are an AI designed to generate **one immersive, realistic idea** based on a user-provided topic. Your output must be formatted as a **single-line JSON array** and follow the rules below exactly.\n\n---\n\n### RULES\n\n1. **Number of ideas**  \n   - Return **only one idea**.\n\n2. **Topic**  \n   - The user will provide a keyword (e.g., “glass cutting ASMR,” “wood carving sounds,” “satisfying rock splits”).\n\n3. **Idea**  \n   - Maximum 13 words.  \n   - Describe a viral-worthy, original, or surreal moment related to the topic.\n\n4. **Caption**  \n   - Short, punchy, viral-friendly.  \n   - Include **one emoji**.  \n   - Exactly **12 hashtags** in this order:  \n     1. 4 topic-relevant hashtags  \n     2. 4 all-time most popular hashtags  \n     3. 4 currently trending hashtags (based on live research)  \n   - All in lowercase.\n\n5. **Environment**  \n   - Maximum 20 words.  \n   - Must match the action in the Idea exactly.  \n   - Specify location (studio table, natural terrain, lab bench…), visual details (dust particles, polished surface, subtle reflections…), and style (macro close-up, cinematic slow-motion, minimalist…).\n\n6. **Sound**  \n   - Maximum 15 words.  \n   - Describe the primary sound for the scene (to feed into an audio model).\n\n7. **Status**  \n   - Always set to `\"for production\"`.\n\n---\n\n### OUTPUT FORMAT (single-line JSON array)\n\n```json\n[\n  {\n    \"Caption\": \"Your short viral title with emoji #4_topic_hashtags #4_all_time_popular_hashtags #4_trending_hashtags\",\n    \"Idea\": \"Your idea under 13 words\",\n    \"Environment\": \"Your vivid setting under 20 words matching the action\",\n    \"Sound\": \"Your primary sound description under 15 words\",\n    \"Status\": \"for production\"\n  }\n]\n"
+        }
+      },
+      "id": "285e1a29-8647-4b30-8319-cf7b176631c3",
+      "name": "AI Agent: Generate Creative Video Idea",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        220,
+        140
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {},
+      "id": "3d17369d-75ad-4928-a818-6583bf64757a",
+      "name": "Tool: Inject Creative Perspective (Idea)",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        340,
+        420
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n    \"Caption\": \"Diver Removes Nets Off Whale 🐋 #whalerescue #marinelife #oceanrescue #seahelpers #love #nature #instagood #explore #viral #savenature #oceanguardians #cleanoceans\",\n    \"Idea\": \"Diver carefully cuts tangled net from distressed whale in open sea\",\n    \"Environment\": \"Open ocean, sunlight beams through water, diver and whale, cinematic realism\",\n    \"Sound\": \"Primary sound description under 15 words\",\n    \"Status\": \"for production\"\n  }\n]\n"
+      },
+      "id": "e0ece632-a625-4c12-b303-09ed21808d9f",
+      "name": "Parse AI Output (Idea, Environment, Sound)",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        500,
+        420
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "=1liAQknFquByT7BsvCBCxwLXTYzcyTnveIn74Vl8QM9s",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "=0",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Caption": "={{ $json.output[0].Caption }}",
+            "Idea": "={{ $json.output[0].Idea }}",
+            "Environment": "={{ $json.output[0].Environment }}",
+            "Sound_": "={{ $json.output[0].Sound }}",
+            "Status": "={{ $json.output[0].Status }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Idea",
+              "displayName": "Idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Environment",
+              "displayName": "Environment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Sound",
+              "displayName": "Sound",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Idea_",
+              "displayName": "Idea_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Environment_",
+              "displayName": "Environment_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Sound_",
+              "displayName": "Sound_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Scene 1",
+              "displayName": "Scene 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Scene 2",
+              "displayName": "Scene 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Scene 3",
+              "displayName": "Scene 3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Video URL ",
+              "displayName": "Video URL ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Sound URL ",
+              "displayName": "Sound URL ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "fb393a21-0be3-44cd-843b-f71b30d9adcd",
+      "name": "Save Idea & Metadata to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        680,
+        140
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ie8rgGVXzeaoIA51",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Give me 3 video prompts based on the previous idea\n\nUse the Think tool to review your output",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Role: You are a prompt-generation AI specializing in cinematic, ASMR-style video prompts. Your task is to generate a multi-scene video sequence that vividly shows a sharp knife actively cutting through a specific object in a clean, high-detail setting.\n\nYour writing must follow this style:\n\nSharp, precise cinematic realism.\n\nMacro-level detail with tight focus on the blade interacting with the object.\n\nThe knife must always be in motion — slicing, splitting, or gliding through the material. Never idle or static.\n\nCamera terms are allowed (e.g. macro view, tight angle, over-the-blade shot).\n\nEach scene must contain all of the following, expressed through detailed visual language:\n\n✅ The main object or subject (from the Idea)\n\n✅ The cutting environment or surface (from the Environment)\n\n✅ The texture, structure, and behavior of the material as it’s being cut\n\n✅ A visible, sharp blade actively cutting\n\nDescriptions should show:\n\nThe physical makeup of the material — is it translucent, brittle, dense, reflective, granular, fibrous, layered, or fluid-filled?\n\nHow the material responds to the blade — resistance, cracking, tearing, smooth separation, tension, vibration.\n\nThe interaction between the blade and the surface — light reflection, buildup of particles, contact points, residue or dust.\n\nAny ASMR-relevant sensory cues like particle release, shimmer, or subtle movement, but always shown visually — not narrated.\n\nTone:\n\nClean, clinical, visual.\n\nNo poetic metaphors, emotion, or storytelling.\n\nAvoid fantasy or surreal imagery.\n\nAll description must feel physically grounded and logically accurate.\n\nLength:\n\nEach scene must be between 1,000 and 2,000 characters.\n\nNo shallow or repetitive scenes — each must be immersive, descriptive, and specific.\n\nEach scene should explore a distinct phase of the cutting process, a different camera perspective, or a new behavior of the material under the blade.\n\nInputs:\n\nIdea: \"{{ $json.idea }}\"\nEnvironment: \"{{ $json.environment_prompt }}\"\nSound: \"{{ $json.sound_prompt }}\"\n\nFormat:\n\nIdea: \"...\"\nEnvironment: \"...\"\nSound: \"...\"\n\nScene 1: \"...\"\nScene 2: \"...\"\nScene 3: \"...\"\nScene 4: \"...\"\nScene 5: \"...\"\nScene 6: \"...\"\nScene 7: \"...\"\nScene 8: \"...\"\nScene 9: \"...\"\nScene 10: \"...\"\nScene 11: \"...\"\nScene 12: \"...\"\nScene 13: \"...\"\n\n"
+        }
+      },
+      "id": "6c18299e-f971-4962-beaf-055b7810be77",
+      "name": "AI Agent: Generate Detailed Video Prompts",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1020,
+        140
+      ],
+      "typeVersion": 1.9
+    },
+    {
+      "parameters": {},
+      "id": "19e9f7dc-8d5d-4152-ade1-d006e25a6dfb",
+      "name": "Tool: Refine and Validate Prompts1",
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "position": [
+        1100,
+        420
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"Idea\": \"An obsidian rock being sliced with a shimmering knife\",\n  \"Environment\": \"Clean studio table, subtle light reflections\",\n  \"Sound\": \"Crisp slicing, deep grinding, and delicate crumbling\",\n  \"Scene 1\": \"Extreme macro shot: a razor-sharp, polished knife blade presses into the dark, granular surface of an obsidian rock, just beginning to indent.\",\n  \"Scene 2\": \"Close-up: fine, iridescent dust particles erupt from the point of contact as the blade cuts deeper into the obsidian, catching the studio light.\",\n  \"Scene 3\": \"Mid-shot: the knife, held perfectly steady, has formed a shallow, clean groove across the obsidian's shimmering surface, revealing a new, smooth texture.\"\n}"
+      },
+      "id": "b1281828-8791-4655-b2ef-a61dd6c73dce",
+      "name": "Parse Structured Video Prompt Output",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1260,
+        420
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "jsCode": "function findSceneEntries(obj) {\n  const scenes = [];\n\n  for (const [key, value] of Object.entries(obj)) {\n    if (key.toLowerCase().startsWith(\"scene\") && typeof value === \"string\") {\n      scenes.push(value);\n    } else if (typeof value === \"object\" && value !== null) {\n      scenes.push(...findSceneEntries(value));\n    }\n  }\n\n  return scenes;\n}\n\nlet output = [];\n\ntry {\n  const inputData = items[0].json;\n  const scenes = findSceneEntries(inputData);\n\n  if (scenes.length === 0) {\n    throw new Error(\"No scene keys found at any level.\");\n  }\n\n  output = scenes.map(scene => ({ description: scene }));\n} catch (e) {\n  throw new Error(\"Could not extract scenes properly. Details: \" + e.message);\n}\n\nreturn output;\n"
+      },
+      "id": "ba44a67d-80b4-464a-8f43-1f8d7f5b9752",
+      "name": "Extract Individual Scene Descriptions",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -60,
+        680
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.wavespeed.ai/api/v3/bytedance/seedance-v1-pro-t2v-480p",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"aspect_ratio\": \"9:16\",\n  \"duration\": 10,\n  \"prompt\": \"VIDEO THEME: {{ $('AI Agent: Generate Detailed Video Prompts').item.json.output.Idea }} | WHAT HAPPENS IN THE VIDEO: {{ $json.description }} | WHERE THE VIDEO IS SHOT: {{ $('AI Agent: Generate Detailed Video Prompts').item.json.output.Environment }}\"\n}\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 3000
+            }
+          }
+        }
+      },
+      "id": "4a4ee602-1029-4783-ad75-576fea087c53",
+      "name": "Generate Video Clips (Wavespeed AI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        140,
+        680
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pGjf5G1B4ohFX6Qx",
+          "name": "Header Auth account"
+        },
+        "httpBearerAuth": {
+          "id": "rRbyzY5BL1yCg7EP",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 240
+      },
+      "id": "02ae4644-5cd3-40e5-b434-5ba59cc2b8cd",
+      "name": "Wait for Clip Generation (Wavespeed AI)",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        340,
+        680
+      ],
+      "webhookId": "60604cd4-5d90-48dc-93f4-1335e5f03fdd",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "=https://api.wavespeed.ai/api/v3/predictions/{{ $json.data.id }}/result",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "options": {}
+      },
+      "id": "45aff4c8-b3c8-4a6f-9b86-2d900d738b36",
+      "name": "Retrieve Video Clips",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        540,
+        680
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pGjf5G1B4ohFX6Qx",
+          "name": "Header Auth account"
+        },
+        "httpBearerAuth": {
+          "id": "rRbyzY5BL1yCg7EP",
+          "name": "Bearer Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/mmaudio-v2 ",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 1edd36d1-831f-4b81-8696-0aaaa7e7ec5c:6962229aa33f08bb2cf557e281f39845"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "= {\n        \"prompt\": \"ASMR Soothing sound effects. {{ $('AI Agent: Generate Detailed Video Prompts').item.json.output.Sound }}\",\n        \"duration\": 10,\n        \"video_url\": \"{{ $json.data.outputs[0] }}\"\n  }\n",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "id": "648feed9-7102-4933-b9cd-ee2a85810636",
+      "name": "Generate ASMR Sound (Fal AI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        820,
+        680
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "id": "95d271f8-6144-4dd9-8184-f5da7960af3e",
+      "name": "Wait for Sound Generation (Fal AI)",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        1020,
+        680
+      ],
+      "webhookId": "abac7859-a9f6-46f3-95c2-df43ec32807d",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/mmaudio-v2/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 1edd36d1-831f-4b81-8696-0aaaa7e7ec5c:6962229aa33f08bb2cf557e281f39845"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ec0f1da5-3258-4d39-afce-e15ee9924201",
+      "name": "Retrieve Final Sound Output",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1220,
+        680
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    video_urls: items.map(item => item.json.video.url)\n  }\n];"
+      },
+      "id": "d5c3ce6d-c075-4e9c-9a1e-3b73fb353b26",
+      "name": "List Clip URLs for Stitching",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -60,
+        940
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/ffmpeg-api/compose",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 1edd36d1-831f-4b81-8696-0aaaa7e7ec5c:6962229aa33f08bb2cf557e281f39845"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"tracks\": [\n    {\n      \"id\": \"1\",\n      \"type\": \"video\",\n      \"keyframes\": [\n        { \"url\": \"{{ $json.video_urls[0] }}\", \"timestamp\": 0, \"duration\": 10 },\n        { \"url\": \"{{ $json.video_urls[1] }}\", \"timestamp\": 10, \"duration\": 10 },\n        { \"url\": \"{{ $json.video_urls[2] }}\", \"timestamp\": 20, \"duration\": 10 }\n      ]\n    }\n  ]\n}",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1,
+              "batchInterval": 2000
+            }
+          }
+        }
+      },
+      "id": "01df36c7-cd69-4270-9f9f-ba04768d092d",
+      "name": "Merge Clips into Final Video (Fal AI)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        140,
+        940
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pGjf5G1B4ohFX6Qx",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 60
+      },
+      "id": "7ae62aa8-916c-4329-823a-3cfdff929b12",
+      "name": "Wait for Video Rendering (Fal AI)",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        340,
+        940
+      ],
+      "webhookId": "389fcfd1-9337-4334-a54b-4114f36e30bc",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/ffmpeg-api/requests/{{ $json.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 1edd36d1-831f-4b81-8696-0aaaa7e7ec5c:6962229aa33f08bb2cf557e281f39845"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "181da0db-f508-473c-802d-4a1779dfc238",
+      "name": "Retrieve Final Merged Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        540,
+        940
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "pGjf5G1B4ohFX6Qx",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "=1liAQknFquByT7BsvCBCxwLXTYzcyTnveIn74Vl8QM9s",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "0",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Video URL ": "={{ $json.video_url }}",
+            "Thumbnail": "={{ $json.thumbnail_url }}",
+            "Status": "ready to be posted",
+            "ID": "1"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Idea",
+              "displayName": "Idea",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Environment",
+              "displayName": "Environment",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Sound",
+              "displayName": "Sound",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Idea_",
+              "displayName": "Idea_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Environment_",
+              "displayName": "Environment_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Sound_",
+              "displayName": "Sound_",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Scene 1",
+              "displayName": "Scene 1",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Scene 2",
+              "displayName": "Scene 2",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Scene 3",
+              "displayName": "Scene 3",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Video URL ",
+              "displayName": "Video URL ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Thumbnail",
+              "displayName": "Thumbnail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "f6bc0e03-1376-499f-82e7-152426253e1f",
+      "name": "URL Final Video",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1220,
+        940
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ie8rgGVXzeaoIA51",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"instagram_id\": \"1111\",\n  \"youtube_id\": \"1111\",\n  \"threads_id\": \"1111\",\n  \"tiktok_id\": \"1111\",\n  \"facebook_id\": \"1111\",\n  \"facebook_page_id\": \"1111\",\n  \"twitter_id\": \"1111\",\n  \"linkedin_id\": \"1111\",\n  \"pinterest_id\": \"1111\",\n  \"pinterest_board_id\": \"1111\",\n  \"bluesky_id\": \"1111\"\n}\n",
+        "options": {}
+      },
+      "id": "421bbc84-495b-43cd-973b-e5149218c88d",
+      "name": "Assign Social Media IDs",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        120,
+        1520
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "="
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "="
+        },
+        "options": {}
+      },
+      "id": "21c43452-19f0-4e71-a4ad-a97335dea313",
+      "name": "Get my video",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -80,
+        1520
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Get my video').item.json['final_output'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "59b2679f-3878-44d6-a9ec-6594fce8afee",
+      "name": "Upload Video to Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        360,
+        1520
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.instagram_id }}\",\n    \"target\": {\n      \"targetType\": \"instagram\"\n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"instagram\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n\n",
+        "options": {}
+      },
+      "id": "f0ee6b6d-b6fe-4bbc-95ff-dab331abf996",
+      "name": "INSTAGRAM",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        780,
+        1260
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.youtube_id }}\",\n    \"target\": {\n      \"targetType\": \"youtube\",\n      \"title\": \"{{ $('Get my video').item.json.Titre }}\",\n      \"privacyStatus\": \"unlisted\",\n      \"shouldNotifySubscribers\": \"false\"\n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"youtube\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "91a6456b-5d06-4d17-923b-cb09d071bae2",
+      "name": "YOUTUBE",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1000,
+        1260
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "=YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.tiktok_id }}\",\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"isYourBrand\": \"false\", \n      \"disabledDuet\": \"false\",\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"isAiGenerated\": \"true\",\n      \"disabledStitch\": \"false\",\n      \"disabledComments\": \"false\",\n      \"isBrandedContent\": \"false\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"tiktok\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "96da3020-5997-49ea-8fe5-4932ec7cc49f",
+      "name": "TIKTOK",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1200,
+        1260
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "=YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.facebook_id }}\",\n    \"target\": {\n      \"targetType\": \"facebook\",\n      \"pageId\": \"{{ $('Assign Social Media IDs').item.json.facebook_page_id }}\"\n\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"facebook\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}",
+        "options": {}
+      },
+      "id": "6755d4e2-f606-4687-ac32-f5fda0339213",
+      "name": "FACEBOOK",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        780,
+        1500
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.threads_id }}\",\n    \"target\": {\n      \"targetType\": \"threads\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"threads\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "064af7d9-0034-4900-86fb-660660e8822d",
+      "name": "THREADS",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1000,
+        1500
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.linkedin_id }}\",\n    \"target\": {\n      \"targetType\": \"linkedin\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"linkedin\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "db81e01a-603a-43ec-bd87-022866e1e796",
+      "name": "LINKEDIN",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        780,
+        1740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "= {\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.bluesky_id }}\",\n    \"target\": {\n      \"targetType\": \"bluesky\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"bluesky\",\n      \"mediaUrls\": [\n        \"https://pbs.twimg.com/media/GE8MgIiWEAAfsK3.jpg\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "1bb4aefd-ac66-45ef-b6f9-c7df23117296",
+      "name": "BLUESKY",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1000,
+        1740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.pinterest_id }}\",\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Assign Social Media IDs').item.json.pinterest_board_id }}\"      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"pinterest\",\n      \"mediaUrls\": [\n        \"https://pbs.twimg.com/media/GE8MgIiWEAAfsK3.jpg\"\n      ]\n    }\n  }\n}\n\n",
+        "options": {}
+      },
+      "id": "05b65a02-90c7-4466-86d3-9b655346ffa7",
+      "name": "PINTEREST",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1200,
+        1740
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "="
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "="
+        },
+        "columns": {
+          "value": {
+            "STATUS": "Publish",
+            "row_number": "={{ $('Get my video').item.json.row_number }}"
+          },
+          "schema": [
+            {
+              "id": "PROMPT",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "PROMPT",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "DESCRIPTION",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "DESCRIPTION",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "URL VIDEO",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "URL VIDEO",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Titre",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Titre",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "STATUS",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "STATUS",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "row_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "row_number"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d828609a-3af4-4025-8f0a-8d0eefcba7ea",
+      "name": "Update Production",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        360,
+        1740
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "YOUR_API_HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Assign Social Media IDs').item.json.twitter_id }}\",\n    \"target\": {\n      \"targetType\": \"twitter\"\n      \n    },\n    \"content\": {\n      \"text\": \"{{ $('Get my video').item.json.DESCRIPTION }}\",\n      \"platform\": \"twitter\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ]\n    }\n  }\n}\n",
+        "options": {}
+      },
+      "id": "1a4edad0-5e44-4837-87c1-d4bea88de940",
+      "name": "TWITTER",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1200,
+        1500
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        100,
+        400
+      ],
+      "id": "00f7359d-addc-42f2-a366-cd43fa929cbd",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "DgQSQ6OnWRyMfHDV",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "moonshotai/kimi-k2",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        960,
+        420
+      ],
+      "id": "9d800ef2-3e5e-4bdf-a46c-14f1d88b1f74",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "DgQSQ6OnWRyMfHDV",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Get my video": {
+      "main": [
+        [
+          {
+            "node": "Assign Social Media IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL Final Video": {
+      "main": [
+        []
+      ]
+    },
+    "Retrieve Video Clips": {
+      "main": [
+        [
+          {
+            "node": "Generate ASMR Sound (Fal AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assign Social Media IDs": {
+      "main": [
+        [
+          {
+            "node": "Upload Video to Blotato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Video to Blotato": {
+      "main": [
+        [
+          {
+            "node": "INSTAGRAM",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "YOUTUBE",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TIKTOK",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "FACEBOOK",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "THREADS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "TWITTER",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LINKEDIN",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "BLUESKY",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "PINTEREST",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update Production",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Final Merged Video": {
+      "main": [
+        [
+          {
+            "node": "URL Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Final Sound Output": {
+      "main": [
+        [
+          {
+            "node": "List Clip URLs for Stitching",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate ASMR Sound (Fal AI)": {
+      "main": [
+        [
+          {
+            "node": "Wait for Sound Generation (Fal AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Clip URLs for Stitching": {
+      "main": [
+        [
+          {
+            "node": "Merge Clips into Final Video (Fal AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Video Rendering (Fal AI)": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Final Merged Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool: Refine and Validate Prompts1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent: Generate Detailed Video Prompts",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Sound Generation (Fal AI)": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Final Sound Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video Clips (Wavespeed AI)": {
+      "main": [
+        [
+          {
+            "node": "Wait for Clip Generation (Wavespeed AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Structured Video Prompt Output": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent: Generate Detailed Video Prompts",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Individual Scene Descriptions": {
+      "main": [
+        [
+          {
+            "node": "Generate Video Clips (Wavespeed AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Clips into Final Video (Fal AI)": {
+      "main": [
+        [
+          {
+            "node": "Wait for Video Rendering (Fal AI)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Idea & Metadata to Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent: Generate Detailed Video Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent: Generate Creative Video Idea": {
+      "main": [
+        [
+          {
+            "node": "Save Idea & Metadata to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger: Start Daily Content Generation": {
+      "main": [
+        [
+          {
+            "node": "AI Agent: Generate Creative Video Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Clip Generation (Wavespeed AI)": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Video Clips",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool: Inject Creative Perspective (Idea)": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent: Generate Creative Video Idea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent: Generate Detailed Video Prompts": {
+      "main": [
+        []
+      ]
+    },
+    "Parse AI Output (Idea, Environment, Sound)": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent: Generate Creative Video Idea",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent: Generate Creative Video Idea",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent: Generate Detailed Video Prompts",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {
+    "Retrieve Video Clips": [
+      {
+        "json": {
+          "code": 200,
+          "message": "success",
+          "data": {
+            "id": "27a75e7b258e4e87adb6833da0fd12ee",
+            "model": "bytedance/seedance-v1-pro-t2v-480p",
+            "outputs": [
+              "https://d1q70pf5vjeyhc.cloudfront.net/predictions/27a75e7b258e4e87adb6833da0fd12ee/1.mp4"
+            ],
+            "urls": {
+              "get": "https://api.wavespeed.ai/api/v3/predictions/27a75e7b258e4e87adb6833da0fd12ee/result"
+            },
+            "has_nsfw_contents": [
+              false
+            ],
+            "status": "completed",
+            "created_at": "2025-07-23T01:26:31.040700393Z",
+            "error": "",
+            "executionTime": 71705,
+            "timings": {
+              "inference": 71705
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "code": 200,
+          "message": "success",
+          "data": {
+            "id": "6f297263807c46539a93cba3c8d1c109",
+            "model": "bytedance/seedance-v1-pro-t2v-480p",
+            "outputs": [
+              "https://d1q70pf5vjeyhc.cloudfront.net/predictions/6f297263807c46539a93cba3c8d1c109/1.mp4"
+            ],
+            "urls": {
+              "get": "https://api.wavespeed.ai/api/v3/predictions/6f297263807c46539a93cba3c8d1c109/result"
+            },
+            "has_nsfw_contents": [
+              false
+            ],
+            "status": "completed",
+            "created_at": "2025-07-23T01:26:34.003262777Z",
+            "error": "",
+            "executionTime": 71765,
+            "timings": {
+              "inference": 71765
+            }
+          }
+        }
+      },
+      {
+        "json": {
+          "code": 200,
+          "message": "success",
+          "data": {
+            "id": "fbcb86b9353b4d3a9d5700bcbb5e8ced",
+            "model": "bytedance/seedance-v1-pro-t2v-480p",
+            "outputs": [
+              "https://d1q70pf5vjeyhc.cloudfront.net/predictions/fbcb86b9353b4d3a9d5700bcbb5e8ced/1.mp4"
+            ],
+            "urls": {
+              "get": "https://api.wavespeed.ai/api/v3/predictions/fbcb86b9353b4d3a9d5700bcbb5e8ced/result"
+            },
+            "has_nsfw_contents": [
+              false
+            ],
+            "status": "completed",
+            "created_at": "2025-07-23T01:26:37.010871576Z",
+            "error": "",
+            "executionTime": 69798,
+            "timings": {
+              "inference": 69798
+            }
+          }
+        }
+      }
+    ],
+    "Retrieve Final Sound Output": [
+      {
+        "json": {
+          "video": {
+            "url": "https://v3.fal.media/files/elephant/NP0gCrKcSjNM0TQNMIOT__1.mp4",
+            "content_type": "application/octet-stream",
+            "file_name": "1.mp4",
+            "file_size": 910478
+          }
+        }
+      },
+      {
+        "json": {
+          "video": {
+            "url": "https://v3.fal.media/files/koala/SYrk9mH50zttLf515swQK_1.mp4",
+            "content_type": "application/octet-stream",
+            "file_name": "1.mp4",
+            "file_size": 854812
+          }
+        }
+      },
+      {
+        "json": {
+          "video": {
+            "url": "https://v3.fal.media/files/panda/VtwmeYL-axnIiz71F7ISj_1.mp4",
+            "content_type": "application/octet-stream",
+            "file_name": "1.mp4",
+            "file_size": 1042188
+          }
+        }
+      }
+    ]
+  },
+  "versionId": "83ae0388-a795-45bd-9255-965f05f1c1d0",
+  "triggerCount": 0,
+  "shared": [
+    {
+      "createdAt": "2025-07-23T01:23:26.175Z",
+      "updatedAt": "2025-07-23T01:23:26.175Z",
+      "role": "workflow:owner",
+      "workflowId": "yaZJPAg3saRGaLfr",
+      "projectId": "dfihSMO24GNVuIpM",
+      "project": {
+        "createdAt": "2025-06-02T01:49:12.943Z",
+        "updatedAt": "2025-06-03T17:01:34.876Z",
+        "id": "dfihSMO24GNVuIpM",
+        "name": "guillaume bolivard <guillaumebolivard@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "projectRelations": [
+          {
+            "createdAt": "2025-06-02T01:49:12.944Z",
+            "updatedAt": "2025-06-02T01:49:12.944Z",
+            "role": "project:personalOwner",
+            "userId": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+            "projectId": "dfihSMO24GNVuIpM",
+            "user": {
+              "createdAt": "2025-06-02T01:49:12.554Z",
+              "updatedAt": "2025-07-28T18:29:17.351Z",
+              "id": "7bcd283c-9587-46b0-b078-91f3217e06b7",
+              "email": "guillaumebolivard@gmail.com",
+              "firstName": "guillaume",
+              "lastName": "bolivard",
+              "personalizationAnswers": {
+                "version": "v4",
+                "personalization_survey_submitted_at": "2025-06-03T17:01:45.849Z",
+                "personalization_survey_n8n_version": "1.94.1",
+                "companySize": "<20",
+                "companyType": "saas",
+                "role": "business-owner",
+                "reportedSource": "google"
+              },
+              "settings": {
+                "userActivated": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "IMfYaRPSuI74c7Ep",
+                "userActivatedAt": 1753375680028,
+                "npsSurvey": {
+                  "responded": true,
+                  "lastShownAt": 1753727350221
+                }
+              },
+              "role": "global:owner",
+              "disabled": false,
+              "mfaEnabled": false,
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": []
+}
