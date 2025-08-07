@@ -2,7 +2,7 @@
 
 The ChatGPT Micro-Cap Trading Experiment now supports **both local and API-based LLMs** for AI-powered trading decisions. This document explains how to set up and use these features.
 
-## 🤖 Supported LLM Providers
+##  Supported LLM Providers
 
 ### API-Based (Remote)
 - **OpenAI GPT-4** - Best performance, requires API key (~$0.15-0.60 per query)
@@ -12,7 +12,7 @@ The ChatGPT Micro-Cap Trading Experiment now supports **both local and API-based
 - **Ollama** - Easy local setup with multiple models (free, requires 4-16GB RAM)
 - **Hugging Face** - Most flexible, supports GPU acceleration (free)
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Install Dependencies
 ```bash
@@ -47,7 +47,7 @@ This will:
 2. Add to `.env` file: `ANTHROPIC_API_KEY=your_key_here`
 3. Run: `python trading_bot.py --ai --provider anthropic`
 
-## 📊 Usage Examples
+##  Usage Examples
 
 ### Command Line Interface
 ```bash
@@ -91,7 +91,7 @@ portfolio, cash = process_portfolio(
 )
 ```
 
-## 🔧 Configuration
+##  Configuration
 
 ### LLM Settings (.llm_config.json)
 ```json
@@ -116,7 +116,7 @@ OPENAI_API_KEY=your_openai_key
 ANTHROPIC_API_KEY=your_anthropic_key
 ```
 
-## 🎯 How AI Recommendations Work
+##  How AI Recommendations Work
 
 ### 1. Analysis Process
 The AI analyzes:
@@ -150,7 +150,7 @@ TradingDecision(
 )
 ```
 
-## 📋 Prompt Engineering
+##  Prompt Engineering
 
 The system uses specialized prompts for trading analysis:
 
@@ -173,7 +173,7 @@ CONSTRAINTS:
 3. **Catalyst Analysis**: Upcoming events, news flow, insider activity
 4. **Risk Assessment**: Volatility, liquidity, correlation analysis
 
-## 🛡️ Safety and Risk Management
+##  Safety and Risk Management
 
 ### Built-in Safeguards
 - **Confidence filtering**: Recommendations below 30% confidence are rejected
@@ -191,7 +191,7 @@ CONSTRAINTS:
 - **Portfolio limits**: Maximum position sizes and concentrations
 - **Performance tracking**: Monitor AI decision outcomes
 
-## 🔍 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -222,7 +222,7 @@ CONSTRAINTS:
 - View setup guide: `python setup_llm.py --setup-guide`
 - Check logs for detailed error messages
 
-## 💡 Best Practices
+##  Best Practices
 
 ### Provider Selection
 - **OpenAI GPT-4o-mini**: Best balance of cost and performance
@@ -239,7 +239,7 @@ CONSTRAINTS:
 - Use local models for frequent queries
 - Reserve premium models for complex decisions
 
-## 📈 Performance Expectations
+##  Performance Expectations
 
 ### AI Capabilities
 - **Pattern recognition**: Identifies technical setups and breakouts
@@ -258,7 +258,7 @@ CONSTRAINTS:
 - Monitor confidence scores and rejection rates
 - Review reasoning quality for decision improvement
 
-## 🔗 Integration with Existing Workflow
+##  Integration with Existing Workflow
 
 The LLM integration seamlessly works with existing features:
 

@@ -1,4 +1,4 @@
-# 🌐 Hostinger Deployment Guide for Trading Bot
+#  Hostinger Deployment Guide for Trading Bot
 
 ## Overview
 
@@ -419,4 +419,4 @@ If you encounter issues:
 
 ---
 
-**Your trading bot will be accessible at your domain/IP after successful deployment!** 🚀
+**Your trading bot will be accessible at your domain/IP after successful deployment!** 

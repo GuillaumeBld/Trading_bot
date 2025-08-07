@@ -4,7 +4,7 @@ This folder lets you run the trading experiment on your own computer with **full
 
 Run the commands below from the repository root. The scripts automatically save their CSV data inside this folder.
 
-## 🚀 Quick Start Options
+##  Quick Start Options
 
 ### Option 1: AI-Enhanced Trading (Recommended)
 ```bash

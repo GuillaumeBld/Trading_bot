@@ -1,10 +1,10 @@
 # Project Overview
 
-## 🎯 What is the ChatGPT Micro-Cap Trading Bot?
+##  What is the ChatGPT Micro-Cap Trading Bot?
 
 The ChatGPT Micro-Cap Trading Bot is an advanced portfolio management system designed to trade micro-cap stocks (market cap < $300M) with optional AI assistance. It combines traditional trading logic with cutting-edge language models to provide intelligent trading recommendations while maintaining strict risk management.
 
-## 🔬 The Experiment
+##  The Experiment
 
 This project originated as a 6-month live trading experiment to answer a fundamental question:
 
@@ -12,18 +12,18 @@ This project originated as a 6-month live trading experiment to answer a fundame
 
 Starting with just $100, the experiment tracks every trade, decision, and outcome to provide transparent insights into AI-powered trading performance.
 
-## 🏗️ System Architecture
+##  System Architecture
 
 ### Core Components
 
 ```
 ChatGPT Micro-Cap Trading Bot
-├── Trading Engine (trading_script.py)
-├── AI Integration (llm_interface.py)
-├── Web Interface (streamlit_app.py)
-├── CLI Interface (trading_bot.py)
-├── Configuration (setup_llm.py)
-└── Data Management (CSV files)
+ Trading Engine (trading_script.py)
+ AI Integration (llm_interface.py)
+ Web Interface (streamlit_app.py)
+ CLI Interface (trading_bot.py)
+ Configuration (setup_llm.py)
+ Data Management (CSV files)
 ```
 
 ### Data Flow
@@ -33,7 +33,7 @@ ChatGPT Micro-Cap Trading Bot
 4. **Execution**: Trades logged and portfolio updated
 5. **Performance Tracking**: Metrics calculated and stored
 
-## 🤖 AI Integration
+##  AI Integration
 
 ### Supported LLM Providers
 
@@ -51,7 +51,7 @@ ChatGPT Micro-Cap Trading Bot
 - **Catalyst Identification**: News events and timing analysis
 - **Position Sizing**: Optimal allocation recommendations
 
-## 📊 Trading Strategy
+##  Trading Strategy
 
 ### Micro-Cap Focus
 - **Market Cap < $300M**: Focus on undervalued small companies
@@ -72,7 +72,7 @@ ChatGPT Micro-Cap Trading Bot
 4. **Monitoring**: Daily price tracking and alerts
 5. **Exit**: Profit taking or loss cutting based on rules
 
-## 🛡️ Safety Features
+##  Safety Features
 
 ### Financial Safeguards
 - **Capital Protection**: Never risk more than available cash
@@ -91,7 +91,7 @@ ChatGPT Micro-Cap Trading Bot
 - **Secure Storage**: API keys in environment variables
 - **No External Sharing**: Portfolio data stays local
 
-## 📈 Performance Tracking
+##  Performance Tracking
 
 ### Key Metrics
 - **Total Return**: Absolute and percentage gains/losses
@@ -111,7 +111,7 @@ ChatGPT Micro-Cap Trading Bot
 - **Performance Charts**: Visual portfolio tracking
 - **Custom Analysis**: Pandas-compatible data format
 
-## 🎯 Use Cases
+##  Use Cases
 
 ### Individual Traders
 - **Learning Tool**: Understand micro-cap market dynamics
@@ -131,7 +131,7 @@ ChatGPT Micro-Cap Trading Bot
 - **Strategy Development**: Implement new trading algorithms
 - **Data Analysis**: Access rich trading datasets
 
-## 🚀 Future Roadmap
+##  Future Roadmap
 
 ### Planned Features
 - **Multi-Asset Support**: Options, crypto, international stocks
@@ -146,7 +146,7 @@ ChatGPT Micro-Cap Trading Bot
 - **Reinforcement Learning**: Adaptive trading strategies
 - **Real-time Data**: Millisecond-level market feeds
 
-## ⚖️ Legal & Compliance
+##  Legal & Compliance
 
 ### Disclaimers
 - **Educational Purpose**: This is for learning and research

@@ -2,7 +2,7 @@
 
 Master the command-line interface for the ChatGPT Micro-Cap Trading Bot. This guide covers all commands, options, and advanced usage patterns.
 
-## 🚀 Quick Reference
+##  Quick Reference
 
 ### Basic Commands
 ```bash
@@ -31,7 +31,7 @@ python trading_bot.py --setup
 python trading_bot.py --help
 ```
 
-## 📋 Complete Command Reference
+##  Complete Command Reference
 
 ### Main Trading Bot (`trading_bot.py`)
 
@@ -76,7 +76,7 @@ python setup_llm.py [OPTIONS]
 
 ### Core Trading Script (`trading_script.py`)
 
-⚠️ **Note**: Typically called by `trading_bot.py`, but can be used directly:
+ **Note**: Typically called by `trading_bot.py`, but can be used directly:
 
 ```bash
 python trading_script.py
@@ -88,7 +88,7 @@ python trading_script.py
 streamlit run streamlit_app.py [-- --OPTION VALUE]
 ```
 
-## 🎯 Common Usage Patterns
+##  Common Usage Patterns
 
 ### Daily Trading Workflow
 
@@ -159,16 +159,16 @@ for dir in Portfolio_*; do
 done
 ```
 
-## 💻 Interactive Mode Details
+##  Interactive Mode Details
 
 ### Initial Setup (First Run)
 ```
 $ python trading_bot.py
-🚀 Starting ChatGPT Micro-Cap Trading Bot
+ Starting ChatGPT Micro-Cap Trading Bot
 ==================================================
-📁 Data directory: Scripts and CSV Files
-📊 Portfolio file: Scripts and CSV Files/chatgpt_portfolio_update.csv
-👤 Mode: Manual trading only
+ Data directory: Scripts and CSV Files
+ Portfolio file: Scripts and CSV Files/chatgpt_portfolio_update.csv
+ Mode: Manual trading only
 ==================================================
 
 Portfolio CSV is empty. Returning set amount of cash for creating portfolio.
@@ -194,10 +194,10 @@ Manual buy for ABEO complete!
 
 ### AI Recommendations
 ```
-🤖 Getting AI recommendations...
+ Getting AI recommendations...
 Using LLM provider: openai
 
-📋 LLM provided 2 recommendations:
+ LLM provided 2 recommendations:
 
 --- Recommendation 1 ---
 Action: BUY
@@ -209,7 +209,7 @@ Confidence: 0.85
 Reasoning: Strong technical breakout above resistance with volume confirmation...
 
 Execute this recommendation? (y/n/skip): y
-✅ BUY executed
+ BUY executed
 
 --- Recommendation 2 ---
 Action: SELL
@@ -221,7 +221,7 @@ Confidence: 0.72
 Reasoning: Position has reached profit target and showing signs of distribution...
 
 Execute this recommendation? (y/n/skip): n
-❌ Recommendation skipped by user
+ Recommendation skipped by user
 ```
 
 ### Portfolio Summary
@@ -248,7 +248,7 @@ today's portfolio:
 cash balance: 25.5
 ```
 
-## 🔧 Advanced Features
+##  Advanced Features
 
 ### Environment Variable Overrides
 ```bash
@@ -288,7 +288,7 @@ python trading_bot.py --ai
 python -v trading_bot.py --ai
 ```
 
-## 🔒 Security Considerations
+##  Security Considerations
 
 ### API Key Management
 ```bash
@@ -312,12 +312,12 @@ chmod 700 ~/trading_data
 chmod 600 ~/trading_data/*.csv
 ```
 
-## 🆘 Troubleshooting Commands
+##  Troubleshooting Commands
 
 ### Diagnostic Commands
 ```bash
 # Check system compatibility
-python -c "import pandas, numpy, yfinance; print('✅ Core dependencies OK')"
+python -c "import pandas, numpy, yfinance; print(' Core dependencies OK')"
 
 # Test AI provider availability
 python setup_llm.py --check
@@ -357,7 +357,7 @@ print(f'Memory usage: {psutil.Process().memory_info().rss / 1024**2:.1f}MB')
 python -m cProfile trading_bot.py --ai > profile.txt
 ```
 
-## 📊 Output Formats
+##  Output Formats
 
 ### CSV Data Files
 ```bash
@@ -383,7 +383,7 @@ python trading_bot.py --output json --ai
 python trading_bot.py --output json --ai | jq '.recommendations'
 ```
 
-## 🎯 Best Practices
+##  Best Practices
 
 ### Daily Usage
 1. **Check provider status** before trading

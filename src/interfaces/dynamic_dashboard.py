@@ -39,7 +39,7 @@ try:
     from core.llm_interface import LLMManager
     CONFIG_AVAILABLE = True
 except ImportError as e:
-    st.error(f"⚠️ Required modules not available: {e}")
+    st.error(f" Required modules not available: {e}")
     CONFIG_AVAILABLE = False
 
 # Configure logging
@@ -48,8 +48,8 @@ logger = logging.getLogger(__name__)
 
 # Set page configuration
 st.set_page_config(
-    page_title="🚀 Dynamic Trading Dashboard",
-    page_icon="📊",
+    page_title=" Dynamic Trading Dashboard",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -209,7 +209,7 @@ def add_notification(message: str, type: str = "info"):
 def display_notifications():
     """Display live notifications"""
     if st.session_state.notifications:
-        st.markdown("### 🔔 Live Notifications")
+        st.markdown("###  Live Notifications")
         for notif in reversed(st.session_state.notifications[-5:]):  # Show last 5
             type_class = f"alert-{notif['type']}" if notif['type'] in ['success', 'warning', 'danger'] else "alert-info"
             time_str = notif['timestamp'].strftime("%H:%M:%S")
@@ -374,7 +374,7 @@ def create_live_performance_metrics(portfolio_data):
             total_return = metrics.get('total_return', 0)
             delta_color = "normal" if total_return >= 0 else "inverse"
             st.metric(
-                label="📈 Total Return",
+                label=" Total Return",
                 value=f"{total_return:.2%}",
                 delta=f"{total_return:.2%}",
                 delta_color=delta_color
@@ -383,7 +383,7 @@ def create_live_performance_metrics(portfolio_data):
         with col2:
             sharpe_ratio = metrics.get('sharpe_ratio', 0)
             st.metric(
-                label="⚡ Sharpe Ratio",
+                label=" Sharpe Ratio",
                 value=f"{sharpe_ratio:.2f}",
                 delta="Good" if sharpe_ratio > 1.0 else "Needs Improvement"
             )
@@ -391,7 +391,7 @@ def create_live_performance_metrics(portfolio_data):
         with col3:
             max_drawdown = metrics.get('max_drawdown', 0)
             st.metric(
-                label="📉 Max Drawdown",
+                label=" Max Drawdown",
                 value=f"{max_drawdown:.2%}",
                 delta=f"{max_drawdown:.2%}",
                 delta_color="inverse"
@@ -400,7 +400,7 @@ def create_live_performance_metrics(portfolio_data):
         with col4:
             win_rate = metrics.get('win_rate', 0)
             st.metric(
-                label="🎯 Win Rate",
+                label=" Win Rate",
                 value=f"{win_rate:.1%}",
                 delta="Excellent" if win_rate > 0.6 else "Good" if win_rate > 0.5 else "Needs Work"
             )
@@ -416,7 +416,7 @@ def create_market_overview():
     market_data = get_real_time_market_data()
     
     if market_data:
-        st.markdown("### 🌍 Live Market Overview")
+        st.markdown("###  Live Market Overview")
         
         cols = st.columns(len(market_data))
         for i, (symbol, data) in enumerate(market_data.items()):
@@ -424,7 +424,7 @@ def create_market_overview():
                 if isinstance(data, dict) and 'price' in data:
                     change = data.get('change', 0)
                     change_pct = data.get('change_percent', 0)
-                    color = "🟢" if change >= 0 else "🔴"
+                    color = "🟢" if change >= 0 else ""
                     
                     st.markdown(f"""
                     <div class="metric-card">
@@ -458,15 +458,15 @@ def main():
     """, unsafe_allow_html=True)
     
     # Main header
-    st.markdown('<h1 class="main-header">🚀 Dynamic Trading Dashboard</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header"> Dynamic Trading Dashboard</h1>', unsafe_allow_html=True)
     
     # Sidebar controls
     with st.sidebar:
-        st.markdown("### ⚙️ Real-Time Controls")
+        st.markdown("###  Real-Time Controls")
         
         # Auto-refresh controls
         st.session_state.auto_refresh = st.checkbox(
-            "🔄 Auto Refresh", 
+            " Auto Refresh", 
             value=st.session_state.auto_refresh,
             help="Automatically refresh data at specified intervals"
         )
@@ -481,24 +481,24 @@ def main():
             )
         
         # Manual refresh button
-        if st.button("🔄 Refresh Now", use_container_width=True):
+        if st.button(" Refresh Now", use_container_width=True):
             data_manager.clear_cache()
             st.session_state.last_update = datetime.now()
             add_notification("Manual refresh triggered", "info")
             st.rerun()
         
         # Clear notifications
-        if st.button("🧹 Clear Notifications", use_container_width=True):
+        if st.button(" Clear Notifications", use_container_width=True):
             st.session_state.notifications.clear()
             st.rerun()
         
         st.markdown("---")
         
         # Status indicators
-        st.markdown("### 📊 System Status")
-        st.success("✅ Dashboard: Online")
-        st.success("✅ Data Feed: Active" if CONFIG_AVAILABLE else "❌ Data Feed: Offline")
-        st.info(f"🔄 Auto-refresh: {'ON' if st.session_state.auto_refresh else 'OFF'}")
+        st.markdown("###  System Status")
+        st.success(" Dashboard: Online")
+        st.success(" Data Feed: Active" if CONFIG_AVAILABLE else " Data Feed: Offline")
+        st.info(f" Auto-refresh: {'ON' if st.session_state.auto_refresh else 'OFF'}")
     
     # Display notifications
     display_notifications()
@@ -510,19 +510,19 @@ def main():
     portfolio_data = get_real_time_portfolio_data()
     
     # Performance metrics
-    st.markdown("### 📊 Live Performance Metrics")
+    st.markdown("###  Live Performance Metrics")
     create_live_performance_metrics(portfolio_data)
     
     # Dynamic charts
-    st.markdown("### 📈 Real-Time Portfolio Analysis")
+    st.markdown("###  Real-Time Portfolio Analysis")
     if portfolio_data is not None:
         chart = create_dynamic_portfolio_chart(portfolio_data)
         st.plotly_chart(chart, use_container_width=True, key="portfolio_chart")
     else:
-        st.warning("📊 No portfolio data available. Start trading to see live updates!")
+        st.warning(" No portfolio data available. Start trading to see live updates!")
     
     # Real-time trading activity (if available)
-    st.markdown("### 🔄 Recent Trading Activity")
+    st.markdown("###  Recent Trading Activity")
     if portfolio_data is not None and not portfolio_data.empty:
         recent_trades = portfolio_data.tail(10)
         st.dataframe(
@@ -540,7 +540,7 @@ def main():
     st.markdown(f"""
     <div class="refresh-controls">
         <small>
-            🔄 Next refresh in: {st.session_state.refresh_interval - (datetime.now() - st.session_state.last_update).seconds if st.session_state.auto_refresh else 'Manual'} seconds
+             Next refresh in: {st.session_state.refresh_interval - (datetime.now() - st.session_state.last_update).seconds if st.session_state.auto_refresh else 'Manual'} seconds
         </small>
     </div>
     """, unsafe_allow_html=True)

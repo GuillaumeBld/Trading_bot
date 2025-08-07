@@ -1,6 +1,6 @@
 # Broker Integration Roadmap
 
-## 🎯 Overview
+##  Overview
 
 Transform the ChatGPT Micro-Cap Trading Bot from a tracking tool into a fully-integrated trading platform by connecting with real brokerage accounts for automated trade execution.
 
@@ -8,17 +8,17 @@ Transform the ChatGPT Micro-Cap Trading Bot from a tracking tool into a fully-in
 **Target State**: Automated trade execution through multiple broker APIs  
 **Timeline**: Q4 2024 - Q2 2025  
 
-## 🏦 Target Broker Integrations
+##  Target Broker Integrations
 
 ### Tier 1 - Primary Targets (Q4 2024)
 
-#### 1. Alpaca Markets ⭐ **HIGHEST PRIORITY**
+#### 1. Alpaca Markets  **HIGHEST PRIORITY**
 **Why Alpaca First:**
-- ✅ **Developer-friendly** - Excellent API documentation
-- ✅ **Commission-free** - No trading fees for stocks
-- ✅ **Paper trading** - Perfect for testing and validation
-- ✅ **Micro-cap support** - Trades small-cap and penny stocks
-- ✅ **Real-time data** - Streaming market data included
+-  **Developer-friendly** - Excellent API documentation
+-  **Commission-free** - No trading fees for stocks
+-  **Paper trading** - Perfect for testing and validation
+-  **Micro-cap support** - Trades small-cap and penny stocks
+-  **Real-time data** - Streaming market data included
 
 **API Capabilities:**
 - REST API for account management and trading
@@ -57,11 +57,11 @@ class AlpacaBroker:
 
 #### 2. TD Ameritrade (Charles Schwab)
 **Why TD Ameritrade:**
-- ✅ **Established platform** - Reliable and well-documented
-- ✅ **Comprehensive API** - Full trading and data access
-- ✅ **Paper trading** - thinkorswim paper money
-- ✅ **Research tools** - Fundamental data access
-- ⚠️ **More complex** - OAuth flow and approval process
+-  **Established platform** - Reliable and well-documented
+-  **Comprehensive API** - Full trading and data access
+-  **Paper trading** - thinkorswim paper money
+-  **Research tools** - Fundamental data access
+-  **More complex** - OAuth flow and approval process
 
 **API Features:**
 - OAuth2 authentication with refresh tokens
@@ -80,11 +80,11 @@ class AlpacaBroker:
 
 #### 3. Interactive Brokers (IBKR)
 **Why IBKR:**
-- ✅ **Global markets** - International stock access
-- ✅ **Low costs** - Competitive pricing structure  
-- ✅ **Professional tools** - Advanced trading features
-- ✅ **API maturity** - Long-established API
-- ⚠️ **Complexity** - Steep learning curve
+-  **Global markets** - International stock access
+-  **Low costs** - Competitive pricing structure  
+-  **Professional tools** - Advanced trading features
+-  **API maturity** - Long-established API
+-  **Complexity** - Steep learning curve
 
 **Considerations:**
 - TWS (Trader Workstation) dependency
@@ -94,10 +94,10 @@ class AlpacaBroker:
 
 #### 4. E*TRADE
 **Why E*TRADE:**
-- ✅ **Popular platform** - Large user base
-- ✅ **Good documentation** - Developer-friendly resources
-- ✅ **Sandbox environment** - Testing capabilities
-- ⚠️ **Limited micro-cap** - May restrict some small stocks
+-  **Popular platform** - Large user base
+-  **Good documentation** - Developer-friendly resources
+-  **Sandbox environment** - Testing capabilities
+-  **Limited micro-cap** - May restrict some small stocks
 
 ### Tier 3 - Future Considerations (Q2 2025+)
 
@@ -116,7 +116,7 @@ class AlpacaBroker:
 - Primarily mobile-focused platform
 - May consider if they expand API access
 
-## 🔧 Technical Architecture
+##  Technical Architecture
 
 ### Broker Abstraction Layer
 ```python
@@ -214,7 +214,7 @@ class BrokerManager:
 }
 ```
 
-## 🔒 Security & Risk Management
+##  Security & Risk Management
 
 ### API Key Security
 - **Environment variables** - Never hardcode credentials
@@ -256,7 +256,7 @@ class RiskManager:
 - **Symbol validation** - Verify ticker exists and is tradeable
 - **Market hours** - Only trade during market hours (unless extended)
 
-## 📊 Integration Features
+##  Integration Features
 
 ### Portfolio Synchronization
 - **Real-time sync** - Keep local and broker positions aligned
@@ -276,7 +276,7 @@ class RiskManager:
 - **Trade confirmations** - Immediate execution notifications
 - **Performance tracking** - Integrated P&L calculation
 
-## 🧪 Testing Strategy
+##  Testing Strategy
 
 ### Paper Trading Phase
 1. **Alpaca Paper Trading** - Test all functionality in sandbox
@@ -296,7 +296,7 @@ class RiskManager:
 - **Response time** - < 2 seconds for order placement
 - **Error rate** - < 0.1% failed orders
 
-## 📱 User Experience
+##  User Experience
 
 ### Broker Selection Interface
 ```python
@@ -304,7 +304,7 @@ class RiskManager:
 import streamlit as st
 
 def broker_selection_ui():
-    st.sidebar.header("🏦 Broker Integration")
+    st.sidebar.header(" Broker Integration")
     
     # Available brokers
     available_brokers = get_available_brokers()
@@ -345,7 +345,7 @@ def broker_selection_ui():
 5. **Confirmation** - Display order status and confirmation
 6. **Portfolio Update** - Update local portfolio tracking
 
-## 🚧 Implementation Challenges
+##  Implementation Challenges
 
 ### Technical Challenges
 - **API Rate Limits** - Manage request frequency
@@ -365,7 +365,7 @@ def broker_selection_ui():
 - **Cost Structure** - API fees and data costs
 - **User Education** - Teaching users about real trading risks
 
-## 📈 Success Metrics
+##  Success Metrics
 
 ### Technical Metrics
 - **Integration uptime** - 99.9% broker API availability
@@ -385,7 +385,7 @@ def broker_selection_ui():
 - **Feature usage** - 70%+ of trades through broker APIs
 - **Market expansion** - Access to institutional users
 
-## 🛣️ Migration Path
+##  Migration Path
 
 ### Phase 1: Foundation (Month 1)
 - Implement broker abstraction layer
@@ -411,7 +411,7 @@ def broker_selection_ui():
 - Mobile app integration
 - Enterprise features
 
-## 💰 Cost Analysis
+##  Cost Analysis
 
 ### Development Costs
 - **Engineering time** - 6 months × 2 developers = $120K

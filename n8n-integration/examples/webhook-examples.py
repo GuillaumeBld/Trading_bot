@@ -400,33 +400,33 @@ def robust_webhook_send(webhook_client: TradingBotWebhookClient, data: Dict[str,
 
 # Main execution examples
 if __name__ == "__main__":
-    print("🔗 Trading Bot n8n Integration Examples")
+    print(" Trading Bot n8n Integration Examples")
     print("=" * 50)
     
     # Synchronous examples
-    print("\n📤 Sending trade notification...")
+    print("\n Sending trade notification...")
     example_trade_notification()
     
-    print("\n⚠️ Sending portfolio alert...")
+    print("\n Sending portfolio alert...")
     example_portfolio_alert()
     
-    print("\n📊 Sending market update...")
+    print("\n Sending market update...")
     example_market_update()
     
-    print("\n🤖 n8n executing trade...")
+    print("\n n8n executing trade...")
     example_n8n_trade_execution()
     
-    print("\n📈 Portfolio monitoring...")
+    print("\n Portfolio monitoring...")
     example_portfolio_monitoring()
     
-    print("\n📦 Batch operations...")
+    print("\n Batch operations...")
     example_batch_operations()
     
     # Asynchronous examples
-    print("\n🚀 Async webhook example...")
+    print("\n Async webhook example...")
     asyncio.run(async_webhook_example())
     
-    print("\n⚡ Async API example...")
+    print("\n Async API example...")
     asyncio.run(async_api_example())
     
-    print("\n✅ All examples completed!")
+    print("\n All examples completed!")

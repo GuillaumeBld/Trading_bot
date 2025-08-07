@@ -1,6 +1,6 @@
-# 🌐 Hostinger Deployment - Step by Step
+#  Hostinger Deployment - Step by Step
 
-## 🚨 IMPORTANT SECURITY FIRST
+##  IMPORTANT SECURITY FIRST
 
 **IMMEDIATELY** do this:
 1. Go to your Hostinger dashboard
@@ -8,7 +8,7 @@
 3. **Never share API keys** in public conversations again
 4. Use the new API key for deployment
 
-## 🎯 Quick Deployment (5 Minutes)
+##  Quick Deployment (5 Minutes)
 
 ### Step 1: Connect to Your VPS
 ```bash
@@ -53,14 +53,14 @@ cd /opt/trading-bot
 ```
 
 **The script will automatically:**
-- ✅ Install Docker, Docker Compose, Git, Python
-- ✅ Clone the repository
-- ✅ Set up environment variables
-- ✅ Deploy all services (Trading Bot, n8n, Database)
-- ✅ Configure Nginx reverse proxy
-- ✅ Set up SSL certificate (optional)
-- ✅ Configure firewall
-- ✅ Set up monitoring and backups
+-  Install Docker, Docker Compose, Git, Python
+-  Clone the repository
+-  Set up environment variables
+-  Deploy all services (Trading Bot, n8n, Database)
+-  Configure Nginx reverse proxy
+-  Set up SSL certificate (optional)
+-  Configure firewall
+-  Set up monitoring and backups
 
 ### Step 3: Configure Your Settings
 
@@ -78,7 +78,7 @@ After deployment:
 - **n8n Workflows**: `http://your-domain.com/n8n` or `http://your-ip:5678`
 - **API Docs**: `http://your-domain.com/api/docs` or `http://your-ip:8000/docs`
 
-## 🎛️ What You'll Have After Deployment
+##  What You'll Have After Deployment
 
 ### 1. **Real-Time Trading Dashboard**
 - Live portfolio monitoring
@@ -106,7 +106,7 @@ After deployment:
 - Automated backups
 - Health monitoring
 
-## 🔧 Manual Configuration (If Needed)
+##  Manual Configuration (If Needed)
 
 ### If Automatic Script Doesn't Work:
 
@@ -142,7 +142,7 @@ nano docker/.env  # Add your API keys
 docker-compose -f docker/docker-compose.yml up -d
 ```
 
-## 🧪 Testing Your Deployment
+##  Testing Your Deployment
 
 ### Health Checks:
 ```bash
@@ -161,7 +161,7 @@ docker-compose -f n8n-integration/docker/docker-compose.yml ps
 - **Dashboard**: `200 OK` response
 - **All Services**: Should show "Up" status
 
-## 🔐 Security Setup
+##  Security Setup
 
 ### 1. **Change Default Passwords**
 ```bash
@@ -191,7 +191,7 @@ sudo apt install certbot python3-certbot-nginx
 sudo certbot --nginx -d your-domain.com
 ```
 
-## 📊 Using Your Trading Bot
+##  Using Your Trading Bot
 
 ### 1. **Access n8n Workflows**
 - Go to: `http://your-domain.com/n8n`
@@ -210,7 +210,7 @@ sudo certbot --nginx -d your-domain.com
 - Enable AI trading signals
 - Monitor performance
 
-## 🆘 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues:
 
@@ -239,7 +239,7 @@ docker-compose -f n8n-integration/docker/docker-compose.yml down -v
 docker-compose -f n8n-integration/docker/docker-compose.yml up -d
 ```
 
-## 📞 Support
+##  Support
 
 If you need help:
 1. Check the logs: `docker-compose logs [service-name]`
@@ -247,16 +247,16 @@ If you need help:
 3. Check service status: `docker-compose ps`
 4. Verify environment variables in `.env`
 
-## 🎉 Success!
+##  Success!
 
 After successful deployment, you'll have:
-- ✅ **Professional Trading Dashboard** with real-time updates
-- ✅ **Automated n8n Workflows** for trading signals and alerts
-- ✅ **Complete API System** for external integrations
-- ✅ **Secure Infrastructure** with SSL and monitoring
-- ✅ **Production-Ready Setup** with backups and health checks
+-  **Professional Trading Dashboard** with real-time updates
+-  **Automated n8n Workflows** for trading signals and alerts
+-  **Complete API System** for external integrations
+-  **Secure Infrastructure** with SSL and monitoring
+-  **Production-Ready Setup** with backups and health checks
 
-**Your AI-powered trading bot is now live on Hostinger!** 🚀
+**Your AI-powered trading bot is now live on Hostinger!** 
 
 ---
 
@@ -267,4 +267,4 @@ After successful deployment, you'll have:
 4. Start with paper trading to test everything
 5. Monitor performance and adjust as needed
 
-**Happy Trading!** 📈🤖
+**Happy Trading!** 

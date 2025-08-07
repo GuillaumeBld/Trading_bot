@@ -1,119 +1,119 @@
-# 📁 Repository Structure Guide
+#  Repository Structure Guide
 
 This document explains the clean, organized structure of the ChatGPT Micro-Cap Trading Bot repository.
 
-## 🎯 Organization Principles
+##  Organization Principles
 
 The repository follows modern Python project standards with clear separation of concerns:
 
-- **📦 Source Code** (`src/`) - All Python modules organized by functionality
-- **📊 Data** (`data/`) - Portfolio data, trades, and backups
-- **🛠️ Scripts** (`scripts/`) - Utility scripts and tools
-- **📚 Documentation** (`docs/`) - Comprehensive user and developer guides
-- **🗃️ Archive** (`archive/`) - Historical files and original structure
-- **🎨 Assets** (`assets/`) - Images, reports, and static files
+- ** Source Code** (`src/`) - All Python modules organized by functionality
+- ** Data** (`data/`) - Portfolio data, trades, and backups
+- ** Scripts** (`scripts/`) - Utility scripts and tools
+- ** Documentation** (`docs/`) - Comprehensive user and developer guides
+- ** Archive** (`archive/`) - Historical files and original structure
+- ** Assets** (`assets/`) - Images, reports, and static files
 
-## 📂 Directory Structure
+##  Directory Structure
 
 ```
 chatgpt-microcap-experiment/
-├── 📄 README.md                    # Main project overview
-├── 📄 CONTRIBUTING.md              # Contribution guidelines
-├── 📄 requirements.txt             # Python dependencies
-├── 📄 setup.py                     # Package installation
-├── 📄 .gitignore                   # Git ignore rules
-├── 🚀 run_dashboard.py             # Quick dashboard launcher
-├── 🚀 run_trading.py               # Quick CLI launcher
-│
-├── 📦 src/                         # Source Code
-│   ├── 🧠 core/                    # Core Business Logic
-│   │   ├── trading_script.py       # Main trading engine
-│   │   ├── llm_interface.py        # AI integration
-│   │   └── __init__.py
-│   ├── 🖥️ interfaces/              # User Interfaces
-│   │   ├── advanced_dashboard.py   # Full-featured dashboard
-│   │   ├── dashboard_app.py        # Alternative dashboard
-│   │   ├── streamlit_app.py        # Basic web interface
-│   │   ├── trading_bot.py          # Command-line interface
-│   │   └── __init__.py
-│   ├── 🔧 services/                # External Services
-│   │   ├── market_data_service.py  # Market data & news
-│   │   └── __init__.py
-│   ├── ⚙️ config/                  # Configuration
-│   │   ├── dashboard_config.py     # Settings management
-│   │   └── __init__.py
-│   └── __init__.py
-│
-├── 📊 data/                        # Data Storage
-│   ├── portfolio/                  # Portfolio snapshots
-│   │   └── .gitkeep
-│   ├── trades/                     # Trade history
-│   │   └── .gitkeep
-│   └── backups/                    # Data backups
-│       └── .gitkeep
-│
-├── 🛠️ scripts/                     # Utility Scripts
-│   ├── setup/                      # Installation & Setup
-│   │   └── setup_llm.py           # AI provider setup
-│   ├── utils/                      # Helper Utilities
-│   │   └── launch_dashboard.py    # Dashboard launcher
-│   └── demos/                      # Demonstrations
-│       ├── demo_dashboard.py      # Dashboard demo
-│       └── demo_llm_features.py   # AI features demo
-│
-├── 🎨 assets/                      # Static Assets
-│   ├── images/                     # Screenshots & charts
-│   │   └── (6-30 - 7-25) Results.png
-│   └── reports/                    # Generated reports
-│       ├── Starting Research.pdf
-│       ├── Week 1.pdf
-│       ├── Week 2.pdf
-│       ├── Week 3.pdf
-│       ├── Week 4.pdf
-│       ├── Week 5.pdf
-│       └── Week 6.pdf
-│
-├── 📚 docs/                        # Documentation
-│   ├── README.md                   # Documentation index
-│   ├── getting-started/            # New user guides
-│   ├── installation/               # Setup instructions
-│   ├── configuration/              # Settings guides
-│   ├── usage/                      # Interface guides
-│   ├── llm-providers/             # AI setup guides
-│   ├── tutorials/                  # Step-by-step tutorials
-│   ├── examples/                   # Real-world examples
-│   ├── troubleshooting/           # Help & FAQ
-│   └── api-reference/             # Technical docs
-│
-├── 🚀 future-enhancements/         # Development Planning
-│   ├── README.md                   # Planning overview
-│   ├── roadmap/                    # Development timeline
-│   ├── feature-requests/           # Community requests
-│   ├── research/                   # AI & trading research
-│   ├── architecture/               # System design
-│   ├── integrations/               # Third-party connections
-│   └── DEVELOPMENT_PRIORITIES.md   # Strategic priorities
-│
-├── 🗃️ archive/                     # Historical Files
-│   └── original-structure/         # Original file organization
-│       ├── Experiment Details/
-│       ├── Scripts and CSV Files/
-│       ├── Start Your Own/
-│       ├── Weekly Deep Research (MD)/
-│       └── Weekly Deep Research (PDF)/
-│
-├── 🧪 tests/                       # Test Suites
-│   ├── unit/                       # Unit tests
-│   │   └── .gitkeep
-│   └── integration/                # Integration tests
-│       └── .gitkeep
-│
-└── 📁 Other/                       # Miscellaneous
-    ├── License.txt                 # MIT License
-    └── ignore_list.gitignore       # Additional ignore rules
+  README.md                    # Main project overview
+  CONTRIBUTING.md              # Contribution guidelines
+  requirements.txt             # Python dependencies
+  setup.py                     # Package installation
+  .gitignore                   # Git ignore rules
+  run_dashboard.py             # Quick dashboard launcher
+  run_trading.py               # Quick CLI launcher
+
+  src/                         # Source Code
+     core/                    # Core Business Logic
+       trading_script.py       # Main trading engine
+       llm_interface.py        # AI integration
+       __init__.py
+     interfaces/              # User Interfaces
+       advanced_dashboard.py   # Full-featured dashboard
+       dashboard_app.py        # Alternative dashboard
+       streamlit_app.py        # Basic web interface
+       trading_bot.py          # Command-line interface
+       __init__.py
+     services/                # External Services
+       market_data_service.py  # Market data & news
+       __init__.py
+     config/                  # Configuration
+       dashboard_config.py     # Settings management
+       __init__.py
+    __init__.py
+
+  data/                        # Data Storage
+    portfolio/                  # Portfolio snapshots
+       .gitkeep
+    trades/                     # Trade history
+       .gitkeep
+    backups/                    # Data backups
+        .gitkeep
+
+  scripts/                     # Utility Scripts
+    setup/                      # Installation & Setup
+       setup_llm.py           # AI provider setup
+    utils/                      # Helper Utilities
+       launch_dashboard.py    # Dashboard launcher
+    demos/                      # Demonstrations
+        demo_dashboard.py      # Dashboard demo
+        demo_llm_features.py   # AI features demo
+
+  assets/                      # Static Assets
+    images/                     # Screenshots & charts
+       (6-30 - 7-25) Results.png
+    reports/                    # Generated reports
+        Starting Research.pdf
+        Week 1.pdf
+        Week 2.pdf
+        Week 3.pdf
+        Week 4.pdf
+        Week 5.pdf
+        Week 6.pdf
+
+  docs/                        # Documentation
+    README.md                   # Documentation index
+    getting-started/            # New user guides
+    installation/               # Setup instructions
+    configuration/              # Settings guides
+    usage/                      # Interface guides
+    llm-providers/             # AI setup guides
+    tutorials/                  # Step-by-step tutorials
+    examples/                   # Real-world examples
+    troubleshooting/           # Help & FAQ
+    api-reference/             # Technical docs
+
+  future-enhancements/         # Development Planning
+    README.md                   # Planning overview
+    roadmap/                    # Development timeline
+    feature-requests/           # Community requests
+    research/                   # AI & trading research
+    architecture/               # System design
+    integrations/               # Third-party connections
+    DEVELOPMENT_PRIORITIES.md   # Strategic priorities
+
+  archive/                     # Historical Files
+    original-structure/         # Original file organization
+        Experiment Details/
+        Scripts and CSV Files/
+        Start Your Own/
+        Weekly Deep Research (MD)/
+        Weekly Deep Research (PDF)/
+
+  tests/                       # Test Suites
+    unit/                       # Unit tests
+       .gitkeep
+    integration/                # Integration tests
+        .gitkeep
+
+  Other/                       # Miscellaneous
+     License.txt                 # MIT License
+     ignore_list.gitignore       # Additional ignore rules
 ```
 
-## 🚀 Quick Start Commands
+##  Quick Start Commands
 
 ### Easy Launchers (Root Directory)
 ```bash
@@ -142,7 +142,7 @@ python scripts/setup/setup_llm.py
 python scripts/demos/demo_dashboard.py
 ```
 
-## 📦 Package Structure
+##  Package Structure
 
 The `src/` directory is organized as a proper Python package:
 
@@ -162,7 +162,7 @@ The `src/` directory is organized as a proper Python package:
 ### Configuration (`src/config/`)
 - **`dashboard_config.py`** - Comprehensive settings management with encryption
 
-## 📊 Data Organization
+##  Data Organization
 
 ### Portfolio Data (`data/portfolio/`)
 - Daily portfolio snapshots
@@ -179,7 +179,7 @@ The `src/` directory is organized as a proper Python package:
 - Configuration snapshots
 - Recovery files
 
-## 🛠️ Scripts Organization
+##  Scripts Organization
 
 ### Setup Scripts (`scripts/setup/`)
 - **`setup_llm.py`** - Interactive AI provider configuration
@@ -191,7 +191,7 @@ The `src/` directory is organized as a proper Python package:
 - **`demo_dashboard.py`** - Creates sample data and launches demo
 - **`demo_llm_features.py`** - Demonstrates AI integration features
 
-## 📚 Documentation Structure
+##  Documentation Structure
 
 Comprehensive documentation organized by user type and use case:
 
@@ -205,7 +205,7 @@ Comprehensive documentation organized by user type and use case:
 - **Troubleshooting** - Problem-solving guides
 - **API Reference** - Technical documentation
 
-## 🔒 Security & Privacy
+##  Security & Privacy
 
 ### Protected Files (.gitignore)
 - API keys and secrets (`.env`, `*.key`)
@@ -218,7 +218,7 @@ Comprehensive documentation organized by user type and use case:
 - Sample configurations without sensitive data
 - Demo data for testing
 
-## 🧪 Testing Structure
+##  Testing Structure
 
 ### Unit Tests (`tests/unit/`)
 - Core logic testing
@@ -230,7 +230,7 @@ Comprehensive documentation organized by user type and use case:
 - API integration testing
 - User interface testing
 
-## 🗃️ Archive Organization
+##  Archive Organization
 
 Historical files preserved in `archive/original-structure/`:
 - Original experiment documentation
@@ -238,7 +238,7 @@ Historical files preserved in `archive/original-structure/`:
 - Research reports and findings
 - Maintains project history while keeping main structure clean
 
-## ✨ Benefits of This Organization
+##  Benefits of This Organization
 
 ### For Users
 - **Easy Navigation** - Clear structure with logical grouping
@@ -257,7 +257,7 @@ Historical files preserved in `archive/original-structure/`:
 - **Documentation First** - Changes require documentation updates
 - **Quality Standards** - Linting, testing, and review processes
 
-## 🔄 Migration from Old Structure
+##  Migration from Old Structure
 
 If you have data from the old structure:
 
@@ -266,7 +266,7 @@ If you have data from the old structure:
 3. **Custom Scripts**: Place in appropriate `scripts/` subdirectory
 4. **Documentation**: Check if covered in new docs, otherwise add to appropriate section
 
-## 📞 Getting Help
+##  Getting Help
 
 - **Structure Questions**: Check this document first
 - **Usage Help**: See `docs/README.md` for comprehensive guides

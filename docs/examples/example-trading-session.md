@@ -2,7 +2,7 @@
 
 This document shows a complete trading session from start to finish, including AI recommendations, decision-making, and results analysis.
 
-## 📊 Session Overview
+##  Session Overview
 
 **Date**: August 6, 2024  
 **Starting Cash**: $100.00  
@@ -10,7 +10,7 @@ This document shows a complete trading session from start to finish, including A
 **AI Provider**: OpenAI GPT-4o-mini  
 **Market Condition**: Mixed signals, moderate volatility
 
-## 🚀 Session Start
+##  Session Start
 
 ### Command Used
 ```bash
@@ -19,23 +19,23 @@ python trading_bot.py --ai --provider openai --data-dir "Example Session"
 
 ### Initial Output
 ```
-🚀 Starting ChatGPT Micro-Cap Trading Bot
+ Starting ChatGPT Micro-Cap Trading Bot
 ==================================================
-📁 Data directory: Example Session
-📊 Portfolio file: Example Session/chatgpt_portfolio_update.csv
-🤖 AI Provider: openai
-✨ AI recommendations: ENABLED
+ Data directory: Example Session
+ Portfolio file: Example Session/chatgpt_portfolio_update.csv
+ AI Provider: openai
+ AI recommendations: ENABLED
 ==================================================
 
 Portfolio CSV is empty. Returning set amount of cash for creating portfolio.
 What would you like your starting cash amount to be? 100
 ```
 
-## 🤖 AI Analysis Phase
+##  AI Analysis Phase
 
 ### Market Data Collection
 ```
-🤖 Getting AI recommendations...
+ Getting AI recommendations...
 Using LLM provider: openai
 
 Fetching market data for: ^RUT, IWO, XBI
@@ -47,7 +47,7 @@ XBI: $89.47 (+0.22%)
 ### AI Recommendations Generated
 
 ```
-📋 LLM provided 3 recommendations:
+ LLM provided 3 recommendations:
 
 --- Recommendation 1 ---
 Action: BUY
@@ -59,11 +59,11 @@ Confidence: 0.85
 Reasoning: Strong technical breakout above $5.50 resistance level with volume confirmation at 45K shares. Company reported 15% revenue growth last quarter and has upcoming product launch catalyst in Q4. RSI shows momentum without being overbought at 68. Risk/reward favorable with support at $5.20.
 
 Execute this recommendation? (y/n/skip): y
-✅ BUY executed
+ BUY executed
 LLM Recommendation: BUY ABEO - 10.0 shares @ $5.75
 Reasoning: Strong technical breakout above $5.50 resistance level with volume confirmation...
 Confidence: 0.85
-✅ BUY executed
+ BUY executed
 
 --- Recommendation 2 ---
 Action: BUY  
@@ -75,7 +75,7 @@ Confidence: 0.72
 Reasoning: Biotech with promising Phase 2 trial results announced last week. Chart shows ascending triangle pattern with breakout potential. Sector rotation into healthcare creating tailwinds. However, regulatory risk remains elevated, hence lower confidence score.
 
 Execute this recommendation? (y/n/skip): y  
-✅ BUY executed
+ BUY executed
 
 --- Recommendation 3 ---
 Action: BUY
@@ -87,7 +87,7 @@ Confidence: 0.68
 Reasoning: AI/Software micro-cap with recent contract wins. Trading near 52-week lows despite improving fundamentals. High beta stock suitable for momentum play. Warning: low float could cause volatile price swings.
 
 Execute this recommendation? (y/n/skip): n
-❌ Recommendation skipped by user
+ Recommendation skipped by user
 ```
 
 ### User Decision Logic
@@ -95,14 +95,14 @@ Execute this recommendation? (y/n/skip): n
 - **CADL**: Accepted - Good confidence (0.72) + biotech catalyst
 - **CSAI**: Rejected - Lower confidence (0.68) + high volatility warning
 
-## 📈 Portfolio Processing
+##  Portfolio Processing
 
 ### Stop-Loss Monitoring
 ```
 Processing portfolio positions...
 
-ABEO: Current $5.68, Stop-loss $4.89 ✅ SAFE
-CADL: Current $5.06, Stop-loss $4.03 ✅ SAFE
+ABEO: Current $5.68, Stop-loss $4.89  SAFE
+CADL: Current $5.06, Stop-loss $4.03  SAFE
 ```
 
 ### Market Data Updates
@@ -130,7 +130,7 @@ XBI volume for today: $23,567,000
 percent change from the day before: +0.22%
 ```
 
-## 📊 Performance Analysis
+##  Performance Analysis
 
 ### Portfolio Metrics
 ```
@@ -157,7 +157,7 @@ total equity: 97.82
 - **Relative Performance**: -2.33% underperformance
 - **Risk Taken**: 97.8% invested, 2.2% cash
 
-## 📁 Generated Data Files
+##  Generated Data Files
 
 ### Portfolio Update CSV
 ```csv
@@ -174,7 +174,7 @@ Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
 2024-08-06,CADL,8.0,5.04,40.32,0.0,LLM Decision: Biotech with promising Phase 2 trial results announced...,,
 ```
 
-## 🔍 Analysis of AI Decisions
+##  Analysis of AI Decisions
 
 ### What the AI Got Right
 1. **Risk Management**: Proper stop-loss placement at ~15% below entry
@@ -192,7 +192,7 @@ Date,Ticker,Shares Bought,Buy Price,Cost Basis,PnL,Reason,Shares Sold,Sell Price
 2. **Good**: Accepted high-confidence recommendations
 3. **Consider**: Could have started with smaller positions
 
-## 📈 Day 2 Follow-Up Session
+##  Day 2 Follow-Up Session
 
 ### Running Next Day
 ```bash
@@ -205,7 +205,7 @@ python trading_bot.py --ai --provider openai --data-dir "Example Session"
 0    ABEO    10.0       4.89       5.75       57.50
 1    CADL     8.0       4.03       5.04       40.32
 
-🤖 Getting AI recommendations...
+ Getting AI recommendations...
 ```
 
 ### New AI Analysis
@@ -224,10 +224,10 @@ Confidence: 0.80
 Reasoning: Stock showing strength above $5.00. Recommend raising stop-loss to $4.55 to lock in some gains while maintaining upside potential.
 
 Execute this recommendation? (y/n/skip): y
-✅ Stop-loss adjusted to $4.55
+ Stop-loss adjusted to $4.55
 ```
 
-## 🎯 Key Lessons Learned
+##  Key Lessons Learned
 
 ### AI Strengths Demonstrated
 - **Comprehensive Analysis**: Considered technical, fundamental, and catalysts
@@ -246,7 +246,7 @@ Execute this recommendation? (y/n/skip): y
 - **Risk Monitoring**: Automatic stop-loss enforcement
 - **Learning Tool**: Rich data for strategy improvement
 
-## 💡 Optimization Ideas
+##  Optimization Ideas
 
 ### For Next Session
 1. **Smaller Initial Positions**: Start with 5-10% allocations
@@ -260,7 +260,7 @@ Execute this recommendation? (y/n/skip): y
 3. **Risk Budgeting**: Set maximum risk per position
 4. **Correlation Analysis**: Avoid highly correlated positions
 
-## 📊 Session Summary
+##  Session Summary
 
 | Metric | Value | Notes |
 |--------|-------|-------|
@@ -273,7 +273,7 @@ Execute this recommendation? (y/n/skip): y
 | **Risk Level** | High | 97.8% invested |
 | **Stop-Loss Protection** | Active | 15% downside protection |
 
-## 🔄 Continuing the Experiment
+##  Continuing the Experiment
 
 This example shows just the beginning of a trading journey. Key next steps:
 

@@ -1,28 +1,28 @@
 # System Architecture Evolution
 
-## 🏗️ Current Architecture (v2.0)
+##  Current Architecture (v2.0)
 
 ### System Overview
 ```
 Current Architecture (Monolithic)
-┌─────────────────────────────────────┐
-│           User Interfaces          │
-├─────────────────┬───────────────────┤
-│   CLI Interface │   Web Interface   │
-│  (trading_bot)  │  (streamlit_app)  │
-└─────────────────┴───────────────────┘
-           │              │
-           ▼              ▼
-┌─────────────────────────────────────┐
-│         Core Trading Engine        │
-│        (trading_script.py)         │
-├─────────────────────────────────────┤
-│         LLM Integration Layer       │
-│        (llm_interface.py)          │
-├─────────────────────────────────────┤
-│           Data Layer               │
-│    (CSV files + yFinance)          │
-└─────────────────────────────────────┘
+
+           User Interfaces          
+
+   CLI Interface    Web Interface   
+  (trading_bot)    (streamlit_app)  
+
+                         
+                         
+
+         Core Trading Engine        
+        (trading_script.py)         
+
+         LLM Integration Layer       
+        (llm_interface.py)          
+
+           Data Layer               
+    (CSV files + yFinance)          
+
 ```
 
 ### Current Limitations
@@ -33,46 +33,46 @@ Current Architecture (Monolithic)
 - **Limited monitoring** - Basic error handling
 - **Monolithic structure** - Hard to scale components independently
 
-## 🚀 Target Architecture (v3.0) - Microservices
+##  Target Architecture (v3.0) - Microservices
 
 ### High-Level Design
 ```
 Target Microservices Architecture
-┌─────────────────────────────────────────────────────────┐
-│                    Load Balancer                        │
-└─────────────────────────────────────────────────────────┘
-           │              │              │
-           ▼              ▼              ▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│   Web Frontend  │ │   Mobile App    │ │   API Gateway   │
-│   (React/Vue)   │ │ (React Native)  │ │   (FastAPI)     │
-└─────────────────┘ └─────────────────┘ └─────────────────┘
-           │              │              │
-           └──────────────┼──────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│                  Service Mesh                           │
-├─────────────────┬─────────────────┬─────────────────────┤
-│  Trading Service│   AI Service    │  Portfolio Service  │
-│                 │                 │                     │
-│ • Order mgmt    │ • LLM routing   │ • Position tracking │
-│ • Risk checks   │ • Model cache   │ • Performance calc  │
-│ • Broker APIs   │ • Confidence    │ • Risk metrics      │
-└─────────────────┴─────────────────┴─────────────────────┘
-           │              │              │
-           └──────────────┼──────────────┘
-                          │
-                          ▼
-┌─────────────────────────────────────────────────────────┐
-│                  Data Layer                             │
-├─────────────────┬─────────────────┬─────────────────────┤
-│   PostgreSQL    │     Redis       │   Message Queue     │
-│                 │                 │                     │
-│ • User data     │ • Session cache │ • Async processing  │
-│ • Portfolios    │ • Market cache  │ • Notifications     │
-│ • Trade history │ • AI responses  │ • Event streaming   │
-└─────────────────┴─────────────────┴─────────────────────┘
+
+                    Load Balancer                        
+
+                                       
+                                       
+  
+   Web Frontend      Mobile App        API Gateway   
+   (React/Vue)     (React Native)      (FastAPI)     
+  
+                                       
+           
+                          
+                          
+
+                  Service Mesh                           
+
+  Trading Service   AI Service      Portfolio Service  
+                                                       
+ • Order mgmt     • LLM routing    • Position tracking 
+ • Risk checks    • Model cache    • Performance calc  
+ • Broker APIs    • Confidence     • Risk metrics      
+
+                                       
+           
+                          
+                          
+
+                  Data Layer                             
+
+   PostgreSQL         Redis          Message Queue     
+                                                       
+ • User data      • Session cache  • Async processing  
+ • Portfolios     • Market cache   • Notifications     
+ • Trade history  • AI responses   • Event streaming   
+
 ```
 
 ### Service Breakdown
@@ -160,14 +160,14 @@ Target Microservices Architecture
 - Economic calendar events
 - Data quality and validation
 
-## 🗄️ Database Design Evolution
+##  Database Design Evolution
 
 ### Current State (CSV Files)
 ```
 Current File Structure:
-├── chatgpt_portfolio_update.csv
-├── chatgpt_trade_log.csv
-└── user_config.json
+ chatgpt_portfolio_update.csv
+ chatgpt_trade_log.csv
+ user_config.json
 ```
 
 ### Target State (Relational + NoSQL)
@@ -285,7 +285,7 @@ CACHE_TTL = {
 }
 ```
 
-## 🔄 Migration Strategy
+##  Migration Strategy
 
 ### Phase 1: Database Migration (Month 1-2)
 1. **Set up PostgreSQL** - Production database instance
@@ -315,7 +315,7 @@ CACHE_TTL = {
 4. **Security hardening** - Penetration testing
 5. **Documentation** - API docs and guides
 
-## 📊 Performance & Scalability Targets
+##  Performance & Scalability Targets
 
 ### Current Performance
 - **Users**: Single user per instance
@@ -335,25 +335,25 @@ CACHE_TTL = {
 ### Scalability Metrics
 ```
 Performance Benchmarks:
-├── API Response Time
-│   ├── 95th percentile: <500ms
-│   ├── 99th percentile: <1000ms
-│   └── Timeout: 30s
-├── Database Performance
-│   ├── Query response: <100ms
-│   ├── Connection pool: 100 connections
-│   └── Backup window: <1 hour
-├── AI Service Performance
-│   ├── Model response: <5s
-│   ├── Cache hit rate: >80%
-│   └── Concurrent requests: 100+
-└── System Resources
-    ├── CPU utilization: <70%
-    ├── Memory usage: <80%
-    └── Disk I/O: <80%
+ API Response Time
+    95th percentile: <500ms
+    99th percentile: <1000ms
+    Timeout: 30s
+ Database Performance
+    Query response: <100ms
+    Connection pool: 100 connections
+    Backup window: <1 hour
+ AI Service Performance
+    Model response: <5s
+    Cache hit rate: >80%
+    Concurrent requests: 100+
+ System Resources
+     CPU utilization: <70%
+     Memory usage: <80%
+     Disk I/O: <80%
 ```
 
-## 🔒 Security Architecture
+##  Security Architecture
 
 ### Authentication & Authorization
 - **JWT tokens** - Stateless authentication
@@ -376,7 +376,7 @@ Performance Benchmarks:
 - **Secrets management** - HashiCorp Vault
 - **Regular updates** - Security patch management
 
-## 🚀 Deployment Strategy
+##  Deployment Strategy
 
 ### Current Deployment
 - **Single server** - Everything on one machine
@@ -435,7 +435,7 @@ spec:
 - **Jaeger** - Distributed tracing
 - **PagerDuty** - Alerting and incident response
 
-## 🎯 Success Metrics
+##  Success Metrics
 
 ### Technical Metrics
 - **System uptime**: 99.9%

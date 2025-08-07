@@ -8,70 +8,70 @@ This unified trading bot project consolidates all the best features from multipl
 
 ```
 unified-trading-bot/
-├── 📦 src/                          # Core source code
-│   ├── 🧠 core/                     # Core trading logic
-│   │   ├── trading_engine.py        # Main trading engine (783 lines)
-│   │   ├── trading_script.py        # Trading script implementation (575 lines)
-│   │   └── llm_interface.py         # AI integration (485 lines)
-│   ├── 🖥️ interfaces/               # User interfaces and dashboards
-│   │   ├── advanced_dashboard.py    # Full-featured dashboard (1095 lines)
-│   │   ├── dashboard_app.py         # Dashboard application (834 lines)
-│   │   ├── dynamic_dashboard.py     # Dynamic dashboard (549 lines)
-│   │   ├── trading_bot.py           # CLI interface (178 lines)
-│   │   ├── streamlit_app.py         # Basic web UI (145 lines)
-│   │   └── real_time_service.py     # Real-time services (447 lines)
-│   ├── 🔧 services/                 # External services
-│   │   ├── market_data_service.py   # Market data & news (558 lines)
-│   │   └── real_time_service.py     # Real-time monitoring (duplicate)
-│   └── ⚙️ config/                   # Configuration management
-│       ├── dashboard_config.py      # Dashboard settings (430 lines)
-│       └── dynamic_config.py        # Dynamic configuration
-├── 🛠️ scripts/                      # Utility and setup scripts
-│   ├── run_dashboard.py             # Dashboard launcher (28 lines)
-│   ├── run_trading.py               # Trading bot launcher (33 lines)
-│   ├── run_dynamic_dashboard.py     # Dynamic dashboard launcher (54 lines)
-│   ├── demo_dashboard.py            # Demo dashboard (363 lines)
-│   ├── demo_llm_features.py         # LLM features demo (198 lines)
-│   ├── setup_llm.py                 # LLM setup wizard (262 lines)
-│   ├── launch_dashboard.py          # Dashboard launcher (255 lines)
-│   └── utils/                       # Utility scripts
-│       └── launch_dynamic_dashboard.py
-├── 📊 data/                         # Data storage
-│   ├── portfolio/                   # Portfolio snapshots
-│   ├── trades/                      # Trade history
-│   └── backups/                     # Data backups
-├── 🎨 assets/                       # Static assets
-│   ├── images/                      # Screenshots & charts
-│   └── reports/                     # Generated reports
-├── 📚 docs/                         # Comprehensive documentation
-│   ├── getting-started/             # Quick start guides
-│   ├── configuration/               # Configuration guides
-│   ├── usage/                       # Usage documentation
-│   ├── tutorials/                   # Tutorial guides
-│   ├── troubleshooting/             # FAQ and troubleshooting
-│   ├── examples/                    # Code examples
-│   ├── llm-providers/               # LLM provider guides
-│   └── installation/                # Installation guides
-├── 🚀 deployment/                   # Deployment guides and scripts
-│   ├── hostinger-deployment-guide.md
-│   └── hostinger-quick-deploy.sh
-├── 🤖 n8n-integration/              # n8n workflow automation
-│   ├── workflows/                   # Pre-built n8n workflows
-│   ├── docker/                      # Docker deployment files
-│   ├── api-wrapper/                 # FastAPI integration layer
-│   └── docs/                        # n8n setup guides
-├── 🔮 future-enhancements/          # Development roadmap
-│   ├── architecture/                # System evolution plans
-│   ├── feature-requests/            # Feature request templates
-│   ├── integrations/                # Broker integration plans
-│   ├── research/                    # AI trading research
-│   └── roadmap/                     # Development roadmap
-├── 📋 Experiment Details/           # Original experiment data
-├── 📁 Scripts and CSV Files/        # Original trading scripts
-├── 📁 Start Your Own/               # Starter templates
-├── 📄 Weekly Deep Research (MD)/    # Research summaries
-├── 📄 Weekly Deep Research (PDF)/   # Research PDFs
-└── 📁 Other/                        # Miscellaneous files
+  src/                          # Core source code
+     core/                     # Core trading logic
+       trading_engine.py        # Main trading engine (783 lines)
+       trading_script.py        # Trading script implementation (575 lines)
+       llm_interface.py         # AI integration (485 lines)
+     interfaces/               # User interfaces and dashboards
+       advanced_dashboard.py    # Full-featured dashboard (1095 lines)
+       dashboard_app.py         # Dashboard application (834 lines)
+       dynamic_dashboard.py     # Dynamic dashboard (549 lines)
+       trading_bot.py           # CLI interface (178 lines)
+       streamlit_app.py         # Basic web UI (145 lines)
+       real_time_service.py     # Real-time services (447 lines)
+     services/                 # External services
+       market_data_service.py   # Market data & news (558 lines)
+       real_time_service.py     # Real-time monitoring (duplicate)
+     config/                   # Configuration management
+        dashboard_config.py      # Dashboard settings (430 lines)
+        dynamic_config.py        # Dynamic configuration
+  scripts/                      # Utility and setup scripts
+    run_dashboard.py             # Dashboard launcher (28 lines)
+    run_trading.py               # Trading bot launcher (33 lines)
+    run_dynamic_dashboard.py     # Dynamic dashboard launcher (54 lines)
+    demo_dashboard.py            # Demo dashboard (363 lines)
+    demo_llm_features.py         # LLM features demo (198 lines)
+    setup_llm.py                 # LLM setup wizard (262 lines)
+    launch_dashboard.py          # Dashboard launcher (255 lines)
+    utils/                       # Utility scripts
+        launch_dynamic_dashboard.py
+  data/                         # Data storage
+    portfolio/                   # Portfolio snapshots
+    trades/                      # Trade history
+    backups/                     # Data backups
+  assets/                       # Static assets
+    images/                      # Screenshots & charts
+    reports/                     # Generated reports
+  docs/                         # Comprehensive documentation
+    getting-started/             # Quick start guides
+    configuration/               # Configuration guides
+    usage/                       # Usage documentation
+    tutorials/                   # Tutorial guides
+    troubleshooting/             # FAQ and troubleshooting
+    examples/                    # Code examples
+    llm-providers/               # LLM provider guides
+    installation/                # Installation guides
+  deployment/                   # Deployment guides and scripts
+    hostinger-deployment-guide.md
+    hostinger-quick-deploy.sh
+  n8n-integration/              # n8n workflow automation
+    workflows/                   # Pre-built n8n workflows
+    docker/                      # Docker deployment files
+    api-wrapper/                 # FastAPI integration layer
+    docs/                        # n8n setup guides
+  future-enhancements/          # Development roadmap
+    architecture/                # System evolution plans
+    feature-requests/            # Feature request templates
+    integrations/                # Broker integration plans
+    research/                    # AI trading research
+    roadmap/                     # Development roadmap
+  Experiment Details/           # Original experiment data
+  Scripts and CSV Files/        # Original trading scripts
+  Start Your Own/               # Starter templates
+  Weekly Deep Research (MD)/    # Research summaries
+  Weekly Deep Research (PDF)/   # Research PDFs
+  Other/                        # Miscellaneous files
 ```
 
 ## Key Components

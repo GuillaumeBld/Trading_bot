@@ -126,14 +126,14 @@ def execute_llm_decision(decision: TradingDecision, cash: float, portfolio_df: p
     
     # Safety checks
     if decision.confidence < 0.3:
-        message += "\n❌ SKIPPED: Low confidence recommendation"
+        message += "\n SKIPPED: Low confidence recommendation"
         return cash, portfolio_df, message
     
     try:
         if decision.action == "buy" and decision.ticker and decision.shares and decision.price:
             # Validate buy decision
             if decision.price * decision.shares > cash:
-                message += f"\n❌ SKIPPED: Insufficient cash (need ${decision.price * decision.shares:.2f}, have ${cash:.2f})"
+                message += f"\n SKIPPED: Insufficient cash (need ${decision.price * decision.shares:.2f}, have ${cash:.2f})"
                 return cash, portfolio_df, message
             
             # Execute buy
@@ -146,7 +146,7 @@ def execute_llm_decision(decision: TradingDecision, cash: float, portfolio_df: p
                 chatgpt_portfolio=portfolio_df,
                 interactive=False
             )
-            message += "\n✅ BUY executed"
+            message += "\n BUY executed"
             
         elif decision.action == "sell" and decision.ticker and decision.shares and decision.price:
             # Execute sell
@@ -159,24 +159,24 @@ def execute_llm_decision(decision: TradingDecision, cash: float, portfolio_df: p
                 reason=f"LLM Decision: {decision.reasoning}",
                 interactive=False
             )
-            message += "\n✅ SELL executed"
+            message += "\n SELL executed"
             
         elif decision.action == "adjust_stop_loss" and decision.ticker and decision.stop_loss:
             # Adjust stop loss
             if decision.ticker in portfolio_df["ticker"].values:
                 portfolio_df.loc[portfolio_df["ticker"] == decision.ticker, "stop_loss"] = decision.stop_loss
-                message += f"\n✅ Stop-loss adjusted to ${decision.stop_loss:.2f}"
+                message += f"\n Stop-loss adjusted to ${decision.stop_loss:.2f}"
             else:
-                message += "\n❌ SKIPPED: Ticker not in portfolio"
+                message += "\n SKIPPED: Ticker not in portfolio"
                 
         elif decision.action == "hold":
-            message += "\n📍 HOLD - No action taken"
+            message += "\n HOLD - No action taken"
             
         else:
-            message += "\n❌ SKIPPED: Invalid or incomplete decision parameters"
+            message += "\n SKIPPED: Invalid or incomplete decision parameters"
             
     except Exception as e:
-        message += f"\n❌ ERROR executing decision: {e}"
+        message += f"\n ERROR executing decision: {e}"
     
     return cash, portfolio_df, message
 
@@ -238,7 +238,7 @@ Are you sure you want to do this? To exit, enter 1. """
     # LLM Recommendations Section
     llm_messages = []
     if use_llm and LLM_AVAILABLE:
-        print("\n🤖 Getting AI recommendations...")
+        print("\n Getting AI recommendations...")
         
         # Set specific LLM provider if requested
         llm_manager = get_llm_manager()
@@ -260,7 +260,7 @@ Are you sure you want to do this? To exit, enter 1. """
         decisions = get_llm_recommendations(portfolio_df, cash, market_data)
         
         if decisions:
-            print(f"\n📋 LLM provided {len(decisions)} recommendations:")
+            print(f"\n LLM provided {len(decisions)} recommendations:")
             
             for i, decision in enumerate(decisions, 1):
                 print(f"\n--- Recommendation {i} ---")
@@ -287,14 +287,14 @@ Execute this recommendation? (y/n/skip): """
                     elif user_choice in ['skip', 's']:
                         continue
                     else:
-                        print("❌ Recommendation skipped by user")
+                        print(" Recommendation skipped by user")
                 else:
                     # Auto-execute in non-interactive mode
                     cash, portfolio_df, message = execute_llm_decision(decision, cash, portfolio_df)
                     llm_messages.append(message)
                     print(message)
         else:
-            print("🤷 No recommendations received from LLM")
+            print(" No recommendations received from LLM")
 
     if interactive:
         while True:

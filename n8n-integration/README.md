@@ -1,8 +1,8 @@
-# 🔗 n8n Integration for ChatGPT Micro-Cap Trading Bot
+#  n8n Integration for ChatGPT Micro-Cap Trading Bot
 
 This folder contains everything needed to integrate the ChatGPT Micro-Cap Trading Bot with n8n workflows, including Docker deployment, API wrappers, and example workflows.
 
-## 🎯 Overview
+##  Overview
 
 The integration allows you to:
 - **Automate Trading Workflows** - Trigger trades based on external events
@@ -12,38 +12,38 @@ The integration allows you to:
 - **Risk Management** - Automated monitoring and alerts
 - **Reporting** - Generate and distribute trading reports
 
-## 📁 Folder Structure
+##  Folder Structure
 
 ```
 n8n-integration/
-├── README.md                    # This file
-├── workflows/                   # n8n workflow templates
-│   ├── trading-alerts.json      # Trading notification workflows
-│   ├── portfolio-monitoring.json # Portfolio tracking workflows
-│   ├── news-sentiment.json      # News sentiment analysis
-│   └── risk-management.json     # Risk monitoring workflows
-├── docker/                      # Docker deployment files
-│   ├── docker-compose.yml       # Complete stack deployment
-│   ├── Dockerfile.trading-bot   # Trading bot container
-│   ├── Dockerfile.api-wrapper   # API wrapper container
-│   └── .env.example            # Environment variables template
-├── api-wrapper/                 # FastAPI wrapper for n8n integration
-│   ├── main.py                 # FastAPI application
-│   ├── models.py               # Pydantic models
-│   ├── routes/                 # API route definitions
-│   └── requirements.txt        # API wrapper dependencies
-├── examples/                    # Example integrations
-│   ├── webhook-examples.py     # Webhook integration examples
-│   ├── api-client.py          # API client examples
-│   └── sample-workflows/       # Complete workflow examples
-└── docs/                       # Detailed documentation
-    ├── setup-guide.md          # Step-by-step setup
-    ├── api-reference.md        # API documentation
-    ├── workflow-templates.md   # Workflow explanations
-    └── troubleshooting.md      # Common issues and solutions
+ README.md                    # This file
+ workflows/                   # n8n workflow templates
+    trading-alerts.json      # Trading notification workflows
+    portfolio-monitoring.json # Portfolio tracking workflows
+    news-sentiment.json      # News sentiment analysis
+    risk-management.json     # Risk monitoring workflows
+ docker/                      # Docker deployment files
+    docker-compose.yml       # Complete stack deployment
+    Dockerfile.trading-bot   # Trading bot container
+    Dockerfile.api-wrapper   # API wrapper container
+    .env.example            # Environment variables template
+ api-wrapper/                 # FastAPI wrapper for n8n integration
+    main.py                 # FastAPI application
+    models.py               # Pydantic models
+    routes/                 # API route definitions
+    requirements.txt        # API wrapper dependencies
+ examples/                    # Example integrations
+    webhook-examples.py     # Webhook integration examples
+    api-client.py          # API client examples
+    sample-workflows/       # Complete workflow examples
+ docs/                       # Detailed documentation
+     setup-guide.md          # Step-by-step setup
+     api-reference.md        # API documentation
+     workflow-templates.md   # Workflow explanations
+     troubleshooting.md      # Common issues and solutions
 ```
 
-## 🚀 Quick Start Options
+##  Quick Start Options
 
 ### Option 1: Docker Compose (Recommended)
 ```bash
@@ -83,31 +83,31 @@ n8n start
 # See docs/cloud-deployment.md for specific instructions
 ```
 
-## 🔧 Integration Architecture
+##  Integration Architecture
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Trading Bot    │    │   API Wrapper   │    │      n8n        │
-│                 │    │   (FastAPI)     │    │   Workflows     │
-│ • Core Logic    │◄──►│                 │◄──►│                 │
-│ • AI Trading    │    │ • REST API      │    │ • Notifications │
-│ • Dashboard     │    │ • Webhooks      │    │ • Integrations  │
-│ • Data Storage  │    │ • Event Stream  │    │ • Automation    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │
-                    ┌─────────────────┐
-                    │  External APIs  │
-                    │                 │
-                    │ • Brokers       │
-                    │ • News Sources  │
-                    │ • Social Media  │
-                    │ • Notifications │
-                    └─────────────────┘
+        
+  Trading Bot           API Wrapper             n8n        
+                        (FastAPI)            Workflows     
+ • Core Logic                                      
+ • AI Trading         • REST API           • Notifications 
+ • Dashboard          • Webhooks           • Integrations  
+ • Data Storage       • Event Stream       • Automation    
+        
+                                                       
+         
+                                 
+                    
+                      External APIs  
+                                     
+                     • Brokers       
+                     • News Sources  
+                     • Social Media  
+                     • Notifications 
+                    
 ```
 
-## 📊 Available Workflows
+##  Available Workflows
 
 ### 1. Trading Alerts (`workflows/trading-alerts.json`)
 - **Triggers**: New trades, portfolio changes, performance milestones
@@ -129,7 +129,7 @@ n8n start
 - **Actions**: Stop-loss execution, position sizing adjustments
 - **Use Case**: Automated risk control
 
-## 🛠️ API Endpoints
+##  API Endpoints
 
 The API wrapper provides these endpoints for n8n integration:
 
@@ -159,7 +159,7 @@ The API wrapper provides these endpoints for n8n integration:
 - `GET /api/ai/providers` - List available AI providers
 - `POST /api/ai/configure` - Configure AI settings
 
-## 🔔 Webhook Integration
+##  Webhook Integration
 
 ### Receiving Webhooks from n8n
 ```python
@@ -183,7 +183,7 @@ async def notify_n8n(event_type: str, data: dict):
     })
 ```
 
-## 🐳 Docker Deployment
+##  Docker Deployment
 
 ### Complete Stack
 The `docker-compose.yml` includes:
@@ -217,7 +217,7 @@ API_PORT=8000
 WEBHOOK_SECRET=your-webhook-secret
 ```
 
-## 🌐 Cloud Deployment Options
+##  Cloud Deployment Options
 
 ### Option 1: Railway
 ```bash
@@ -247,7 +247,7 @@ gcloud run deploy trading-bot --source .
 gcloud run deploy n8n-workflows --source ./n8n-integration
 ```
 
-## 📱 Mobile Integration
+##  Mobile Integration
 
 ### Telegram Bot Integration
 ```javascript
@@ -255,7 +255,7 @@ gcloud run deploy n8n-workflows --source ./n8n-integration
 {
   "parameters": {
     "chatId": "your-chat-id",
-    "text": "🚀 New trade executed: {{$json.symbol}} - {{$json.action}} {{$json.shares}} shares at ${{$json.price}}"
+    "text": " New trade executed: {{$json.symbol}} - {{$json.action}} {{$json.shares}} shares at ${{$json.price}}"
   }
 }
 ```
@@ -266,12 +266,12 @@ gcloud run deploy n8n-workflows --source ./n8n-integration
 {
   "parameters": {
     "webhookUri": "your-discord-webhook-url",
-    "text": "📊 Portfolio Update: Total Value: ${{$json.total_value}} ({{$json.change_percent}}%)"
+    "text": " Portfolio Update: Total Value: ${{$json.total_value}} ({{$json.change_percent}}%)"
   }
 }
 ```
 
-## 🔐 Security Considerations
+##  Security Considerations
 
 ### API Security
 - **Authentication**: JWT tokens or API keys
@@ -291,7 +291,7 @@ gcloud run deploy n8n-workflows --source ./n8n-integration
 - **Secret Management**: Use Docker secrets
 - **Image Scanning**: Scan for vulnerabilities
 
-## 📈 Monitoring & Logging
+##  Monitoring & Logging
 
 ### Application Monitoring
 - **Health Checks**: API endpoint monitoring
@@ -311,7 +311,7 @@ gcloud run deploy n8n-workflows --source ./n8n-integration
 - **Error Handling**: Failed workflow notifications
 - **Data Flow**: Input/output validation
 
-## 🆘 Support & Troubleshooting
+##  Support & Troubleshooting
 
 ### Common Issues
 1. **Connection Errors**: Check network connectivity and firewall settings
@@ -325,7 +325,7 @@ gcloud run deploy n8n-workflows --source ./n8n-integration
 - **Issues**: Report bugs on GitHub Issues
 - **Discussions**: Join GitHub Discussions for community support
 
-## 🎯 Next Steps
+##  Next Steps
 
 1. **Choose Deployment Method** - Docker Compose, manual, or cloud
 2. **Configure Environment** - Set up API keys and settings
@@ -336,6 +336,6 @@ gcloud run deploy n8n-workflows --source ./n8n-integration
 
 ---
 
-**Ready to automate your trading workflows with n8n?** 🚀
+**Ready to automate your trading workflows with n8n?** 
 
 Start with the Docker Compose setup for the easiest deployment, then customize the workflows to match your trading strategy and notification preferences.

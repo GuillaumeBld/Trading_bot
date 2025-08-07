@@ -2,27 +2,27 @@
 
 Choose the right AI provider for your trading needs. This comprehensive comparison covers features, costs, setup complexity, and performance characteristics.
 
-## 🏆 Quick Recommendations
+##  Quick Recommendations
 
-### 🥇 Best Overall: OpenAI GPT-4o-mini
+###  Best Overall: OpenAI GPT-4o-mini
 - **Why**: Best balance of performance, cost, and reliability
 - **Cost**: ~$0.15-0.60 per trading session
 - **Setup**: Easy (just need API key)
 - **Best for**: Most users wanting high-quality AI recommendations
 
-### 🥈 Best Free Option: Ollama + Llama3.1
+###  Best Free Option: Ollama + Llama3.1
 - **Why**: Completely free, good performance, runs locally
 - **Cost**: $0 (uses your hardware)
 - **Setup**: Medium (install Ollama + download model)
 - **Best for**: Privacy-conscious users, unlimited usage
 
-### 🥉 Best Alternative: Anthropic Claude-3-haiku
+###  Best Alternative: Anthropic Claude-3-haiku
 - **Why**: Fast, cost-effective, safety-focused
 - **Cost**: ~$0.25-0.80 per trading session
 - **Setup**: Easy (just need API key)
 - **Best for**: Users wanting OpenAI alternative
 
-## 📊 Detailed Comparison
+##  Detailed Comparison
 
 | Feature | OpenAI | Anthropic | Ollama | Hugging Face |
 |---------|--------|-----------|--------|--------------|
@@ -36,7 +36,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 | **Model Variety** | Limited | Limited | Extensive | Extensive |
 | **Offline Usage** | No | No | Yes | Yes |
 
-## 🔥 OpenAI (Recommended)
+##  OpenAI (Recommended)
 
 ### Models Available
 - **GPT-4o-mini** - Best value, excellent performance
@@ -48,7 +48,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **GPT-4o**: ~$0.30-0.60
 - **GPT-4-turbo**: ~$0.20-0.40
 
-### Pros ✅
+### Pros 
 - **Best trading analysis quality**
 - **Most reliable and consistent**
 - **Fast response times (2-5 seconds)**
@@ -56,7 +56,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Strong risk assessment capabilities**
 - **Regular model improvements**
 
-### Cons ❌
+### Cons 
 - **Requires API key and billing setup**
 - **Usage costs (though reasonable)**
 - **Internet connection required**
@@ -69,9 +69,9 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - Users with budget for API costs
 
 ### Setup Guide
-👉 **[Complete OpenAI Setup Guide](openai.md)**
+ **[Complete OpenAI Setup Guide](openai.md)**
 
-## 🏛️ Anthropic Claude
+##  Anthropic Claude
 
 ### Models Available
 - **Claude-3-haiku** - Fast and cost-effective
@@ -83,7 +83,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Claude-3-sonnet**: ~$0.50-0.80
 - **Claude-3-opus**: ~$1.00-2.00
 
-### Pros ✅
+### Pros 
 - **Safety-focused design**
 - **Excellent reasoning capabilities**
 - **Good alternative to OpenAI**
@@ -91,7 +91,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Strong ethical guidelines**
 - **Constitutional AI approach**
 
-### Cons ❌
+### Cons 
 - **Slightly more expensive than OpenAI**
 - **Requires API key and billing**
 - **Less specialized for financial analysis**
@@ -104,9 +104,9 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - Teams needing diverse AI perspectives
 
 ### Setup Guide
-👉 **[Complete Anthropic Setup Guide](anthropic.md)**
+ **[Complete Anthropic Setup Guide](anthropic.md)**
 
-## 🦙 Ollama (Best Free Option)
+##  Ollama (Best Free Option)
 
 ### Models Available
 - **Llama3.1:8b** - Excellent general performance (4.7GB)
@@ -120,7 +120,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **CPU**: Multi-core recommended
 - **GPU**: Optional but helpful
 
-### Pros ✅
+### Pros 
 - **Completely free**
 - **No usage limits**
 - **Runs entirely offline**
@@ -128,7 +128,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Good performance for trading**
 - **Full privacy (no data sharing)**
 
-### Cons ❌
+### Cons 
 - **Requires local installation**
 - **Uses your computer's resources**
 - **Slower than cloud APIs**
@@ -143,9 +143,9 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - Budget-conscious traders
 
 ### Setup Guide
-👉 **[Complete Ollama Setup Guide](ollama.md)**
+ **[Complete Ollama Setup Guide](ollama.md)**
 
-## 🤗 Hugging Face (Advanced Users)
+##  Hugging Face (Advanced Users)
 
 ### Models Available
 - **Microsoft/DialoGPT-medium** - Conversational AI
@@ -159,7 +159,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Storage**: 5-50GB per model
 - **Python**: Advanced ML environment
 
-### Pros ✅
+### Pros 
 - **Completely free**
 - **Thousands of models available**
 - **GPU acceleration support**
@@ -167,7 +167,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Cutting-edge research models**
 - **Full customization possible**
 
-### Cons ❌
+### Cons 
 - **Complex setup process**
 - **Requires ML/Python expertise**
 - **Variable model quality**
@@ -183,9 +183,9 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - Students learning about AI
 
 ### Setup Guide
-👉 **[Complete Hugging Face Setup Guide](huggingface.md)**
+ **[Complete Hugging Face Setup Guide](huggingface.md)**
 
-## 💰 Cost Analysis
+##  Cost Analysis
 
 ### Monthly Cost Estimates (20 trading days)
 
@@ -202,19 +202,19 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Local AI**: Electricity (~$1-5/month), hardware wear
 - **Cloud AI**: Rate limiting costs, data transfer (minimal)
 
-## ⚡ Performance Comparison
+##  Performance Comparison
 
 ### Response Speed
-1. **OpenAI GPT-4o-mini**: 2-5 seconds ⚡⚡⚡
-2. **Anthropic Claude-3-haiku**: 2-5 seconds ⚡⚡⚡
-3. **Ollama (8B model)**: 5-15 seconds ⚡⚡
-4. **Hugging Face**: 10-60 seconds ⚡
+1. **OpenAI GPT-4o-mini**: 2-5 seconds 
+2. **Anthropic Claude-3-haiku**: 2-5 seconds 
+3. **Ollama (8B model)**: 5-15 seconds 
+4. **Hugging Face**: 10-60 seconds 
 
 ### Trading Analysis Quality
-1. **OpenAI GPT-4o**: 9.5/10 🏆
-2. **OpenAI GPT-4o-mini**: 9/10 🥇
-3. **Anthropic Claude-3-sonnet**: 8.5/10 🥈
-4. **Anthropic Claude-3-haiku**: 8/10 🥉
+1. **OpenAI GPT-4o**: 9.5/10 
+2. **OpenAI GPT-4o-mini**: 9/10 
+3. **Anthropic Claude-3-sonnet**: 8.5/10 
+4. **Anthropic Claude-3-haiku**: 8/10 
 5. **Ollama Llama3.1:8b**: 7/10
 6. **Hugging Face (varies)**: 5-7/10
 
@@ -224,7 +224,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 3. **Ollama**: 95% (depends on your system)
 4. **Hugging Face**: Variable (depends on setup)
 
-## 🔒 Privacy & Security Comparison
+##  Privacy & Security Comparison
 
 ### Data Privacy
 | Provider | Data Storage | Data Training | Local Processing |
@@ -238,7 +238,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - **Cloud providers**: Enterprise-grade security, encrypted transmission
 - **Local providers**: No network transmission, full user control
 
-## 🎯 Decision Framework
+##  Decision Framework
 
 ### Choose OpenAI if:
 - You want the best trading analysis
@@ -264,7 +264,7 @@ Choose the right AI provider for your trading needs. This comprehensive comparis
 - You have powerful hardware (especially GPU)
 - You're doing research or development
 
-## 🔄 Multi-Provider Strategy
+##  Multi-Provider Strategy
 
 ### Recommended Combinations
 1. **Primary + Backup**: OpenAI + Ollama
@@ -283,7 +283,7 @@ python trading_bot.py --ai --provider anthropic
 ---
 
 **Ready to choose?** Jump to the detailed setup guide for your selected provider:
-- 🔥 **[OpenAI Setup](openai.md)** (Recommended)
-- 🦙 **[Ollama Setup](ollama.md)** (Free)
-- 🏛️ **[Anthropic Setup](anthropic.md)** (Alternative)
-- 🤗 **[Hugging Face Setup](huggingface.md)** (Advanced)
+-  **[OpenAI Setup](openai.md)** (Recommended)
+-  **[Ollama Setup](ollama.md)** (Free)
+-  **[Anthropic Setup](anthropic.md)** (Alternative)
+-  **[Hugging Face Setup](huggingface.md)** (Advanced)

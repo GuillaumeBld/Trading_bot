@@ -2,7 +2,7 @@
 
 The ChatGPT Micro-Cap Trading Bot offers extensive configuration options to customize your trading experience. This guide covers all available settings and how to modify them.
 
-## 📋 Configuration Files
+##  Configuration Files
 
 ### Core Configuration Files
 - **`.env`** - Environment variables and API keys
@@ -17,7 +17,7 @@ The ChatGPT Micro-Cap Trading Bot offers extensive configuration options to cust
 - **`__pycache__/`** - Python bytecode cache (auto-generated)
 - **`.streamlit/`** - Streamlit app settings (auto-generated)
 
-## 🔧 Configuration Hierarchy
+##  Configuration Hierarchy
 
 Settings are loaded in the following priority order (highest to lowest):
 
@@ -26,7 +26,7 @@ Settings are loaded in the following priority order (highest to lowest):
 3. **Configuration files** - Persistent user preferences
 4. **Default values** - Built-in fallbacks
 
-## ⚙️ Core Settings Categories
+##  Core Settings Categories
 
 ### 1. Trading Parameters
 ```json
@@ -93,7 +93,7 @@ Settings are loaded in the following priority order (highest to lowest):
 }
 ```
 
-## 🔑 Environment Variables
+##  Environment Variables
 
 ### Required for AI Features
 ```bash
@@ -137,7 +137,7 @@ USE_FAKE_API_KEYS=true
 SIMULATION_SPEED=1.0
 ```
 
-## 🎛️ Quick Configuration
+##  Quick Configuration
 
 ### Setup Wizard
 ```bash
@@ -171,7 +171,7 @@ cat > .llm_config.json << EOF
 EOF
 ```
 
-## 📊 Trading Configuration
+##  Trading Configuration
 
 ### Risk Management Settings
 ```python
@@ -211,7 +211,7 @@ PERFORMANCE_SETTINGS = {
 }
 ```
 
-## 🤖 AI Provider Configuration
+##  AI Provider Configuration
 
 ### OpenAI Settings
 ```json
@@ -271,7 +271,7 @@ PERFORMANCE_SETTINGS = {
 }
 ```
 
-## 🔄 Configuration Updates
+##  Configuration Updates
 
 ### Dynamic Configuration
 ```python
@@ -289,7 +289,7 @@ llm_manager.set_active_provider("anthropic")
 python -c "
 from llm_interface import LLMManager
 manager = LLMManager()
-print('✅ Configuration valid')
+print(' Configuration valid')
 print(f'Available providers: {manager.get_available_providers()}')
 "
 ```
@@ -305,7 +305,7 @@ cp .env.backup .env
 cp .llm_config.json.backup .llm_config.json
 ```
 
-## 🎯 Configuration Best Practices
+##  Configuration Best Practices
 
 ### Security
 - **Never commit API keys** to version control
@@ -331,18 +331,18 @@ cp .llm_config.json.backup .llm_config.json
 - **Validate settings** before trading sessions
 - **Keep configuration simple** and well-documented
 
-## 📁 Configuration File Locations
+##  Configuration File Locations
 
 ### Default Locations
 ```
 Project Root/
-├── .env                    # Environment variables
-├── .llm_config.json       # LLM provider settings  
-├── config.json            # Optional extended config
-├── .streamlit/            # Streamlit app settings
-└── data/                  # Data directory
-    ├── chatgpt_portfolio_update.csv
-    └── chatgpt_trade_log.csv
+ .env                    # Environment variables
+ .llm_config.json       # LLM provider settings  
+ config.json            # Optional extended config
+ .streamlit/            # Streamlit app settings
+ data/                  # Data directory
+     chatgpt_portfolio_update.csv
+     chatgpt_trade_log.csv
 ```
 
 ### Custom Locations

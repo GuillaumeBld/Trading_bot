@@ -20,7 +20,7 @@ from pathlib import Path
 
 def create_sample_portfolio_data():
     """Create sample portfolio data for demonstration"""
-    print("📊 Creating sample portfolio data...")
+    print(" Creating sample portfolio data...")
     
     # Ensure data directory exists
     data_dir = Path("Scripts and CSV Files")
@@ -178,15 +178,15 @@ def create_sample_portfolio_data():
     portfolio_df.to_csv(portfolio_file, index=False)
     trades_df.to_csv(trades_file, index=False)
     
-    print(f"✅ Created {len(portfolio_df)} portfolio records")
-    print(f"✅ Created {len(trades_df)} trade records")
-    print(f"📁 Files saved to: {data_dir}")
+    print(f" Created {len(portfolio_df)} portfolio records")
+    print(f" Created {len(trades_df)} trade records")
+    print(f" Files saved to: {data_dir}")
     
     return portfolio_df, trades_df
 
 def create_sample_configuration():
     """Create sample configuration files"""
-    print("⚙️ Creating sample configuration...")
+    print(" Creating sample configuration...")
     
     # Create sample .env file (without real API keys)
     env_content = """# ChatGPT Micro-Cap Trading Bot Configuration
@@ -239,12 +239,12 @@ ALPACA_SECRET_KEY=your-alpaca-secret-here
     with open(".llm_config.json", "w") as f:
         json.dump(llm_config, f, indent=2)
     
-    print("✅ Created .env.example (rename to .env and add your keys)")
-    print("✅ Created .llm_config.json with default settings")
+    print(" Created .env.example (rename to .env and add your keys)")
+    print(" Created .llm_config.json with default settings")
 
 def create_sample_news_data():
     """Create sample news data for testing"""
-    print("📰 Creating sample news data...")
+    print(" Creating sample news data...")
     
     # This would normally be fetched from a news API
     sample_news = [
@@ -275,48 +275,48 @@ def create_sample_news_data():
     with open("sample_news.json", "w") as f:
         json.dump(sample_news, f, indent=2)
     
-    print("✅ Created sample_news.json for testing")
+    print(" Created sample_news.json for testing")
 
 def display_demo_info():
     """Display information about the demo"""
     print("\n" + "="*60)
-    print("🎯 DASHBOARD DEMO READY")
+    print(" DASHBOARD DEMO READY")
     print("="*60)
     
-    print("\n📊 Sample Data Created:")
+    print("\n Sample Data Created:")
     print("   • 60 days of portfolio history")
     print("   • 3 active positions (ABEO, CADL, CSAI)")
     print("   • 5 historical trades")
     print("   • Performance metrics and benchmarks")
     print("   • Sample news and market data")
     
-    print("\n🚀 Next Steps:")
+    print("\n Next Steps:")
     print("   1. Launch the dashboard:")
     print("      python launch_dashboard.py --advanced")
     print("   2. Open browser to: http://localhost:8502")
     print("   3. Explore all dashboard features")
     print("   4. Configure real API keys when ready")
     
-    print("\n⚙️ Configuration:")
+    print("\n Configuration:")
     print("   • Edit .env file with your API keys")
     print("   • Ollama is enabled by default (free)")
     print("   • All other providers need API keys")
     
-    print("\n🔧 Demo Features:")
+    print("\n Demo Features:")
     print("   • Performance tracking with metrics")
     print("   • Position analysis and risk management")
     print("   • Market data and news integration")
     print("   • AI insights and configuration")
     print("   • Complete settings management")
     
-    print("\n📚 Documentation:")
+    print("\n Documentation:")
     print("   • Dashboard Guide: docs/usage/dashboard-guide.md")
     print("   • Configuration: docs/configuration/overview.md")
     print("   • Troubleshooting: docs/troubleshooting/faq.md")
 
 def main():
     """Main demo setup function"""
-    print("🎭 ChatGPT Micro-Cap Trading Bot - Dashboard Demo Setup")
+    print(" ChatGPT Micro-Cap Trading Bot - Dashboard Demo Setup")
     print("="*55)
     
     try:
@@ -330,10 +330,10 @@ def main():
         
         # Ask if user wants to launch dashboard
         print("\n" + "="*60)
-        launch = input("🚀 Launch the advanced dashboard now? (y/N): ").strip().lower()
+        launch = input(" Launch the advanced dashboard now? (y/N): ").strip().lower()
         
         if launch in ['y', 'yes']:
-            print("\n🚀 Launching Advanced Dashboard...")
+            print("\n Launching Advanced Dashboard...")
             import subprocess
             import sys
             
@@ -345,19 +345,19 @@ def main():
                     "--server.port", "8502"
                 ], check=True)
             except KeyboardInterrupt:
-                print("\n👋 Dashboard stopped by user")
+                print("\n Dashboard stopped by user")
             except FileNotFoundError:
-                print("❌ Streamlit not found. Install with: pip install streamlit")
+                print(" Streamlit not found. Install with: pip install streamlit")
             except Exception as e:
-                print(f"❌ Error launching dashboard: {e}")
-                print("💡 Try: python launch_dashboard.py --advanced")
+                print(f" Error launching dashboard: {e}")
+                print(" Try: python launch_dashboard.py --advanced")
         else:
-            print("\n👍 Demo data ready! Launch when you're ready:")
+            print("\n Demo data ready! Launch when you're ready:")
             print("   python launch_dashboard.py --advanced")
     
     except Exception as e:
-        print(f"❌ Error setting up demo: {e}")
-        print("💡 Make sure you have write permissions in this directory")
+        print(f" Error setting up demo: {e}")
+        print(" Make sure you have write permissions in this directory")
 
 if __name__ == "__main__":
     main()

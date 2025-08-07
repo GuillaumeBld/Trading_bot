@@ -2,11 +2,11 @@
 
 Get up and running with the ChatGPT Micro-Cap Trading Bot in under 5 minutes!
 
-## 🚀 30-Second Overview
+##  30-Second Overview
 
 This trading bot helps you manage a micro-cap stock portfolio with optional AI assistance. You can trade manually or get AI-powered recommendations from OpenAI, Anthropic, Ollama, or Hugging Face models.
 
-## ⚡ Quick Setup
+##  Quick Setup
 
 ### Option 1: Manual Trading Only (Fastest)
 ```bash
@@ -44,7 +44,7 @@ streamlit run streamlit_app.py
 # 3. Open browser to http://localhost:8501
 ```
 
-## 🎯 Your First Trade
+##  Your First Trade
 
 ### Manual Trading
 1. Run `python trading_bot.py`
@@ -60,7 +60,7 @@ streamlit run streamlit_app.py
 4. Type 'y' to accept or 'n' to skip
 5. Watch your portfolio grow with AI assistance!
 
-## 📊 Understanding the Output
+##  Understanding the Output
 
 After each trading session, you'll see:
 - **Portfolio Summary**: Your current holdings and cash
@@ -68,14 +68,14 @@ After each trading session, you'll see:
 - **Market Data**: Price updates for your stocks and benchmarks
 - **AI Recommendations**: Detailed reasoning for each suggestion (if using AI)
 
-## 📁 Important Files
+##  Important Files
 
 - **`chatgpt_portfolio_update.csv`** - Daily portfolio snapshots
 - **`chatgpt_trade_log.csv`** - Complete trade history
 - **`.env`** - API keys for AI providers (create this)
 - **`.llm_config.json`** - AI model settings (auto-generated)
 
-## 🔧 Quick Configuration
+##  Quick Configuration
 
 ### Add AI Provider (Optional)
 1. Get API key from [OpenAI](https://platform.openai.com/api-keys) or [Anthropic](https://console.anthropic.com/)
@@ -88,14 +88,14 @@ After each trading session, you'll see:
 3. Pull model: `ollama pull llama3.1:8b`
 4. Run: `python trading_bot.py --ai --provider ollama`
 
-## 🆘 Need Help?
+##  Need Help?
 
 - **Common Issues**: Check [troubleshooting guide](../troubleshooting/common-issues.md)
 - **Detailed Setup**: See [installation guide](../installation/basic-setup.md)
 - **AI Configuration**: Read [LLM provider guides](../llm-providers/comparison.md)
 - **Usage Questions**: Browse [FAQ](../troubleshooting/faq.md)
 
-## ➡️ Next Steps
+##  Next Steps
 
 Once you're up and running:
 
@@ -106,6 +106,6 @@ Once you're up and running:
 
 ---
 
-**🎉 Congratulations!** You're now ready to start micro-cap trading with AI assistance. The system will handle all the tracking, risk management, and performance analysis automatically.
+** Congratulations!** You're now ready to start micro-cap trading with AI assistance. The system will handle all the tracking, risk management, and performance analysis automatically.
 
-**⚠️ Important**: This is for educational/experimental purposes. Only invest money you can afford to lose, and always do your own research before making trading decisions.
+** Important**: This is for educational/experimental purposes. Only invest money you can afford to lose, and always do your own research before making trading decisions.

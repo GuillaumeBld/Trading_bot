@@ -1,6 +1,6 @@
 # System Requirements
 
-## 💻 Hardware Requirements
+##  Hardware Requirements
 
 ### Minimum Requirements (Manual Trading)
 - **CPU**: Any modern processor (Intel/AMD/ARM)
@@ -20,7 +20,7 @@
 - **GPU**: NVIDIA GPU with 8GB+ VRAM (optional, for Hugging Face)
 - **Storage**: SSD recommended for model loading
 
-## 🖥️ Operating System Support
+##  Operating System Support
 
 ### Officially Supported
 - **macOS**: 10.15+ (Catalina and newer)
@@ -28,19 +28,19 @@
 - **Linux**: Ubuntu 18.04+, CentOS 7+, Debian 10+
 
 ### Tested Configurations
-- **macOS Big Sur/Monterey/Ventura** ✅
-- **Windows 10 Pro/Enterprise** ✅
-- **Windows 11** ✅
-- **Ubuntu 20.04/22.04 LTS** ✅
-- **Debian 11/12** ✅
-- **CentOS Stream 8/9** ✅
+- **macOS Big Sur/Monterey/Ventura** 
+- **Windows 10 Pro/Enterprise** 
+- **Windows 11** 
+- **Ubuntu 20.04/22.04 LTS** 
+- **Debian 11/12** 
+- **CentOS Stream 8/9** 
 
 ### Other Platforms
 - **Docker**: Works on any Docker-compatible system
 - **WSL2**: Windows Subsystem for Linux (fully supported)
 - **Cloud**: AWS, GCP, Azure virtual machines
 
-## 🐍 Python Environment
+##  Python Environment
 
 ### Python Version
 - **Required**: Python 3.9 or higher
@@ -57,7 +57,7 @@
 - **conda env**: Conda environments (supported)
 - **virtualenv**: Third-party virtual environments (supported)
 
-## 📦 Core Dependencies
+##  Core Dependencies
 
 ### Essential Packages (Always Required)
 ```
@@ -83,7 +83,7 @@ python-dotenv>=1.0.0    # Environment variables
 pydantic>=2.0.0         # Data validation
 ```
 
-## 🌐 Network Requirements
+##  Network Requirements
 
 ### Internet Connectivity
 - **Market Data**: Access to Yahoo Finance APIs
@@ -100,7 +100,7 @@ pydantic>=2.0.0         # Data validation
 - **AI API Calls**: ~10-50KB per recommendation
 - **Local AI**: No external bandwidth after initial setup
 
-## 🔑 Account Requirements
+##  Account Requirements
 
 ### Trading (Required)
 - **No brokerage account needed**: This is a tracking/analysis tool
@@ -117,7 +117,7 @@ pydantic>=2.0.0         # Data validation
 - **Anthropic Claude-3-haiku**: ~$0.25-0.80 per trading session
 - **Ollama/Hugging Face**: $0 (free, uses local compute)
 
-## 🔧 Development Requirements
+##  Development Requirements
 
 ### Additional Tools (For Contributors)
 - **Git**: Version control system
@@ -131,7 +131,7 @@ pydantic>=2.0.0         # Data validation
 - **Docker**: For containerized deployment
 - **PostgreSQL**: For advanced data storage (future feature)
 
-## ⚡ Performance Considerations
+##  Performance Considerations
 
 ### Manual Trading Performance
 - **Startup Time**: < 5 seconds
@@ -151,7 +151,7 @@ pydantic>=2.0.0         # Data validation
 - **Use GPU acceleration** for Hugging Face models
 - **Cache API responses** to reduce costs
 
-## 🧪 Testing Your System
+##  Testing Your System
 
 ### Quick System Check
 ```bash
@@ -183,7 +183,7 @@ python setup_llm.py --check
 python trading_bot.py --list-providers
 ```
 
-## 🚨 Known Limitations
+##  Known Limitations
 
 ### Platform-Specific Issues
 - **Apple Silicon (M1/M2)**: Some AI packages need Rosetta for compatibility

@@ -339,7 +339,7 @@ if __name__ == "__main__":
         for issue in issues:
             print(f"- {issue}")
     else:
-        print("\n✅ Configuration is valid")
+        print("\n Configuration is valid")
     
     # Test feature checks
     print(f"\nAuto-refresh enabled: {is_auto_refresh_enabled()}")

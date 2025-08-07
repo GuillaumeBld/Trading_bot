@@ -56,9 +56,9 @@ def estimate_reading_time(file_size):
 def generate_navigation_guide():
     """Generate navigation guide based on user type."""
     return """
-# 🧭 Documentation Navigation Guide
+#  Documentation Navigation Guide
 
-## 👨‍💼 For Business Users
+## ‍ For Business Users
 **Goal**: Start trading quickly with minimal technical setup
 
 1. **[Quick Start Guide](getting-started/quick-start.md)** (5 min)
@@ -68,7 +68,7 @@ def generate_navigation_guide():
 
 **Total Time to Trading**: ~35 minutes
 
-## 🤖 For AI Enthusiasts  
+##  For AI Enthusiasts  
 **Goal**: Leverage AI for trading recommendations
 
 1. **[Quick Start Guide](getting-started/quick-start.md)** (5 min)
@@ -79,7 +79,7 @@ def generate_navigation_guide():
 
 **Total Time to AI Trading**: ~70 minutes
 
-## 👨‍💻 For Developers
+## ‍ For Developers
 **Goal**: Understand the system and potentially contribute
 
 1. **[Project Overview](getting-started/overview.md)** (15 min)
@@ -90,7 +90,7 @@ def generate_navigation_guide():
 
 **Total Time to Development**: ~110 minutes
 
-## 🆘 For Troubleshooting
+##  For Troubleshooting
 **Goal**: Fix issues and get help
 
 1. **[Common Issues](troubleshooting/common-issues.md)** (Search specific problem)
@@ -100,7 +100,7 @@ def generate_navigation_guide():
 
 **Find Your Answer**: Usually < 5 minutes
 
-## 📚 For Complete Understanding
+##  For Complete Understanding
 **Goal**: Master every aspect of the system
 
 Complete documentation reading order:
@@ -120,7 +120,7 @@ Complete documentation reading order:
 def generate_quick_reference():
     """Generate quick reference card."""
     return """
-# 🚀 Quick Reference Card
+#  Quick Reference Card
 
 ## Essential Commands
 ```bash
@@ -168,14 +168,14 @@ python setup_llm.py --check
 
 def main():
     """Generate comprehensive documentation summary."""
-    print("📚 ChatGPT Micro-Cap Trading Bot - Documentation Summary")
+    print(" ChatGPT Micro-Cap Trading Bot - Documentation Summary")
     print("=" * 60)
     
     # Scan documentation structure
     file_structure = scan_docs_directory()
     
     # Generate overview
-    print(f"\n📋 Documentation Overview (Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')})")
+    print(f"\n Documentation Overview (Generated: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')})")
     print("=" * 60)
     
     total_files = 0
@@ -185,7 +185,7 @@ def main():
         if not files:
             continue
             
-        print(f"\n📁 {category.title().replace('-', ' ')}")
+        print(f"\n {category.title().replace('-', ' ')}")
         print("-" * 40)
         
         for file_info in sorted(files, key=lambda x: x['name']):
@@ -197,10 +197,10 @@ def main():
             total_files += 1
             total_size += size
             
-            print(f"  📄 {name:<25} ({reading_time:>8}) - {path}")
+            print(f"   {name:<25} ({reading_time:>8}) - {path}")
     
     total_reading_time = estimate_reading_time(total_size)
-    print(f"\n📊 Summary")
+    print(f"\n Summary")
     print("-" * 40)
     print(f"Total files: {total_files}")
     print(f"Total reading time: {total_reading_time}")
@@ -212,41 +212,41 @@ def main():
     # Generate quick reference
     print("\n" + generate_quick_reference())
     
-    print("\n🎯 Documentation Quality Checklist")
+    print("\n Documentation Quality Checklist")
     print("=" * 60)
     
     checklist = [
-        "✅ Getting started guide for beginners",
-        "✅ Complete installation instructions", 
-        "✅ AI provider setup guides",
-        "✅ Command-line reference",
-        "✅ Web interface guide",
-        "✅ Configuration documentation",
-        "✅ API reference for developers",
-        "✅ Troubleshooting and FAQ",
-        "✅ Step-by-step tutorials",
-        "✅ Real-world examples",
-        "✅ Best practices and tips",
-        "✅ Performance optimization",
-        "✅ Security considerations",
-        "✅ Multiple user personas covered"
+        " Getting started guide for beginners",
+        " Complete installation instructions", 
+        " AI provider setup guides",
+        " Command-line reference",
+        " Web interface guide",
+        " Configuration documentation",
+        " API reference for developers",
+        " Troubleshooting and FAQ",
+        " Step-by-step tutorials",
+        " Real-world examples",
+        " Best practices and tips",
+        " Performance optimization",
+        " Security considerations",
+        " Multiple user personas covered"
     ]
     
     for item in checklist:
         print(f"  {item}")
     
-    print(f"\n🎉 Documentation Status: COMPLETE")
-    print(f"📖 Ready for users of all skill levels")
-    print(f"🚀 Total setup time: 5-120 minutes depending on use case")
+    print(f"\n Documentation Status: COMPLETE")
+    print(f" Ready for users of all skill levels")
+    print(f" Total setup time: 5-120 minutes depending on use case")
     
     # Suggest next steps
-    print(f"\n➡️  Next Steps for Users:")
+    print(f"\n  Next Steps for Users:")
     print("   1. Choose your user type from navigation guide above")
     print("   2. Follow the recommended reading path")
     print("   3. Start with Quick Start Guide for immediate results")
     print("   4. Refer to FAQ and troubleshooting as needed")
     
-    print(f"\n📚 Full Documentation Available At:")
+    print(f"\n Full Documentation Available At:")
     print("   • docs/README.md - Main documentation index")
     print("   • All guides are cross-linked for easy navigation") 
     print("   • Search functionality available in web interface")

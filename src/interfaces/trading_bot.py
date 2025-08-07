@@ -17,21 +17,21 @@ from trading_script import main as trading_main, LLM_AVAILABLE, get_llm_manager
 def list_available_providers():
     """List available LLM providers."""
     if not LLM_AVAILABLE:
-        print("❌ LLM interface not available. Run: pip install -r requirements.txt")
+        print(" LLM interface not available. Run: pip install -r requirements.txt")
         return []
     
     llm_manager = get_llm_manager()
     if llm_manager:
         available = llm_manager.get_available_providers()
         if available:
-            print("✅ Available LLM providers:")
+            print(" Available LLM providers:")
             for provider in available:
-                print(f"   🤖 {provider}")
+                print(f"    {provider}")
         else:
-            print("⚠️  No LLM providers configured. Run: python setup_llm.py")
+            print("  No LLM providers configured. Run: python setup_llm.py")
         return available
     else:
-        print("❌ Failed to initialize LLM manager")
+        print(" Failed to initialize LLM manager")
         return []
 
 
@@ -113,7 +113,7 @@ Setup:
     
     # Validate AI options
     if args.ai and not LLM_AVAILABLE:
-        print("❌ LLM interface not available. Install dependencies:")
+        print(" LLM interface not available. Install dependencies:")
         print("   pip install -r requirements.txt")
         sys.exit(1)
     
@@ -124,19 +124,19 @@ Setup:
             available_providers = llm_manager.get_available_providers()
         
         if not available_providers:
-            print("❌ No LLM providers available. Run setup:")
+            print(" No LLM providers available. Run setup:")
             print("   python setup_llm.py")
             sys.exit(1)
         
         if args.provider and args.provider not in available_providers:
-            print(f"❌ Provider '{args.provider}' not available.")
+            print(f" Provider '{args.provider}' not available.")
             print("Available providers:", ", ".join(available_providers))
             sys.exit(1)
         
         if not args.provider:
             # Use the first available provider
             args.provider = available_providers[0]
-            print(f"🤖 Using AI provider: {args.provider}")
+            print(f" Using AI provider: {args.provider}")
     
     # Set up file paths
     data_dir = Path(args.data_dir)
@@ -146,16 +146,16 @@ Setup:
         portfolio_file = str(data_dir / "chatgpt_portfolio_update.csv")
     
     # Display configuration
-    print("🚀 Starting ChatGPT Micro-Cap Trading Bot")
+    print(" Starting ChatGPT Micro-Cap Trading Bot")
     print("=" * 50)
-    print(f"📁 Data directory: {data_dir}")
-    print(f"📊 Portfolio file: {portfolio_file}")
+    print(f" Data directory: {data_dir}")
+    print(f" Portfolio file: {portfolio_file}")
     
     if args.ai:
-        print(f"🤖 AI Provider: {args.provider}")
-        print("✨ AI recommendations: ENABLED")
+        print(f" AI Provider: {args.provider}")
+        print(" AI recommendations: ENABLED")
     else:
-        print("👤 Mode: Manual trading only")
+        print(" Mode: Manual trading only")
     
     print("=" * 50)
     
@@ -168,9 +168,9 @@ Setup:
             llm_provider=args.provider
         )
     except KeyboardInterrupt:
-        print("\n⏹️  Trading session interrupted by user")
+        print("\n⏹  Trading session interrupted by user")
     except Exception as e:
-        print(f"\n❌ Error during trading session: {e}")
+        print(f"\n Error during trading session: {e}")
         sys.exit(1)
 
 

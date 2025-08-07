@@ -2,18 +2,18 @@
 
 This step-by-step tutorial will guide you through your first trading session with the ChatGPT Micro-Cap Trading Bot. No prior experience required!
 
-## 🎯 What You'll Learn
+##  What You'll Learn
 
 By the end of this tutorial, you'll know how to:
-- ✅ Set up your first portfolio
-- ✅ Make your first trade
-- ✅ Monitor performance
-- ✅ Understand the output data
+-  Set up your first portfolio
+-  Make your first trade
+-  Monitor performance
+-  Understand the output data
 
 **Time Required**: 15-20 minutes  
 **Prerequisites**: Python installed, basic command line knowledge
 
-## 🚀 Before You Start
+##  Before You Start
 
 ### Check Your Setup
 ```bash
@@ -31,7 +31,7 @@ ls -la
 pip install pandas numpy yfinance matplotlib
 ```
 
-## 📈 Step 1: Your First Portfolio
+##  Step 1: Your First Portfolio
 
 ### Start the Trading Bot
 ```bash
@@ -40,11 +40,11 @@ python trading_bot.py
 
 You should see output like this:
 ```
-🚀 Starting ChatGPT Micro-Cap Trading Bot
+ Starting ChatGPT Micro-Cap Trading Bot
 ==================================================
-📁 Data directory: Scripts and CSV Files
-📊 Portfolio file: Scripts and CSV Files/chatgpt_portfolio_update.csv
-👤 Mode: Manual trading only
+ Data directory: Scripts and CSV Files
+ Portfolio file: Scripts and CSV Files/chatgpt_portfolio_update.csv
+ Mode: Manual trading only
 ==================================================
 
 Portfolio CSV is empty. Returning set amount of cash for creating portfolio.
@@ -56,9 +56,9 @@ What would you like your starting cash amount to be?
 What would you like your starting cash amount to be? 100
 ```
 
-**💡 Tip**: Start with $100 or any amount you're comfortable learning with. This is just tracking - no real money is at risk.
+** Tip**: Start with $100 or any amount you're comfortable learning with. This is just tracking - no real money is at risk.
 
-## 🛒 Step 2: Make Your First Trade
+##  Step 2: Make Your First Trade
 
 ### The Trading Prompt
 After setting your cash, you'll see:
@@ -83,7 +83,7 @@ Enter buy price: 5.75
 Enter stop loss: 4.89
 ```
 
-**📝 Example Explanation**:
+** Example Explanation**:
 - **Ticker**: ABEO (a real micro-cap stock)
 - **Shares**: 10 (invest $57.50 of your $100)
 - **Price**: $5.75 (current market price)
@@ -102,7 +102,7 @@ Press Enter to confirm (or type "1" to cancel).
 Manual buy for ABEO complete!
 ```
 
-## 📊 Step 3: Add Another Position
+##  Step 3: Add Another Position
 
 Let's diversify with a second stock:
 
@@ -121,7 +121,7 @@ Confirm the trade, and you should see:
 Manual buy for CADL complete!
 ```
 
-## 🎉 Step 4: Finish Setup
+##  Step 4: Finish Setup
 
 Press Enter to skip more trades:
 ```
@@ -131,7 +131,7 @@ Would you like to log a manual trade? Enter 'b' for buy, 's' for sell, or press 
 
 Just press Enter to continue to the analysis phase.
 
-## 📈 Step 5: Review Your Portfolio
+##  Step 5: Review Your Portfolio
 
 The system will now:
 1. Fetch current market data
@@ -172,7 +172,7 @@ today's portfolio:
 cash balance: 2.18
 ```
 
-## 📁 Step 6: Understanding Your Data
+##  Step 6: Understanding Your Data
 
 ### Files Created
 After your session, check these files:
@@ -217,7 +217,7 @@ Shows columns:
 - **PnL**: Profit/Loss on sale
 - **Reason**: Why trade was made
 
-## 🔄 Step 7: Your Second Day
+##  Step 7: Your Second Day
 
 ### Running the Bot Again
 The next day (or anytime), run:
@@ -227,11 +227,11 @@ python trading_bot.py
 
 Now it loads your existing portfolio:
 ```
-🚀 Starting ChatGPT Micro-Cap Trading Bot
+ Starting ChatGPT Micro-Cap Trading Bot
 ==================================================
-📁 Data directory: Scripts and CSV Files
-📊 Portfolio file: Scripts and CSV Files/chatgpt_portfolio_update.csv
-👤 Mode: Manual trading only
+ Data directory: Scripts and CSV Files
+ Portfolio file: Scripts and CSV Files/chatgpt_portfolio_update.csv
+ Mode: Manual trading only
 ==================================================
 
    ticker  shares  stop_loss  buy_price  cost_basis
@@ -241,11 +241,11 @@ Now it loads your existing portfolio:
 
 ### Daily Updates
 The system automatically:
-- ✅ Fetches current prices for your stocks
-- ✅ Checks if any stop-losses were triggered
-- ✅ Updates your portfolio value
-- ✅ Calculates performance metrics
-- ✅ Saves everything to CSV files
+-  Fetches current prices for your stocks
+-  Checks if any stop-losses were triggered
+-  Updates your portfolio value
+-  Calculates performance metrics
+-  Saves everything to CSV files
 
 ### Stop-Loss Example
 If a stock drops below your stop-loss:
@@ -260,7 +260,7 @@ The system automatically:
 - Logs the trade with loss/gain
 - Removes the stock from your portfolio
 
-## 🎯 Understanding Key Concepts
+##  Understanding Key Concepts
 
 ### Stop-Loss Protection
 - **What**: Automatic sale when price drops to set level
@@ -277,32 +277,32 @@ The system automatically:
 - **Sharpe Ratio**: Risk-adjusted performance
 - **Benchmark Comparison**: How you're doing vs market
 
-## 🛠️ Common Beginner Mistakes
+##  Common Beginner Mistakes
 
-### ❌ Avoid These
+###  Avoid These
 1. **No stop-losses**: Always set them!
 2. **Position too large**: Don't risk >20% on one stock
 3. **No diversification**: Don't put all money in one stock
 4. **Emotional trading**: Stick to your plan
 5. **Ignoring data**: Review your performance regularly
 
-### ✅ Best Practices
+###  Best Practices
 1. **Start small**: Learn with amounts you can afford to lose
 2. **Set stop-losses**: 15-20% below entry is common
 3. **Diversify**: 3-7 positions maximum
 4. **Keep records**: The system does this automatically
 5. **Review regularly**: Learn from wins and losses
 
-## 🎉 Congratulations!
+##  Congratulations!
 
 You've completed your first trading session! You now know how to:
-- ✅ Create and manage a portfolio
-- ✅ Make buy and sell trades
-- ✅ Set stop-loss protection
-- ✅ Understand performance data
-- ✅ Use the CSV tracking system
+-  Create and manage a portfolio
+-  Make buy and sell trades
+-  Set stop-loss protection
+-  Understand performance data
+-  Use the CSV tracking system
 
-## 🚀 Next Steps
+##  Next Steps
 
 Ready to level up? Try these:
 
@@ -333,7 +333,7 @@ streamlit run streamlit_app.py
 - **[Advanced Strategies](advanced-strategies.md)** - Professional techniques
 - **[Risk Management](../usage/portfolio-management.md)** - Protect your capital
 
-## ⚠️ Important Reminders
+##  Important Reminders
 
 - **This is for learning**: Start with small amounts
 - **Not financial advice**: You make all trading decisions

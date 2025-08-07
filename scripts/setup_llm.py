@@ -26,8 +26,8 @@ def create_env_template():
     
     with open(".env", "w") as f:
         f.write(env_content)
-    print("✅ Created .env template file")
-    print("📝 Edit .env file to add your API keys")
+    print(" Created .env template file")
+    print(" Edit .env file to add your API keys")
 
 
 def create_llm_config():
@@ -62,12 +62,12 @@ def create_llm_config():
     
     with open(".llm_config.json", "w") as f:
         json.dump(config, f, indent=2)
-    print("✅ Created .llm_config.json with default settings")
+    print(" Created .llm_config.json with default settings")
 
 
 def check_provider_availability():
     """Check which LLM providers are available."""
-    print("\n🔍 Checking LLM provider availability...\n")
+    print("\n Checking LLM provider availability...\n")
     
     available_providers = []
     
@@ -79,14 +79,14 @@ def check_provider_availability():
             try:
                 client = openai.OpenAI(api_key=api_key)
                 client.models.list()
-                print("✅ OpenAI: Available and configured")
+                print(" OpenAI: Available and configured")
                 available_providers.append("openai")
             except Exception as e:
-                print(f"❌ OpenAI: API key invalid - {e}")
+                print(f" OpenAI: API key invalid - {e}")
         else:
-            print("⚠️  OpenAI: API key not configured")
+            print("  OpenAI: API key not configured")
     except ImportError:
-        print("❌ OpenAI: Library not installed (pip install openai)")
+        print(" OpenAI: Library not installed (pip install openai)")
     
     # Check Anthropic
     try:
@@ -96,14 +96,14 @@ def check_provider_availability():
             try:
                 client = anthropic.Anthropic(api_key=api_key)
                 # Try a minimal test
-                print("✅ Anthropic: Available and configured")
+                print(" Anthropic: Available and configured")
                 available_providers.append("anthropic")
             except Exception as e:
-                print(f"❌ Anthropic: API key invalid - {e}")
+                print(f" Anthropic: API key invalid - {e}")
         else:
-            print("⚠️  Anthropic: API key not configured")
+            print("  Anthropic: API key not configured")
     except ImportError:
-        print("❌ Anthropic: Library not installed (pip install anthropic)")
+        print(" Anthropic: Library not installed (pip install anthropic)")
     
     # Check Ollama
     try:
@@ -112,37 +112,37 @@ def check_provider_availability():
             client = ollama.Client(host='http://localhost:11434')
             models = client.list()
             if models and 'models' in models:
-                print(f"✅ Ollama: Available with {len(models['models'])} models")
+                print(f" Ollama: Available with {len(models['models'])} models")
                 available_providers.append("ollama")
                 for model in models['models'][:3]:  # Show first 3 models
-                    print(f"   📦 {model['name']}")
+                    print(f"    {model['name']}")
                 if len(models['models']) > 3:
                     print(f"   ... and {len(models['models']) - 3} more")
             else:
-                print("❌ Ollama: No models found")
+                print(" Ollama: No models found")
         except Exception as e:
-            print(f"❌ Ollama: Not running or inaccessible - {e}")
+            print(f" Ollama: Not running or inaccessible - {e}")
     except ImportError:
-        print("❌ Ollama: Library not installed (pip install ollama)")
+        print(" Ollama: Library not installed (pip install ollama)")
     
     # Check Hugging Face
     try:
         import transformers
         import torch
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f"✅ Hugging Face: Available (device: {device})")
+        print(f" Hugging Face: Available (device: {device})")
         available_providers.append("huggingface")
     except ImportError:
-        print("❌ Hugging Face: Libraries not installed (pip install transformers torch)")
+        print(" Hugging Face: Libraries not installed (pip install transformers torch)")
     
-    print(f"\n📊 Summary: {len(available_providers)} provider(s) available")
+    print(f"\n Summary: {len(available_providers)} provider(s) available")
     return available_providers
 
 
 def install_ollama_guide():
     """Show guide for installing Ollama."""
     print("""
-🦙 Ollama Installation Guide:
+ Ollama Installation Guide:
 
 1. Install Ollama:
    Mac/Linux: curl -fsSL https://ollama.ai/install.sh | sh
@@ -166,35 +166,35 @@ For trading, we recommend llama3.1:8b as it provides good analysis capabilities.
 def show_provider_setup_guide():
     """Show setup guide for each provider."""
     print("""
-🛠️  LLM Provider Setup Guide:
+  LLM Provider Setup Guide:
 
-📡 API-Based Providers (Remote):
+ API-Based Providers (Remote):
   
-  🔥 OpenAI GPT-4 (Recommended for best results)
+   OpenAI GPT-4 (Recommended for best results)
      • Get API key: https://platform.openai.com/api-keys
      • Cost: ~$0.15-0.60 per query
      • Models: gpt-4o-mini, gpt-4o, gpt-4-turbo
   
-  🏛️  Anthropic Claude (Good alternative)
+    Anthropic Claude (Good alternative)
      • Get API key: https://console.anthropic.com/
      • Cost: ~$0.25-0.80 per query  
      • Models: claude-3-haiku, claude-3-sonnet, claude-3-opus
 
-💻 Local Providers (Free but requires computation):
+ Local Providers (Free but requires computation):
   
-  🦙 Ollama (Easiest local setup)
+   Ollama (Easiest local setup)
      • Free and runs locally
      • Supports many open models
      • Good for privacy and unlimited usage
      • Requires 4-16GB RAM depending on model
   
-  🤗 Hugging Face Transformers (Most flexible)
+   Hugging Face Transformers (Most flexible)
      • Free and runs locally
      • Requires Python ML setup
      • Can use GPU acceleration
      • Best for advanced users
 
-💡 Recommendations:
+ Recommendations:
    • Beginners: Start with OpenAI GPT-4o-mini ($0.15/query)
    • Privacy-focused: Use Ollama with llama3.1:8b
    • Advanced users: Hugging Face with local GPU
@@ -236,7 +236,7 @@ def main():
         return
     
     # Default: Interactive setup
-    print("🤖 LLM Setup for ChatGPT Micro-Cap Trading Experiment")
+    print(" LLM Setup for ChatGPT Micro-Cap Trading Experiment")
     print("=" * 60)
     
     print("\n1. Creating configuration files...")
@@ -250,12 +250,12 @@ def main():
     
     if not available:
         print("\n3. Next steps:")
-        print("   📝 Edit .env file to add API keys for remote providers")
-        print("   🦙 Or install Ollama for local AI: python setup_llm.py --ollama-guide")
-        print("   📖 For detailed setup: python setup_llm.py --setup-guide")
+        print("    Edit .env file to add API keys for remote providers")
+        print("    Or install Ollama for local AI: python setup_llm.py --ollama-guide")
+        print("    For detailed setup: python setup_llm.py --setup-guide")
     else:
-        print(f"\n✅ Setup complete! {len(available)} provider(s) ready to use.")
-        print("🚀 You can now enable AI recommendations in the trading interface.")
+        print(f"\n Setup complete! {len(available)} provider(s) ready to use.")
+        print(" You can now enable AI recommendations in the trading interface.")
 
 
 if __name__ == "__main__":

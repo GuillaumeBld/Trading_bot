@@ -1,16 +1,16 @@
 # Advanced Dashboard User Guide
 
-## 🎯 Overview
+##  Overview
 
 The Advanced Trading Dashboard is a comprehensive web-based interface that provides complete control over your ChatGPT Micro-Cap Trading Bot. It features:
 
-- **🔧 Complete Configuration Management** - Set up all APIs and trading parameters
-- **📊 Real-time Performance Monitoring** - Track all key metrics and ratios
-- **🌍 Market Data Integration** - Live market data, news, and sentiment analysis
-- **🤖 AI Insights** - Manage AI providers and view recommendations
-- **📈 Advanced Analytics** - Risk analysis, correlation matrices, and more
+- ** Complete Configuration Management** - Set up all APIs and trading parameters
+- ** Real-time Performance Monitoring** - Track all key metrics and ratios
+- ** Market Data Integration** - Live market data, news, and sentiment analysis
+- ** AI Insights** - Manage AI providers and view recommendations
+- ** Advanced Analytics** - Risk analysis, correlation matrices, and more
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Method 1: Using the Launcher (Recommended)
 ```bash
@@ -35,9 +35,9 @@ python launch_dashboard.py --setup
 python launch_dashboard.py --advanced
 ```
 
-## 📋 Dashboard Sections
+##  Dashboard Sections
 
-### 1. 📊 Performance Tab
+### 1.  Performance Tab
 
 **Key Metrics Display:**
 - **Total Return** - Overall portfolio performance vs initial investment
@@ -57,7 +57,7 @@ python launch_dashboard.py --advanced
 - **Drawdown Chart** - Underwater equity curve
 - **Rolling Sharpe** - 30-day rolling Sharpe ratio
 
-### 2. 💼 Positions Tab
+### 2.  Positions Tab
 
 **Current Holdings Table:**
 - Ticker symbols and share quantities
@@ -70,7 +70,7 @@ python launch_dashboard.py --advanced
 - **P&L Bar Chart** - Profit/loss by position
 - **Risk Metrics** - Position-level risk analysis
 
-### 3. 🌍 Market Tab
+### 3.  Market Tab
 
 **Market Indices:**
 - S&P 500, NASDAQ, Dow Jones, Russell 2000
@@ -87,7 +87,7 @@ python launch_dashboard.py --advanced
 - Dollar index, gold, oil prices
 - Interest rates and bond yields
 
-### 4. 📰 News Tab
+### 4.  News Tab
 
 **Market News Feed:**
 - Real-time financial news from major sources
@@ -100,7 +100,7 @@ python launch_dashboard.py --advanced
 - Yahoo Finance and other financial media
 - Configurable news categories and keywords
 
-### 5. 🤖 AI Insights Tab
+### 5.  AI Insights Tab
 
 **AI Provider Status:**
 - Available and configured AI providers
@@ -118,7 +118,7 @@ python launch_dashboard.py --advanced
 - Confidence scores and reasoning
 - User decision tracking (accepted/rejected)
 
-### 6. ⚙️ Configuration Tab
+### 6.  Configuration Tab
 
 **AI Providers Configuration:**
 - OpenAI API key and model settings
@@ -144,7 +144,7 @@ python launch_dashboard.py --advanced
 - Update frequency settings
 - Cache management options
 
-## 🔧 Configuration Guide
+##  Configuration Guide
 
 ### Setting Up AI Providers
 
@@ -211,7 +211,7 @@ python launch_dashboard.py --advanced
 - Enter key in Data Sources configuration
 - Enable news feeds and sentiment analysis
 
-## 📱 Dashboard Features
+##  Dashboard Features
 
 ### Auto-Refresh
 - Enable automatic data refresh (10-300 seconds)
@@ -233,7 +233,7 @@ python launch_dashboard.py --advanced
 - Error and warning notifications
 - Guided troubleshooting assistance
 
-## 🛡️ Security Features
+##  Security Features
 
 ### API Key Protection
 - All sensitive data encrypted at rest
@@ -253,7 +253,7 @@ python launch_dashboard.py --advanced
 - Session management
 - Audit logging capabilities
 
-## 🚨 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -303,7 +303,7 @@ streamlit run advanced_dashboard.py --server.port 8503
 - Verify API keys are valid
 - Check provider-specific setup guides
 
-## 🎯 Best Practices
+##  Best Practices
 
 ### Dashboard Usage
 1. **Start with Configuration** - Set up all APIs before trading
@@ -324,7 +324,7 @@ streamlit run advanced_dashboard.py --server.port 8503
 3. **Regular Backups** - Export configuration regularly
 4. **Update Dependencies** - Keep packages up to date
 
-## 📊 Advanced Usage
+##  Advanced Usage
 
 ### Custom Analysis
 - Export data for external analysis
@@ -346,7 +346,7 @@ streamlit run advanced_dashboard.py --server.port 8503
 
 ---
 
-## 🆘 Getting Help
+##  Getting Help
 
 ### Resources
 - **[Complete Documentation](../README.md)** - Full system documentation

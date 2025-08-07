@@ -2,7 +2,7 @@
 
 This guide will walk you through installing the ChatGPT Micro-Cap Trading Bot on your system. Choose the method that best suits your needs.
 
-## 🎯 Installation Options
+##  Installation Options
 
 ### Option 1: Quick Install (Recommended for Beginners)
 - **Time**: 5-10 minutes
@@ -19,7 +19,7 @@ This guide will walk you through installing the ChatGPT Micro-Cap Trading Bot on
 - **Complexity**: High
 - **Features**: Everything + development tools
 
-## 🚀 Option 1: Quick Install
+##  Option 1: Quick Install
 
 ### Step 1: Download the Project
 ```bash
@@ -58,9 +58,9 @@ python trading_bot.py
 # Follow the prompts to create your first portfolio
 ```
 
-**✅ You're done!** Skip to [First Steps](#-first-steps) below.
+** You're done!** Skip to [First Steps](#-first-steps) below.
 
-## 🔧 Option 2: Full Install
+##  Option 2: Full Install
 
 ### Step 1: Prepare Your Environment
 ```bash
@@ -121,9 +121,9 @@ streamlit run streamlit_app.py
 # Open browser to http://localhost:8501
 ```
 
-**✅ Full installation complete!**
+** Full installation complete!**
 
-## 👨‍💻 Option 3: Development Install
+## ‍ Option 3: Development Install
 
 ### Step 1: Development Environment
 ```bash
@@ -185,7 +185,7 @@ cat > .vscode/settings.json << EOF
 EOF
 ```
 
-## 🔧 Platform-Specific Instructions
+##  Platform-Specific Instructions
 
 ### Windows Users
 ```powershell
@@ -238,7 +238,7 @@ pip3 install -r requirements.txt
 curl -fsSL https://ollama.ai/install.sh | sh
 ```
 
-## 🐳 Docker Installation (Alternative)
+##  Docker Installation (Alternative)
 
 ### Using Docker Compose
 ```bash
@@ -264,15 +264,15 @@ docker build -t trading-bot .
 docker run -p 8501:8501 -v $(pwd)/data:/app/data trading-bot
 ```
 
-## ✅ Verification Steps
+##  Verification Steps
 
 ### Test Core Functionality
 ```bash
 # Test Python imports
-python -c "import pandas, numpy, yfinance, matplotlib; print('✅ Core imports successful')"
+python -c "import pandas, numpy, yfinance, matplotlib; print(' Core imports successful')"
 
 # Test market data access
-python -c "import yfinance as yf; data = yf.download('AAPL', period='1d'); print('✅ Market data access working')"
+python -c "import yfinance as yf; data = yf.download('AAPL', period='1d'); print(' Market data access working')"
 
 # Test trading script
 python trading_script.py --help
@@ -296,7 +296,7 @@ streamlit run streamlit_app.py
 # You should see the trading interface
 ```
 
-## 🆘 Common Installation Issues
+##  Common Installation Issues
 
 ### Python Version Issues
 ```bash
@@ -344,7 +344,7 @@ pip download -r requirements.txt
 pip install --find-links . --no-index -r requirements.txt
 ```
 
-## 🎯 First Steps
+##  First Steps
 
 Once installation is complete:
 
@@ -353,7 +353,7 @@ Once installation is complete:
 3. **Web Interface**: Run `streamlit run streamlit_app.py` for GUI
 4. **Read Documentation**: Check [Usage Guides](../usage/command-line.md)
 
-## 📚 Next Steps
+##  Next Steps
 
 - **[Quick Start Guide](../getting-started/quick-start.md)** - Start trading immediately
 - **[Configuration Guide](../configuration/overview.md)** - Customize your setup

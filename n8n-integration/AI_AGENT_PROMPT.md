@@ -1,4 +1,4 @@
-# 🤖 AI Agent Implementation Prompt - n8n Trading Bot Workflows
+#  AI Agent Implementation Prompt - n8n Trading Bot Workflows
 
 ## Quick Start Prompt for AI Agent
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 🎯 IMMEDIATE TASKS
+##  IMMEDIATE TASKS
 
 ### **PRIORITY 1: Core Trading Automation**
 
@@ -47,7 +47,7 @@
 
 ---
 
-## 🛠️ TECHNICAL SPECIFICATIONS
+##  TECHNICAL SPECIFICATIONS
 
 ### **Available Services**
 - **n8n**: http://localhost:5678 (admin/your-password)
@@ -77,7 +77,7 @@ Headers: {
 
 ---
 
-## 📋 WORKFLOW TEMPLATES
+##  WORKFLOW TEMPLATES
 
 ### **Template 1: AI Trading Signal Processor**
 
@@ -178,7 +178,7 @@ Headers: {
 
 ---
 
-## 🚨 CRITICAL REQUIREMENTS
+##  CRITICAL REQUIREMENTS
 
 ### **Error Handling**
 Every workflow MUST include:
@@ -216,7 +216,7 @@ All actions MUST be logged:
 
 ---
 
-## 📊 SUCCESS CRITERIA
+##  SUCCESS CRITERIA
 
 ### **Functional Requirements**
 - [ ] AI signals processed every 5 minutes
@@ -233,7 +233,7 @@ All actions MUST be logged:
 
 ---
 
-## 🔧 IMPLEMENTATION STEPS
+##  IMPLEMENTATION STEPS
 
 ### **Step 1: Environment Setup**
 ```bash
@@ -269,7 +269,7 @@ In n8n interface:
 
 ---
 
-## 🎯 START HERE
+##  START HERE
 
 **IMMEDIATE ACTION**: 
 1. Access n8n at http://localhost:5678
@@ -288,4 +288,4 @@ In n8n interface:
 
 **TIME LIMIT**: Implement core workflows within 2 hours
 
-🚀 **BEGIN IMPLEMENTATION NOW!**
+ **BEGIN IMPLEMENTATION NOW!**

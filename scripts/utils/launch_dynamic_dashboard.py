@@ -30,7 +30,7 @@ try:
     REAL_TIME_AVAILABLE = True
 except ImportError:
     REAL_TIME_AVAILABLE = False
-    print("⚠️ Real-time service not available. Running in basic mode.")
+    print(" Real-time service not available. Running in basic mode.")
 
 # Configure logging
 logging.basicConfig(
@@ -64,13 +64,13 @@ class DynamicDashboardLauncher:
             try:
                 logger.info("Starting real-time data services...")
                 self.real_time_service = start_real_time_service()
-                logger.info("✅ Real-time services started successfully")
+                logger.info(" Real-time services started successfully")
                 return True
             except Exception as e:
-                logger.error(f"❌ Failed to start real-time services: {e}")
+                logger.error(f" Failed to start real-time services: {e}")
                 return False
         else:
-            logger.warning("⚠️ Real-time services not available")
+            logger.warning(" Real-time services not available")
             return False
     
     def start_streamlit_app(self, port: int = 8502, host: str = "localhost"):
@@ -79,7 +79,7 @@ class DynamicDashboardLauncher:
             dashboard_path = src_path / "interfaces" / "dynamic_dashboard.py"
             
             if not dashboard_path.exists():
-                logger.error(f"❌ Dashboard file not found: {dashboard_path}")
+                logger.error(f" Dashboard file not found: {dashboard_path}")
                 return False
             
             logger.info(f"Starting Streamlit dashboard on {host}:{port}...")
@@ -115,15 +115,15 @@ class DynamicDashboardLauncher:
             time.sleep(2)
             
             if self.streamlit_process.poll() is None:
-                logger.info(f"✅ Streamlit dashboard started successfully")
-                logger.info(f"🌐 Access dashboard at: http://{host}:{port}")
+                logger.info(f" Streamlit dashboard started successfully")
+                logger.info(f" Access dashboard at: http://{host}:{port}")
                 return True
             else:
-                logger.error("❌ Streamlit failed to start")
+                logger.error(" Streamlit failed to start")
                 return False
                 
         except Exception as e:
-            logger.error(f"❌ Error starting Streamlit: {e}")
+            logger.error(f" Error starting Streamlit: {e}")
             return False
     
     def _monitor_streamlit_output(self):
@@ -136,7 +136,7 @@ class DynamicDashboardLauncher:
             for line in iter(self.streamlit_process.stdout.readline, ''):
                 if line.strip():
                     if "You can now view your Streamlit app" in line:
-                        logger.info("🎉 Dashboard is ready!")
+                        logger.info(" Dashboard is ready!")
                     elif "ERROR" in line.upper() or "EXCEPTION" in line.upper():
                         logger.error(f"Streamlit error: {line.strip()}")
                     else:
@@ -170,21 +170,21 @@ class DynamicDashboardLauncher:
         health = self.check_health()
         
         print("\n" + "="*50)
-        print("🚀 DYNAMIC DASHBOARD STATUS")
+        print(" DYNAMIC DASHBOARD STATUS")
         print("="*50)
-        print(f"📊 Streamlit Dashboard: {'✅ Running' if health['streamlit'] else '❌ Stopped'}")
-        print(f"⚡ Real-time Services: {'✅ Running' if health['real_time_service'] else '❌ Not Available'}")
-        print(f"🌐 Overall Status: {'✅ Healthy' if health['overall'] else '❌ Issues Detected'}")
+        print(f" Streamlit Dashboard: {' Running' if health['streamlit'] else ' Stopped'}")
+        print(f" Real-time Services: {' Running' if health['real_time_service'] else ' Not Available'}")
+        print(f" Overall Status: {' Healthy' if health['overall'] else ' Issues Detected'}")
         
         if health['streamlit']:
-            print(f"🔗 Dashboard URL: http://localhost:8502")
+            print(f" Dashboard URL: http://localhost:8502")
         
         print("="*50)
     
     def launch(self, port: int = 8502, host: str = "localhost", 
                enable_real_time: bool = True):
         """Launch the complete dynamic dashboard system"""
-        logger.info("🚀 Starting Dynamic Trading Dashboard...")
+        logger.info(" Starting Dynamic Trading Dashboard...")
         
         self.running = True
         success = True
@@ -195,11 +195,11 @@ class DynamicDashboardLauncher:
         # Start real-time services if enabled
         if enable_real_time:
             if not self.start_real_time_services():
-                logger.warning("⚠️ Continuing without real-time services")
+                logger.warning(" Continuing without real-time services")
         
         # Start Streamlit dashboard
         if not self.start_streamlit_app(port, host):
-            logger.error("❌ Failed to start dashboard")
+            logger.error(" Failed to start dashboard")
             self.shutdown()
             return False
         
@@ -212,26 +212,26 @@ class DynamicDashboardLauncher:
     def run_forever(self):
         """Run the dashboard system until interrupted"""
         try:
-            logger.info("🔄 Dashboard system running. Press Ctrl+C to stop.")
+            logger.info(" Dashboard system running. Press Ctrl+C to stop.")
             
             while self.running:
                 # Periodic health check
                 health = self.check_health()
                 
                 if not health['overall']:
-                    logger.warning("⚠️ Health check failed, attempting restart...")
+                    logger.warning(" Health check failed, attempting restart...")
                     # Could implement auto-restart logic here
                 
                 time.sleep(30)  # Health check every 30 seconds
                 
         except KeyboardInterrupt:
-            logger.info("👋 Shutdown requested by user")
+            logger.info(" Shutdown requested by user")
         finally:
             self.shutdown()
     
     def shutdown(self):
         """Gracefully shutdown all services"""
-        logger.info("🛑 Shutting down dashboard system...")
+        logger.info(" Shutting down dashboard system...")
         
         self.running = False
         
@@ -250,7 +250,7 @@ class DynamicDashboardLauncher:
             logger.info("Stopping real-time services...")
             stop_real_time_service()
         
-        logger.info("✅ Shutdown complete")
+        logger.info(" Shutdown complete")
 
 def main():
     """Main entry point"""
@@ -315,19 +315,19 @@ Examples:
     enable_real_time = not args.no_real_time
     
     print(f"""
-🚀 Dynamic Trading Dashboard Launcher
+ Dynamic Trading Dashboard Launcher
 =====================================
-📊 Dashboard Port: {args.port}
-🌐 Host: {args.host}
-⚡ Real-time Services: {'Enabled' if enable_real_time else 'Disabled'}
-🔧 Verbose Logging: {'Enabled' if args.verbose else 'Disabled'}
+ Dashboard Port: {args.port}
+ Host: {args.host}
+ Real-time Services: {'Enabled' if enable_real_time else 'Disabled'}
+ Verbose Logging: {'Enabled' if args.verbose else 'Disabled'}
 =====================================
     """)
     
     if launcher.launch(args.port, args.host, enable_real_time):
         launcher.run_forever()
     else:
-        logger.error("❌ Failed to launch dashboard system")
+        logger.error(" Failed to launch dashboard system")
         sys.exit(1)
 
 if __name__ == "__main__":

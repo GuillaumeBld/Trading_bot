@@ -1,8 +1,8 @@
-# 🚀 Dynamic Dashboard Guide
+#  Dynamic Dashboard Guide
 
 The Dynamic Trading Dashboard provides real-time updates, live data feeds, and automatic refresh capabilities for monitoring your trading portfolio and market conditions.
 
-## 🎯 Overview
+##  Overview
 
 The Dynamic Dashboard offers:
 
@@ -14,7 +14,7 @@ The Dynamic Dashboard offers:
 - **Background Processing** - Continuous data collection
 - **Performance Optimization** - Efficient caching and batch updates
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Simple Launch
 ```bash
@@ -37,9 +37,9 @@ python scripts/utils/launch_dynamic_dashboard.py --no-real-time
 python scripts/utils/launch_dynamic_dashboard.py --host 0.0.0.0
 ```
 
-## 📊 Dashboard Features
+##  Dashboard Features
 
-### 🔄 Real-Time Controls
+###  Real-Time Controls
 
 Located in the sidebar:
 
@@ -48,7 +48,7 @@ Located in the sidebar:
 - **Manual Refresh** - Force immediate update
 - **Clear Notifications** - Remove notification history
 
-### 📈 Live Performance Metrics
+###  Live Performance Metrics
 
 Automatically updated metrics cards showing:
 
@@ -57,7 +57,7 @@ Automatically updated metrics cards showing:
 - **Max Drawdown** - Largest portfolio decline
 - **Win Rate** - Percentage of profitable trades
 
-### 🌍 Live Market Overview
+###  Live Market Overview
 
 Real-time market data for major indices:
 
@@ -68,7 +68,7 @@ Real-time market data for major indices:
 
 Each showing current price, change, and percentage change with color indicators.
 
-### 📊 Dynamic Charts
+###  Dynamic Charts
 
 Interactive charts that update automatically:
 
@@ -89,7 +89,7 @@ Interactive charts that update automatically:
    - Bar chart of key risk indicators
    - Color-coded performance levels
 
-### 🔔 Live Notifications
+###  Live Notifications
 
 Real-time notification system showing:
 
@@ -103,7 +103,7 @@ Notifications include:
 - Priority level (success, warning, error)
 - Auto-clearing after 30 minutes
 
-### 📊 System Status
+###  System Status
 
 Live status indicators showing:
 - **Dashboard Status** - Online/offline
@@ -111,7 +111,7 @@ Live status indicators showing:
 - **Auto-refresh Status** - On/off
 - **Last Update Time** - Timestamp of latest refresh
 
-## ⚙️ Configuration
+##  Configuration
 
 ### Auto-Refresh Settings
 
@@ -153,7 +153,7 @@ Animation: Enabled
 Lazy Loading: Enabled
 ```
 
-## 🛠️ Advanced Features
+##  Advanced Features
 
 ### Background Data Services
 
@@ -192,30 +192,30 @@ Intelligent data caching:
 - **Hit Rate Optimization** - Reduces API calls
 - **Thread-Safe** - Concurrent access protection
 
-## 🎛️ User Interface
+##  User Interface
 
 ### Layout Structure
 
 ```
-┌─────────────────────────────────────────────────┐
-│ 🚀 Dynamic Trading Dashboard                    │
-├─────────────────┬───────────────────────────────┤
-│ Sidebar         │ Main Content                  │
-│ - Controls      │ - Live Notifications          │
-│ - Settings      │ - Market Overview             │
-│ - Status        │ - Performance Metrics         │
-│                 │ - Dynamic Charts              │
-│                 │ - Trading Activity            │
-└─────────────────┴───────────────────────────────┘
+
+  Dynamic Trading Dashboard                    
+
+ Sidebar          Main Content                  
+ - Controls       - Live Notifications          
+ - Settings       - Market Overview             
+ - Status         - Performance Metrics         
+                  - Dynamic Charts              
+                  - Trading Activity            
+
 ```
 
 ### Visual Indicators
 
 - **🟢 Green** - Positive performance, online status
-- **🔴 Red** - Negative performance, errors
+- ** Red** - Negative performance, errors
 - **🟡 Yellow** - Warnings, neutral status
-- **🔵 Blue** - Information, system messages
-- **⚫ Gray** - Inactive, disabled features
+- ** Blue** - Information, system messages
+- ** Gray** - Inactive, disabled features
 
 ### Animation Effects
 
@@ -224,7 +224,7 @@ Intelligent data caching:
 - **Color Transitions** - Metric changes
 - **Chart Updates** - Smooth data transitions
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -298,7 +298,7 @@ python scripts/utils/launch_dynamic_dashboard.py --no-real-time
    - Use local data sources when possible
    - Batch API requests
 
-## 📱 Mobile Compatibility
+##  Mobile Compatibility
 
 The dashboard is responsive and works on mobile devices:
 
@@ -307,7 +307,7 @@ The dashboard is responsive and works on mobile devices:
 - **Mobile Charts** - Touch-friendly interactions
 - **Simplified Interface** - Key metrics prioritized
 
-## 🔐 Security
+##  Security
 
 ### Data Protection
 - **Local Processing** - All data stays on your system
@@ -320,7 +320,7 @@ The dashboard is responsive and works on mobile devices:
 - **HTTPS Support** - Can be configured for secure access
 - **Firewall Friendly** - Uses standard ports
 
-## 🚀 Advanced Usage
+##  Advanced Usage
 
 ### Custom Data Sources
 
@@ -354,7 +354,7 @@ config = get_dynamic_config_manager()
 config.update_refresh_settings(interval_seconds=15)
 ```
 
-## 📈 Performance Metrics
+##  Performance Metrics
 
 The dashboard tracks its own performance:
 
@@ -364,7 +364,7 @@ The dashboard tracks its own performance:
 - **Memory Usage** - Resource consumption
 - **Error Rate** - Failed operations percentage
 
-## 🎯 Best Practices
+##  Best Practices
 
 ### For Optimal Performance
 1. **Set Appropriate Intervals** - Balance freshness with performance
@@ -380,7 +380,7 @@ The dashboard tracks its own performance:
 4. **Provide Status Feedback** - Show system health
 5. **Enable Auto-Recovery** - Handle connection issues
 
-## 📞 Support
+##  Support
 
 For issues with the Dynamic Dashboard:
 
@@ -392,4 +392,4 @@ For issues with the Dynamic Dashboard:
 
 ---
 
-**The Dynamic Dashboard transforms your trading experience with real-time insights and automated monitoring!** 🚀📊
+**The Dynamic Dashboard transforms your trading experience with real-time insights and automated monitoring!** 

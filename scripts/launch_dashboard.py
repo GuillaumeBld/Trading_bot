@@ -30,18 +30,18 @@ def check_requirements():
             missing_packages.append(package)
     
     if missing_packages:
-        print(f"❌ Missing required packages: {', '.join(missing_packages)}")
-        print("📦 Please install missing packages:")
+        print(f" Missing required packages: {', '.join(missing_packages)}")
+        print(" Please install missing packages:")
         print(f"   pip install {' '.join(missing_packages)}")
         return False
     
-    print("✅ All required packages are installed")
+    print(" All required packages are installed")
     return True
 
 def launch_basic_dashboard():
     """Launch the basic dashboard (original)"""
-    print("🚀 Launching Basic Dashboard...")
-    print("📍 URL: http://localhost:8501")
+    print(" Launching Basic Dashboard...")
+    print(" URL: http://localhost:8501")
     
     try:
         subprocess.run([
@@ -51,15 +51,15 @@ def launch_basic_dashboard():
             "--server.port", "8501"
         ], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"❌ Failed to launch basic dashboard: {e}")
+        print(f" Failed to launch basic dashboard: {e}")
     except KeyboardInterrupt:
-        print("\n👋 Dashboard stopped by user")
+        print("\n Dashboard stopped by user")
 
 def launch_advanced_dashboard():
     """Launch the advanced dashboard with full configuration"""
-    print("🚀 Launching Advanced Dashboard...")
-    print("📍 URL: http://localhost:8502")
-    print("✨ Features: Full configuration management, market data, AI insights")
+    print(" Launching Advanced Dashboard...")
+    print(" URL: http://localhost:8502")
+    print(" Features: Full configuration management, market data, AI insights")
     
     try:
         subprocess.run([
@@ -69,20 +69,20 @@ def launch_advanced_dashboard():
             "--server.port", "8502"
         ], check=True)
     except subprocess.CalledProcessError as e:
-        print(f"❌ Failed to launch advanced dashboard: {e}")
+        print(f" Failed to launch advanced dashboard: {e}")
     except KeyboardInterrupt:
-        print("\n👋 Dashboard stopped by user")
+        print("\n Dashboard stopped by user")
 
 def launch_setup_wizard():
     """Launch the setup wizard for first-time configuration"""
-    print("🧙‍♂️ Launching Setup Wizard...")
+    print("‍ Launching Setup Wizard...")
     
     try:
         subprocess.run([sys.executable, "setup_llm.py"], check=True)
-        print("✅ Setup completed!")
+        print(" Setup completed!")
         
         # Ask user which dashboard to launch
-        choice = input("\n🚀 Which dashboard would you like to launch?\n"
+        choice = input("\n Which dashboard would you like to launch?\n"
                       "1. Basic Dashboard\n"
                       "2. Advanced Dashboard\n"
                       "Choice (1-2): ").strip()
@@ -95,17 +95,17 @@ def launch_setup_wizard():
             print("Invalid choice. Exiting.")
             
     except subprocess.CalledProcessError as e:
-        print(f"❌ Setup wizard failed: {e}")
+        print(f" Setup wizard failed: {e}")
     except KeyboardInterrupt:
-        print("\n👋 Setup cancelled by user")
+        print("\n Setup cancelled by user")
 
 def show_system_info():
     """Show system information and status"""
-    print("📊 ChatGPT Micro-Cap Trading Bot - System Information")
+    print(" ChatGPT Micro-Cap Trading Bot - System Information")
     print("=" * 60)
     
     # Python version
-    print(f"🐍 Python Version: {sys.version.split()[0]}")
+    print(f" Python Version: {sys.version.split()[0]}")
     
     # Check if core files exist
     core_files = [
@@ -117,9 +117,9 @@ def show_system_info():
         "market_data_service.py"
     ]
     
-    print("\n📁 Core Files Status:")
+    print("\n Core Files Status:")
     for file in core_files:
-        status = "✅" if os.path.exists(file) else "❌"
+        status = "" if os.path.exists(file) else ""
         print(f"   {status} {file}")
     
     # Check data files
@@ -128,27 +128,27 @@ def show_system_info():
         "Scripts and CSV Files/chatgpt_trade_log.csv"
     ]
     
-    print("\n📈 Data Files Status:")
+    print("\n Data Files Status:")
     for file in data_files:
         if os.path.exists(file):
             size = os.path.getsize(file)
-            print(f"   ✅ {file} ({size} bytes)")
+            print(f"    {file} ({size} bytes)")
         else:
-            print(f"   ❌ {file} (not found)")
+            print(f"    {file} (not found)")
     
     # Check configuration
     config_files = [".env", ".llm_config.json", "dashboard_config.json"]
     
-    print("\n⚙️ Configuration Files:")
+    print("\n Configuration Files:")
     for file in config_files:
-        status = "✅" if os.path.exists(file) else "❌"
+        status = "" if os.path.exists(file) else ""
         print(f"   {status} {file}")
     
     # Check packages
-    print("\n📦 Package Status:")
+    print("\n Package Status:")
     check_requirements()
     
-    print("\n🌐 Available Interfaces:")
+    print("\n Available Interfaces:")
     print("   • Command Line: python trading_bot.py")
     print("   • Basic Web UI: python launch_dashboard.py --basic")
     print("   • Advanced Dashboard: python launch_dashboard.py --advanced")
@@ -202,12 +202,12 @@ Examples:
     args = parser.parse_args()
     
     # Show header
-    print("🤖 ChatGPT Micro-Cap Trading Bot Dashboard Launcher")
+    print(" ChatGPT Micro-Cap Trading Bot Dashboard Launcher")
     print("=" * 55)
     
     # Check requirements first (unless just showing info)
     if not args.info and not check_requirements():
-        print("\n❌ Please install missing requirements first:")
+        print("\n Please install missing requirements first:")
         print("   pip install -r requirements.txt")
         sys.exit(1)
     
@@ -222,12 +222,12 @@ Examples:
         launch_advanced_dashboard()
     else:
         # Interactive mode
-        print("\n🎯 Choose your dashboard:")
-        print("1. 📊 Basic Dashboard - Simple portfolio tracking")
-        print("2. 🚀 Advanced Dashboard - Full configuration & market data")
-        print("3. 🧙‍♂️ Setup Wizard - First-time configuration")
-        print("4. 📋 System Information - Check system status")
-        print("5. ❌ Exit")
+        print("\n Choose your dashboard:")
+        print("1.  Basic Dashboard - Simple portfolio tracking")
+        print("2.  Advanced Dashboard - Full configuration & market data")
+        print("3. ‍ Setup Wizard - First-time configuration")
+        print("4.  System Information - Check system status")
+        print("5.  Exit")
         
         try:
             choice = input("\nChoice (1-5): ").strip()
@@ -241,14 +241,14 @@ Examples:
             elif choice == "4":
                 show_system_info()
             elif choice == "5":
-                print("👋 Goodbye!")
+                print(" Goodbye!")
                 sys.exit(0)
             else:
-                print("❌ Invalid choice. Please select 1-5.")
+                print(" Invalid choice. Please select 1-5.")
                 sys.exit(1)
                 
         except KeyboardInterrupt:
-            print("\n👋 Goodbye!")
+            print("\n Goodbye!")
             sys.exit(0)
 
 if __name__ == "__main__":

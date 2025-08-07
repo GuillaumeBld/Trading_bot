@@ -5,7 +5,7 @@
 
 set -e  # Exit on any error
 
-echo "🚀 ChatGPT Micro-Cap Trading Bot - Hostinger Deployment"
+echo " ChatGPT Micro-Cap Trading Bot - Hostinger Deployment"
 echo "======================================================"
 
 # Colors for output
@@ -452,7 +452,7 @@ main() {
     echo "  3. Set up your notification channels"
     echo "  4. Test all functionality before live trading"
     echo ""
-    print_success "Happy trading! 🚀"
+    print_success "Happy trading! "
 }
 
 # Run main function

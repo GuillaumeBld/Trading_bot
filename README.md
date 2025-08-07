@@ -1,8 +1,8 @@
-# AI-Powered Trading Bot 🤖📈
+# AI-Powered Trading Bot
 
 A sophisticated trading bot powered by Large Language Models (LLMs) with comprehensive risk management, real-time monitoring, and multi-platform notifications.
 
-## 🚀 Features
+## Features
 
 ### Core Trading Capabilities
 - **AI-Powered Decision Making**: Integration with OpenAI, Anthropic, and local LLMs (Ollama, Hugging Face)
@@ -18,19 +18,19 @@ A sophisticated trading bot powered by Large Language Models (LLMs) with compreh
 - **Backtesting**: Historical performance analysis
 - **Docker Support**: Easy deployment and containerization
 
-## 📊 System Architecture
+## System Architecture
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Trading Bot   │    │   Dashboard     │    │   n8n Workflows │
-│                 │    │                 │    │                 │
-│ • AI Analysis   │◄──►│ • Monitoring    │◄──►│ • Notifications │
-│ • Risk Mgmt     │    │ • Configuration │    │ • Integrations  │
-│ • Execution     │    │ • Visualization │    │ • Automation    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+        
+   Trading Bot          Dashboard            n8n Workflows 
+                                                           
+ • AI Analysis    • Monitoring     • Notifications 
+ • Risk Mgmt          • Configuration      • Integrations  
+ • Execution          • Visualization      • Automation    
+        
 ```
 
-## 🛠️ Installation
+## Installation
 
 ### Quick Start
 ```bash
@@ -55,54 +55,54 @@ python scripts/run_trading.py
 python scripts/run_dynamic_dashboard.py
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 unified-trading-bot/
-├── src/                    # Core source code
-│   ├── core/              # Trading engine and LLM interface
-│   │   ├── trading_engine.py    # Main trading engine
-│   │   ├── trading_script.py    # Trading script implementation
-│   │   └── llm_interface.py     # AI integration
-│   ├── interfaces/        # User interfaces and dashboards
-│   │   ├── advanced_dashboard.py    # Full-featured dashboard
-│   │   ├── dashboard_app.py         # Dashboard application
-│   │   ├── dynamic_dashboard.py     # Dynamic dashboard
-│   │   ├── trading_bot.py           # CLI interface
-│   │   ├── streamlit_app.py         # Basic web UI
-│   │   └── real_time_service.py     # Real-time services
-│   ├── services/          # Market data and real-time services
-│   │   ├── market_data_service.py   # Market data service
-│   │   └── real_time_service.py     # Real-time monitoring
-│   └── config/            # Configuration management
-│       ├── dashboard_config.py      # Dashboard settings
-│       └── dynamic_config.py        # Dynamic configuration
-├── scripts/               # Utility and setup scripts
-│   ├── run_dashboard.py           # Dashboard launcher
-│   ├── run_trading.py             # Trading bot launcher
-│   ├── run_dynamic_dashboard.py   # Dynamic dashboard launcher
-│   ├── demo_dashboard.py          # Demo dashboard
-│   ├── demo_llm_features.py       # LLM features demo
-│   ├── setup_llm.py               # LLM setup wizard
-│   ├── launch_dashboard.py        # Dashboard launcher
-│   └── utils/                     # Utility scripts
-├── n8n-integration/       # n8n workflow automation
-│   ├── workflows/         # Pre-built n8n workflows
-│   ├── docker/           # Docker deployment files
-│   └── api-wrapper/      # FastAPI integration layer
-├── docs/                  # Comprehensive documentation
-├── deployment/            # Deployment guides and scripts
-├── data/                  # Data storage
-│   ├── portfolio/         # Portfolio snapshots
-│   ├── trades/           # Trade history
-│   └── backups/          # Data backups
-├── assets/               # Static assets
-│   ├── images/           # Screenshots & charts
-│   └── reports/          # Generated reports
-└── future-enhancements/  # Development roadmap
+ src/                    # Core source code
+    core/              # Trading engine and LLM interface
+       trading_engine.py    # Main trading engine
+       trading_script.py    # Trading script implementation
+       llm_interface.py     # AI integration
+    interfaces/        # User interfaces and dashboards
+       advanced_dashboard.py    # Full-featured dashboard
+       dashboard_app.py         # Dashboard application
+       dynamic_dashboard.py     # Dynamic dashboard
+       trading_bot.py           # CLI interface
+       streamlit_app.py         # Basic web UI
+       real_time_service.py     # Real-time services
+    services/          # Market data and real-time services
+       market_data_service.py   # Market data service
+       real_time_service.py     # Real-time monitoring
+    config/            # Configuration management
+        dashboard_config.py      # Dashboard settings
+        dynamic_config.py        # Dynamic configuration
+ scripts/               # Utility and setup scripts
+    run_dashboard.py           # Dashboard launcher
+    run_trading.py             # Trading bot launcher
+    run_dynamic_dashboard.py   # Dynamic dashboard launcher
+    demo_dashboard.py          # Demo dashboard
+    demo_llm_features.py       # LLM features demo
+    setup_llm.py               # LLM setup wizard
+    launch_dashboard.py        # Dashboard launcher
+    utils/                     # Utility scripts
+ n8n-integration/       # n8n workflow automation
+    workflows/         # Pre-built n8n workflows
+    docker/           # Docker deployment files
+    api-wrapper/      # FastAPI integration layer
+ docs/                  # Comprehensive documentation
+ deployment/            # Deployment guides and scripts
+ data/                  # Data storage
+    portfolio/         # Portfolio snapshots
+    trades/           # Trade history
+    backups/          # Data backups
+ assets/               # Static assets
+    images/           # Screenshots & charts
+    reports/          # Generated reports
+ future-enhancements/  # Development roadmap
 ```
 
-## 🔧 Configuration
+##  Configuration
 
 ### LLM Configuration
 Create a `.env` file:
@@ -123,15 +123,15 @@ DASHBOARD_CONFIG = {
 }
 ```
 
-## 🤖 n8n Workflows
+##  n8n Workflows
 
 The system includes 5 pre-built n8n workflows:
 
-1. **🤖 AI Trading Signal Processor** - Processes trading signals with AI analysis
-2. **📊 Portfolio Monitor & Risk Management** - Continuous portfolio monitoring
-3. **🔔 Multi-Channel Notification Hub** - Smart notification routing
-4. **🧠 AI Market Analysis & News Monitor** - News-based market analysis
-5. **⚠️ Risk Management & Stop Loss Automation** - Automated risk controls
+1. ** AI Trading Signal Processor** - Processes trading signals with AI analysis
+2. ** Portfolio Monitor & Risk Management** - Continuous portfolio monitoring
+3. ** Multi-Channel Notification Hub** - Smart notification routing
+4. ** AI Market Analysis & News Monitor** - News-based market analysis
+5. ** Risk Management & Stop Loss Automation** - Automated risk controls
 
 ### Deploy n8n Workflows
 ```bash
@@ -139,7 +139,7 @@ cd n8n-integration
 docker-compose up -d
 ```
 
-## 📈 Usage Examples
+##  Usage Examples
 
 ### Basic Trading
 ```python
@@ -159,14 +159,14 @@ bot.set_risk_parameters({
 })
 ```
 
-## 🛡️ Security Features
+##  Security Features
 
 - **API Key Encryption**: Secure credential storage
 - **Rate Limiting**: Protection against API abuse
 - **Input Validation**: Comprehensive data sanitization
 - **Error Handling**: Graceful failure management
 
-## 📊 Performance Monitoring
+##  Performance Monitoring
 
 Access the real-time dashboard at `http://localhost:8501`:
 
@@ -176,7 +176,7 @@ Access the real-time dashboard at `http://localhost:8501`:
 - Risk assessment dashboard
 - Real-time market data
 
-## 🔗 Integrations
+##  Integrations
 
 ### Supported Brokers
 - **Paper Trading**: Built-in simulation mode
@@ -190,7 +190,7 @@ Access the real-time dashboard at `http://localhost:8501`:
 - **Local Models**: Ollama, Hugging Face Transformers
 - **Custom Providers**: Extensible LLM framework
 
-## 🚀 Deployment
+##  Deployment
 
 ### Local Development
 ```bash
@@ -207,7 +207,7 @@ docker-compose up -d
 ./deployment/hostinger-quick-deploy.sh
 ```
 
-## 📚 Documentation
+##  Documentation
 
 - **[Getting Started Guide](docs/getting-started/overview.md)**
 - **[Configuration Manual](docs/configuration/overview.md)**
@@ -215,19 +215,19 @@ docker-compose up -d
 - **[API Reference](docs/api-reference/)**
 - **[Troubleshooting](docs/troubleshooting/faq.md)**
 
-## 🤝 Contributing
+##  Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to this project.
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [License.txt](Other/License.txt) file for details.
 
-## ⚠️ Disclaimer
+##  Disclaimer
 
 This software is for educational and research purposes. Trading involves substantial risk of loss. The authors are not responsible for any financial losses incurred through the use of this software.
 
-## 🌟 Support
+##  Support
 
 - **GitHub Issues**: [Report bugs or request features](https://github.com/GuillaumeBld/Trading_bot/issues)
 - **Documentation**: [Comprehensive guides and tutorials](docs/)
@@ -235,6 +235,6 @@ This software is for educational and research purposes. Trading involves substan
 
 ---
 
-**Built with ❤️ by [Guillaume](https://github.com/GuillaumeBld)**
+**Built with  by [Guillaume](https://github.com/GuillaumeBld)**
 
 *Empowering traders with AI-driven insights and automated decision-making.*

@@ -1,9 +1,9 @@
-# 🚀 Quick Hostinger Deployment - Working Solution
+#  Quick Hostinger Deployment - Working Solution
 
 ## Current Situation
 You're connected to your Hostinger VPS (Ubuntu 24.04.2 LTS) but the original deployment guide references a non-existent GitHub repository.
 
-## ✅ Step-by-Step Solution (Copy & Paste These Commands)
+##  Step-by-Step Solution (Copy & Paste These Commands)
 
 ### Step 1: Install Required Dependencies
 ```bash
@@ -47,7 +47,7 @@ import streamlit as st
 import pandas as pd
 import yfinance as yf
 
-st.title("🤖 Trading Bot - Test Deployment")
+st.title(" Trading Bot - Test Deployment")
 st.write("If you can see this, your server is working!")
 
 # Test data fetching
@@ -118,7 +118,7 @@ sudo ufw enable
 - **Basic Dashboard**: `http://82.25.112.7:8501`
 - **Advanced Dashboard**: `http://82.25.112.7:8502`
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### If you get "Command not found" errors:
 ```bash
@@ -147,7 +147,7 @@ pkill -f streamlit
 python scripts/run_dashboard.py
 ```
 
-## 🚀 Quick Commands for Right Now
+##  Quick Commands for Right Now
 
 **Copy and paste these commands one by one in your current SSH session:**
 
@@ -163,7 +163,7 @@ python3 -m venv venv && source venv/bin/activate && pip install streamlit yfinan
 
 # 4. Create test file
 echo 'import streamlit as st
-st.title("🤖 Trading Bot Test")
+st.title(" Trading Bot Test")
 st.write("Server is working! IP: 82.25.112.7")
 st.balloons()' > test.py
 
@@ -173,4 +173,4 @@ streamlit run test.py --server.port 8501 --server.address 0.0.0.0
 
 **Then visit**: `http://82.25.112.7:8501` in your browser
 
-If you see the test page, your server is ready for the full deployment! 🎉
+If you see the test page, your server is ready for the full deployment! 

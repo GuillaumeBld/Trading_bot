@@ -31,13 +31,13 @@ try:
     from llm_interface import LLMManager
     CONFIG_AVAILABLE = True
 except ImportError as e:
-    st.error(f"⚠️ Required modules not available: {e}")
+    st.error(f" Required modules not available: {e}")
     CONFIG_AVAILABLE = False
 
 # Set page configuration
 st.set_page_config(
     page_title="Advanced Trading Dashboard",
-    page_icon="📊",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -156,7 +156,7 @@ class AdvancedTradingDashboard:
     
     def render_header(self):
         """Render enhanced dashboard header"""
-        st.markdown('<h1 class="main-header">🚀 Advanced Trading Dashboard</h1>', 
+        st.markdown('<h1 class="main-header"> Advanced Trading Dashboard</h1>', 
                    unsafe_allow_html=True)
         
         # System status indicators
@@ -183,7 +183,7 @@ class AdvancedTradingDashboard:
             current_time = datetime.now().strftime("%H:%M:%S")
             st.markdown(f"""
             <div style="text-align: center;">
-                <strong>🕒 {current_time}</strong><br>
+                <strong> {current_time}</strong><br>
                 <small>Last Update</small>
             </div>
             """, unsafe_allow_html=True)
@@ -203,10 +203,10 @@ class AdvancedTradingDashboard:
     
     def render_sidebar_navigation(self):
         """Render sidebar navigation and controls"""
-        st.sidebar.title("🎛️ Dashboard Controls")
+        st.sidebar.title(" Dashboard Controls")
         
         # Auto-refresh controls
-        st.sidebar.markdown("### 🔄 Refresh Settings")
+        st.sidebar.markdown("###  Refresh Settings")
         st.session_state.auto_refresh = st.sidebar.checkbox(
             "Auto Refresh", 
             value=st.session_state.auto_refresh
@@ -222,11 +222,11 @@ class AdvancedTradingDashboard:
             )
         
         # Manual refresh
-        if st.sidebar.button("🔄 Refresh Now", use_container_width=True):
+        if st.sidebar.button(" Refresh Now", use_container_width=True):
             self.refresh_data()
         
         # Timeframe selection
-        st.sidebar.markdown("### 📅 Timeframe")
+        st.sidebar.markdown("###  Timeframe")
         st.session_state.selected_timeframe = st.sidebar.selectbox(
             "Chart Timeframe",
             ["1D", "1W", "1M", "3M", "6M", "1Y", "2Y"],
@@ -234,7 +234,7 @@ class AdvancedTradingDashboard:
         )
         
         # Advanced options
-        st.sidebar.markdown("### ⚙️ Display Options")
+        st.sidebar.markdown("###  Display Options")
         st.session_state.show_advanced_metrics = st.sidebar.checkbox(
             "Show Advanced Metrics",
             value=st.session_state.show_advanced_metrics
@@ -242,7 +242,7 @@ class AdvancedTradingDashboard:
         
         # Configuration validation
         if self.config_manager:
-            st.sidebar.markdown("### 🔍 Configuration Status")
+            st.sidebar.markdown("###  Configuration Status")
             self.render_config_validation()
     
     def render_config_validation(self):
@@ -257,16 +257,16 @@ class AdvancedTradingDashboard:
         warning_count = len(issues['warnings'])
         
         if error_count == 0 and warning_count == 0:
-            st.sidebar.success("✅ Configuration OK")
+            st.sidebar.success(" Configuration OK")
         else:
             if error_count > 0:
-                st.sidebar.error(f"❌ {error_count} Error(s)")
+                st.sidebar.error(f" {error_count} Error(s)")
                 with st.sidebar.expander("View Errors"):
                     for error in issues['errors']:
                         st.write(f"• {error}")
             
             if warning_count > 0:
-                st.sidebar.warning(f"⚠️ {warning_count} Warning(s)")
+                st.sidebar.warning(f" {warning_count} Warning(s)")
                 with st.sidebar.expander("View Warnings"):
                     for warning in issues['warnings']:
                         st.write(f"• {warning}")
@@ -277,14 +277,14 @@ class AdvancedTradingDashboard:
             st.error("Configuration manager not available")
             return
         
-        st.markdown("## ⚙️ System Configuration")
+        st.markdown("##  System Configuration")
         
         # Configuration tabs
         config_tab1, config_tab2, config_tab3, config_tab4 = st.tabs([
-            "🤖 AI Providers",
-            "🏦 Brokers", 
-            "📊 Trading Settings",
-            "📰 Data Sources"
+            " AI Providers",
+            " Brokers", 
+            " Trading Settings",
+            " Data Sources"
         ])
         
         with config_tab1:
@@ -301,7 +301,7 @@ class AdvancedTradingDashboard:
     
     def render_ai_configuration(self):
         """Render AI provider configuration"""
-        st.markdown("### 🤖 AI Provider Settings")
+        st.markdown("###  AI Provider Settings")
         
         # Provider status overview
         col1, col2 = st.columns([1, 1])
@@ -309,7 +309,7 @@ class AdvancedTradingDashboard:
         with col1:
             st.markdown("**Available Providers:**")
             for provider_name, provider_config in self.config_manager.config.llm_providers.items():
-                status = "✅" if provider_config.enabled else "❌"
+                status = "" if provider_config.enabled else ""
                 st.write(f"{status} {provider_name.title()}")
         
         with col2:
@@ -317,7 +317,7 @@ class AdvancedTradingDashboard:
                 available = self.llm_manager.get_available_providers()
                 st.markdown("**Active Providers:**")
                 for provider in available:
-                    st.success(f"✅ {provider}")
+                    st.success(f" {provider}")
         
         # Configuration forms
         for provider_name, provider_config in self.config_manager.config.llm_providers.items():
@@ -375,7 +375,7 @@ class AdvancedTradingDashboard:
             )
         
         # Save button
-        if st.button(f"💾 Save {provider_name.title()} Config", key=f"save_{provider_name}"):
+        if st.button(f" Save {provider_name.title()} Config", key=f"save_{provider_name}"):
             self.config_manager.update_llm_config(
                 provider_name,
                 api_key=api_key,
@@ -386,14 +386,14 @@ class AdvancedTradingDashboard:
             )
             
             if self.config_manager.save_config(self.config_manager.config):
-                st.success(f"✅ {provider_name.title()} configuration saved!")
+                st.success(f" {provider_name.title()} configuration saved!")
                 st.rerun()
             else:
-                st.error("❌ Failed to save configuration")
+                st.error(" Failed to save configuration")
     
     def render_broker_configuration(self):
         """Render broker configuration"""
-        st.markdown("### 🏦 Broker API Settings")
+        st.markdown("###  Broker API Settings")
         
         for broker_name, broker_config in self.config_manager.config.brokers.items():
             with st.expander(f"Configure {broker_name.title()}", expanded=False):
@@ -444,17 +444,17 @@ class AdvancedTradingDashboard:
         col_test, col_save = st.columns(2)
         
         with col_test:
-            if st.button(f"🔗 Test Connection", key=f"test_{broker_name}"):
+            if st.button(f" Test Connection", key=f"test_{broker_name}"):
                 # Simulate connection test
                 with st.spinner("Testing connection..."):
                     time.sleep(2)
                     if api_key:
-                        st.success("✅ Connection successful!")
+                        st.success(" Connection successful!")
                     else:
-                        st.error("❌ Connection failed - missing API key")
+                        st.error(" Connection failed - missing API key")
         
         with col_save:
-            if st.button(f"💾 Save Config", key=f"save_broker_{broker_name}"):
+            if st.button(f" Save Config", key=f"save_broker_{broker_name}"):
                 self.config_manager.update_broker_config(
                     broker_name,
                     api_key=api_key,
@@ -465,12 +465,12 @@ class AdvancedTradingDashboard:
                 )
                 
                 if self.config_manager.save_config(self.config_manager.config):
-                    st.success(f"✅ {broker_name.title()} configuration saved!")
+                    st.success(f" {broker_name.title()} configuration saved!")
                     st.rerun()
     
     def render_trading_configuration(self):
         """Render trading parameters configuration"""
-        st.markdown("### 📊 Trading Parameters")
+        st.markdown("###  Trading Parameters")
         
         config = self.config_manager.config.trading
         
@@ -514,7 +514,7 @@ class AdvancedTradingDashboard:
             )
         
         # Risk metrics
-        st.markdown("### 📈 Performance Settings")
+        st.markdown("###  Performance Settings")
         
         risk_free_rate = st.number_input(
             "Risk-Free Rate (%)",
@@ -527,7 +527,7 @@ class AdvancedTradingDashboard:
         ) / 100
         
         # Save button
-        if st.button("💾 Save Trading Configuration", use_container_width=True):
+        if st.button(" Save Trading Configuration", use_container_width=True):
             self.config_manager.update_trading_config(
                 max_position_size_pct=float(max_position_size),
                 default_stop_loss_pct=float(default_stop_loss),
@@ -537,12 +537,12 @@ class AdvancedTradingDashboard:
             )
             
             if self.config_manager.save_config(self.config_manager.config):
-                st.success("✅ Trading configuration saved!")
+                st.success(" Trading configuration saved!")
                 st.rerun()
     
     def render_data_source_configuration(self):
         """Render data source configuration"""
-        st.markdown("### 📰 Data Source Settings")
+        st.markdown("###  Data Source Settings")
         
         config = self.config_manager.config.data_sources
         
@@ -581,7 +581,7 @@ class AdvancedTradingDashboard:
                 news_api_key = config.news_api_key
         
         # Save button
-        if st.button("💾 Save Data Source Configuration", use_container_width=True):
+        if st.button(" Save Data Source Configuration", use_container_width=True):
             self.config_manager.update_data_source_config(
                 primary_provider=primary_provider,
                 update_frequency=update_frequency,
@@ -590,7 +590,7 @@ class AdvancedTradingDashboard:
             )
             
             if self.config_manager.save_config(self.config_manager.config):
-                st.success("✅ Data source configuration saved!")
+                st.success(" Data source configuration saved!")
                 # Update market service with new API key
                 if self.market_service:
                     self.market_service.news_api_key = news_api_key
@@ -598,13 +598,13 @@ class AdvancedTradingDashboard:
     
     def render_performance_dashboard(self):
         """Render comprehensive performance dashboard"""
-        st.markdown("## 📊 Performance Dashboard")
+        st.markdown("##  Performance Dashboard")
         
         # Load portfolio data
         portfolio_data = self.load_portfolio_data()
         
         if portfolio_data is None:
-            st.warning("📄 No portfolio data found. Please run a trading session first.")
+            st.warning(" No portfolio data found. Please run a trading session first.")
             return
         
         # Performance metrics
@@ -781,7 +781,7 @@ class AdvancedTradingDashboard:
     
     def render_market_overview(self):
         """Render comprehensive market overview"""
-        st.markdown("## 🌍 Market Overview")
+        st.markdown("##  Market Overview")
         
         if not self.market_service:
             st.warning("Market data service not available")
@@ -791,7 +791,7 @@ class AdvancedTradingDashboard:
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            st.markdown("### 📈 Market Indices")
+            st.markdown("###  Market Indices")
             indices = self.market_service.get_market_indices()
             
             if indices:
@@ -808,7 +808,7 @@ class AdvancedTradingDashboard:
                 st.dataframe(df, use_container_width=True, hide_index=True)
         
         with col2:
-            st.markdown("### 🎯 Market Sentiment")
+            st.markdown("###  Market Sentiment")
             sentiment = self.market_service.get_market_sentiment_score()
             
             if sentiment:
@@ -842,7 +842,7 @@ class AdvancedTradingDashboard:
     
     def render_news_feed(self):
         """Render news feed with sentiment analysis"""
-        st.markdown("## 📰 Market News & Analysis")
+        st.markdown("##  Market News & Analysis")
         
         if not self.market_service:
             st.warning("Market data service not available")
@@ -858,7 +858,7 @@ class AdvancedTradingDashboard:
         # Display news items
         for news in news_items:
             sentiment_class = f"sentiment-{news.sentiment}"
-            sentiment_emoji = {"positive": "📈", "negative": "📉", "neutral": "📊"}.get(news.sentiment, "📊")
+            sentiment_emoji = {"positive": "", "negative": "", "neutral": ""}.get(news.sentiment, "")
             
             st.markdown(f"""
             <div class="news-item {sentiment_class}">
@@ -893,7 +893,7 @@ class AdvancedTradingDashboard:
             
             # Auto-refresh countdown
             for seconds in range(st.session_state.refresh_interval, 0, -1):
-                refresh_placeholder.info(f"🔄 Auto-refresh in {seconds} seconds...")
+                refresh_placeholder.info(f" Auto-refresh in {seconds} seconds...")
                 time.sleep(1)
             
             refresh_placeholder.empty()
@@ -901,12 +901,12 @@ class AdvancedTradingDashboard:
         
         # Main content tabs
         main_tabs = st.tabs([
-            "📊 Performance",
-            "💼 Positions", 
-            "🌍 Market",
-            "📰 News",
-            "🤖 AI Insights",
-            "⚙️ Configuration"
+            " Performance",
+            " Positions", 
+            " Market",
+            " News",
+            " AI Insights",
+            " Configuration"
         ])
         
         with main_tabs[0]:
@@ -932,13 +932,13 @@ class AdvancedTradingDashboard:
     
     def render_positions_analysis(self):
         """Render current positions analysis"""
-        st.markdown("## 💼 Portfolio Positions")
+        st.markdown("##  Portfolio Positions")
         
         # Load current positions
         portfolio_data = self.load_portfolio_data()
         
         if portfolio_data is None or portfolio_data.empty:
-            st.info("💰 No current positions. Portfolio is in cash.")
+            st.info(" No current positions. Portfolio is in cash.")
             return
         
         # Get latest positions
@@ -949,11 +949,11 @@ class AdvancedTradingDashboard:
             current_positions = current_positions[current_positions['Shares'] > 0]
         
         if current_positions.empty:
-            st.info("💰 No current positions. Portfolio is in cash.")
+            st.info(" No current positions. Portfolio is in cash.")
             return
         
         # Position summary table
-        st.markdown("### 📋 Current Holdings")
+        st.markdown("###  Current Holdings")
         display_cols = ['Ticker', 'Shares', 'Cost Basis', 'Current Price', 'Total Value', 'PnL', 'Stop Loss']
         available_cols = [col for col in display_cols if col in current_positions.columns]
         
@@ -990,33 +990,33 @@ class AdvancedTradingDashboard:
     
     def render_ai_insights(self):
         """Render AI insights and recommendations"""
-        st.markdown("## 🤖 AI Insights & Recommendations")
+        st.markdown("##  AI Insights & Recommendations")
         
         if not self.llm_manager:
-            st.warning("⚠️ AI providers not configured. Please set up API keys in the Configuration tab.")
+            st.warning(" AI providers not configured. Please set up API keys in the Configuration tab.")
             return
         
         available_providers = self.llm_manager.get_available_providers()
         
         if not available_providers:
-            st.warning("⚠️ No AI providers available. Please configure API keys in the Configuration tab.")
+            st.warning(" No AI providers available. Please configure API keys in the Configuration tab.")
             return
         
         # AI provider status
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("### 🔧 AI Provider Status")
+            st.markdown("###  AI Provider Status")
             for provider in available_providers:
-                st.success(f"✅ {provider.upper()} - Ready")
+                st.success(f" {provider.upper()} - Ready")
         
         with col2:
-            st.markdown("### 📊 Recent Analysis")
+            st.markdown("###  Recent Analysis")
             # This would show recent AI analysis results
-            st.info("🔄 AI analysis history will be displayed here after running recommendations.")
+            st.info(" AI analysis history will be displayed here after running recommendations.")
         
         # Generate new analysis
-        st.markdown("### 🧠 Generate New Analysis")
+        st.markdown("###  Generate New Analysis")
         
         analysis_type = st.selectbox(
             "Analysis Type",
@@ -1028,15 +1028,15 @@ class AdvancedTradingDashboard:
             available_providers
         )
         
-        if st.button("🚀 Generate AI Analysis", use_container_width=True):
+        if st.button(" Generate AI Analysis", use_container_width=True):
             with st.spinner(f"Analyzing with {selected_provider.upper()}..."):
                 # Simulate AI analysis
                 time.sleep(3)
                 
                 # Mock analysis results
-                st.success("✅ Analysis complete!")
+                st.success(" Analysis complete!")
                 
-                st.markdown("### 📋 AI Analysis Results")
+                st.markdown("###  AI Analysis Results")
                 
                 if analysis_type == "Market Overview":
                     st.markdown("""

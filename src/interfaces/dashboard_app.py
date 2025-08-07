@@ -26,7 +26,7 @@ import time
 # Set page config
 st.set_page_config(
     page_title="Trading Bot Dashboard",
-    page_icon="📊",
+    page_icon="",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -75,7 +75,7 @@ try:
     MODULES_AVAILABLE = True
 except ImportError:
     MODULES_AVAILABLE = False
-    st.error("⚠️ Core modules not available. Please ensure all dependencies are installed.")
+    st.error(" Core modules not available. Please ensure all dependencies are installed.")
 
 class TradingDashboard:
     def __init__(self):
@@ -156,7 +156,7 @@ class TradingDashboard:
 
     def render_header(self):
         """Render dashboard header"""
-        st.markdown('<h1 class="main-header">🤖 ChatGPT Micro-Cap Trading Dashboard</h1>', 
+        st.markdown('<h1 class="main-header"> ChatGPT Micro-Cap Trading Dashboard</h1>', 
                    unsafe_allow_html=True)
         
         # Status indicators
@@ -164,51 +164,51 @@ class TradingDashboard:
         
         with col1:
             if MODULES_AVAILABLE:
-                st.success("✅ Core System")
+                st.success(" Core System")
             else:
-                st.error("❌ Core System")
+                st.error(" Core System")
         
         with col2:
             if self.llm_manager and self.llm_manager.get_available_providers():
-                st.success("✅ AI Providers")
+                st.success(" AI Providers")
             else:
-                st.warning("⚠️ AI Providers")
+                st.warning(" AI Providers")
         
         with col3:
             if os.path.exists('Scripts and CSV Files/chatgpt_portfolio_update.csv'):
-                st.success("✅ Portfolio Data")
+                st.success(" Portfolio Data")
             else:
-                st.warning("⚠️ Portfolio Data")
+                st.warning(" Portfolio Data")
         
         with col4:
             current_time = datetime.now().strftime("%H:%M:%S")
-            st.info(f"🕒 {current_time}")
+            st.info(f" {current_time}")
 
     def render_sidebar_config(self):
         """Render configuration sidebar"""
-        st.sidebar.markdown("## ⚙️ Configuration")
+        st.sidebar.markdown("##  Configuration")
         
         # Auto-refresh toggle
         st.session_state.auto_refresh = st.sidebar.checkbox(
-            "🔄 Auto Refresh (30s)", 
+            " Auto Refresh (30s)", 
             value=st.session_state.auto_refresh
         )
         
         # Manual refresh button
-        if st.sidebar.button("🔄 Refresh Now", use_container_width=True):
+        if st.sidebar.button(" Refresh Now", use_container_width=True):
             self.refresh_data()
         
         # Configuration sections
-        with st.sidebar.expander("🤖 AI Providers", expanded=False):
+        with st.sidebar.expander(" AI Providers", expanded=False):
             self.render_llm_config()
         
-        with st.sidebar.expander("🏦 Broker APIs", expanded=False):
+        with st.sidebar.expander(" Broker APIs", expanded=False):
             self.render_broker_config()
         
-        with st.sidebar.expander("📊 Trading Settings", expanded=False):
+        with st.sidebar.expander(" Trading Settings", expanded=False):
             self.render_trading_config()
         
-        with st.sidebar.expander("📰 Data Sources", expanded=False):
+        with st.sidebar.expander(" Data Sources", expanded=False):
             self.render_data_source_config()
 
     def render_llm_config(self):
@@ -253,7 +253,7 @@ class TradingDashboard:
         )
         
         # Save button
-        if st.button("💾 Save AI Config", key="save_ai_config"):
+        if st.button(" Save AI Config", key="save_ai_config"):
             config = st.session_state.config_data.copy()
             config['llm_providers'].update({
                 'OPENAI_API_KEY': openai_key,
@@ -262,7 +262,7 @@ class TradingDashboard:
                 'confidence_threshold': confidence_threshold
             })
             self.save_config(config)
-            st.success("✅ AI configuration saved!")
+            st.success(" AI configuration saved!")
 
     def render_broker_config(self):
         """Render broker API configuration"""
@@ -295,7 +295,7 @@ class TradingDashboard:
         )
         
         # Save button
-        if st.button("💾 Save Broker Config", key="save_broker_config"):
+        if st.button(" Save Broker Config", key="save_broker_config"):
             config = st.session_state.config_data.copy()
             config['brokers'] = {
                 'alpaca': {
@@ -309,7 +309,7 @@ class TradingDashboard:
                 }
             }
             self.save_config(config)
-            st.success("✅ Broker configuration saved!")
+            st.success(" Broker configuration saved!")
 
     def render_trading_config(self):
         """Render trading settings configuration"""
@@ -350,7 +350,7 @@ class TradingDashboard:
             key="cash_reserve"
         )
         
-        if st.button("💾 Save Trading Config", key="save_trading_config"):
+        if st.button(" Save Trading Config", key="save_trading_config"):
             config = st.session_state.config_data.copy()
             config['trading_settings'] = {
                 'max_position_size': max_position_size,
@@ -359,7 +359,7 @@ class TradingDashboard:
                 'cash_reserve': cash_reserve
             }
             self.save_config(config)
-            st.success("✅ Trading configuration saved!")
+            st.success(" Trading configuration saved!")
 
     def render_data_source_config(self):
         """Render data source configuration"""
@@ -390,7 +390,7 @@ class TradingDashboard:
                 key="news_api_key"
             )
         
-        if st.button("💾 Save Data Config", key="save_data_config"):
+        if st.button(" Save Data Config", key="save_data_config"):
             config = st.session_state.config_data.copy()
             config['data_sources'] = {
                 'data_provider': data_provider,
@@ -400,7 +400,7 @@ class TradingDashboard:
             if news_enabled:
                 config['data_sources']['news_api_key'] = st.session_state.get('news_api_key', '')
             self.save_config(config)
-            st.success("✅ Data source configuration saved!")
+            st.success(" Data source configuration saved!")
 
     def load_portfolio_data(self):
         """Load portfolio data from CSV files"""
@@ -497,12 +497,12 @@ class TradingDashboard:
 
     def render_performance_overview(self):
         """Render performance overview section"""
-        st.markdown("## 📊 Performance Overview")
+        st.markdown("##  Performance Overview")
         
         portfolio_df, trades_df = self.load_portfolio_data()
         
         if portfolio_df is None:
-            st.warning("📄 No portfolio data found. Please run a trading session first.")
+            st.warning(" No portfolio data found. Please run a trading session first.")
             return
         
         # Calculate metrics
@@ -584,13 +584,13 @@ class TradingDashboard:
 
     def render_current_positions(self):
         """Render current positions section"""
-        st.markdown("## 💼 Current Positions")
+        st.markdown("##  Current Positions")
         
         portfolio_df, _ = self.load_portfolio_data()
         current_positions = self.get_current_positions(portfolio_df)
         
         if current_positions.empty:
-            st.info("💰 No current positions. Portfolio is in cash.")
+            st.info(" No current positions. Portfolio is in cash.")
             return
         
         # Position summary
@@ -622,12 +622,12 @@ class TradingDashboard:
 
     def render_trade_analysis(self):
         """Render trade analysis section"""
-        st.markdown("## 📈 Trade Analysis")
+        st.markdown("##  Trade Analysis")
         
         _, trades_df = self.load_portfolio_data()
         
         if trades_df is None or trades_df.empty:
-            st.info("📋 No trade history available.")
+            st.info(" No trade history available.")
             return
         
         col1, col2 = st.columns(2)
@@ -665,16 +665,16 @@ class TradingDashboard:
 
     def render_ai_insights(self):
         """Render AI insights section"""
-        st.markdown("## 🤖 AI Insights")
+        st.markdown("##  AI Insights")
         
         if not self.llm_manager:
-            st.warning("⚠️ AI providers not configured. Please set up API keys in the sidebar.")
+            st.warning(" AI providers not configured. Please set up API keys in the sidebar.")
             return
         
         available_providers = self.llm_manager.get_available_providers()
         
         if not available_providers:
-            st.warning("⚠️ No AI providers available. Please configure API keys.")
+            st.warning(" No AI providers available. Please configure API keys.")
             return
         
         col1, col2 = st.columns(2)
@@ -682,19 +682,19 @@ class TradingDashboard:
         with col1:
             st.markdown("### AI Provider Status")
             for provider in available_providers:
-                st.success(f"✅ {provider.upper()}")
+                st.success(f" {provider.upper()}")
         
         with col2:
             st.markdown("### Recent Recommendations")
             # This would show recent AI recommendations
-            st.info("🔄 AI recommendation history will be displayed here.")
+            st.info(" AI recommendation history will be displayed here.")
         
         # AI analysis button
-        if st.button("🧠 Get AI Market Analysis", use_container_width=True):
+        if st.button(" Get AI Market Analysis", use_container_width=True):
             with st.spinner("Analyzing market conditions..."):
                 # Simulate AI analysis
                 time.sleep(2)
-                st.success("✅ AI analysis complete!")
+                st.success(" AI analysis complete!")
                 
                 # Display mock analysis
                 st.markdown("**Market Analysis:**")
@@ -704,7 +704,7 @@ class TradingDashboard:
 
     def render_market_overview(self):
         """Render market overview section"""
-        st.markdown("## 🌍 Market Overview")
+        st.markdown("##  Market Overview")
         
         # Market indices
         indices = {
@@ -727,7 +727,7 @@ class TradingDashboard:
                         prev_price = data['Close'].iloc[-2] if len(data) > 1 else current_price
                         change = ((current_price - prev_price) / prev_price) * 100
                         
-                        color = "🟢" if change >= 0 else "🔴"
+                        color = "🟢" if change >= 0 else ""
                         st.metric(
                             label=name,
                             value=f"{current_price:.2f}",
@@ -738,7 +738,7 @@ class TradingDashboard:
 
     def render_news_feed(self):
         """Render news feed section"""
-        st.markdown("## 📰 Market News")
+        st.markdown("##  Market News")
         
         # Mock news data (in real implementation, would fetch from news API)
         news_items = [
@@ -765,9 +765,9 @@ class TradingDashboard:
         for news in news_items:
             sentiment_color = {
                 "Positive": "🟢",
-                "Negative": "🔴",
+                "Negative": "",
                 "Neutral": "🟡"
-            }.get(news["sentiment"], "⚪")
+            }.get(news["sentiment"], "")
             
             st.markdown(f"""
             **{news['title']}**  
@@ -792,11 +792,11 @@ class TradingDashboard:
         
         # Main content tabs
         tab1, tab2, tab3, tab4, tab5 = st.tabs([
-            "📊 Performance", 
-            "💼 Positions", 
-            "📈 Trades", 
-            "🤖 AI Insights", 
-            "🌍 Market"
+            " Performance", 
+            " Positions", 
+            " Trades", 
+            " AI Insights", 
+            " Market"
         ])
         
         with tab1:

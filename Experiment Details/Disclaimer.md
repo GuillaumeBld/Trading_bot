@@ -22,7 +22,7 @@ Performance metrics are provided for documentation and transparency purposes onl
 
 The project creator(s), contributors, and any associated parties accept **no responsibility or liability** for any losses or decisions made based on the content of this project. Do not use this experiment as a substitute for professional financial advice.
 
-## ✅ What You *Can* Do
+##  What You *Can* Do
 
 - Look at it as a proof-of-concept
 - Learn how LLMs behave under market constraints

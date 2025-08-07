@@ -28,7 +28,7 @@ set_data_dir(data_dir)
 portfolio_file = data_dir / "chatgpt_portfolio_update.csv"
 
 # LLM Configuration
-st.sidebar.header("🤖 AI Assistant")
+st.sidebar.header(" AI Assistant")
 
 if LLM_AVAILABLE:
     llm_manager = get_llm_manager()
@@ -45,7 +45,7 @@ if LLM_AVAILABLE:
         
         if llm_manager:
             llm_manager.set_active_provider(selected_provider)
-            st.sidebar.success(f"✅ {selected_provider.upper()} ready")
+            st.sidebar.success(f" {selected_provider.upper()} ready")
     elif use_llm and not available_providers:
         st.sidebar.error("No LLM providers available. Check your configuration.")
         use_llm = False
@@ -120,7 +120,7 @@ st.dataframe(st.session_state.portfolio_df)
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("📊 Process Portfolio (Manual)", use_container_width=True):
+    if st.button(" Process Portfolio (Manual)", use_container_width=True):
         buf = io.StringIO()
         with redirect_stdout(buf):
             st.session_state.portfolio_df, st.session_state.cash = process_portfolio(
@@ -131,7 +131,7 @@ with col1:
         st.text(buf.getvalue())
 
 with col2:
-    if st.button("🤖 Process with AI", use_container_width=True, disabled=not use_llm):
+    if st.button(" Process with AI", use_container_width=True, disabled=not use_llm):
         if use_llm:
             buf = io.StringIO()
             with redirect_stdout(buf):

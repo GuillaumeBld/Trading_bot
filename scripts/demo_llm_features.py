@@ -13,7 +13,7 @@ import pandas as pd
 
 def demo_trading_decision():
     """Demo the TradingDecision structure."""
-    print("📊 Demo: Trading Decision Structure")
+    print(" Demo: Trading Decision Structure")
     print("=" * 40)
     
     # Simulate what an LLM might return
@@ -30,15 +30,15 @@ def demo_trading_decision():
     print("Example AI Recommendation:")
     print(json.dumps(demo_decision, indent=2))
     
-    print(f"\n✨ Confidence Score: {demo_decision['confidence']:.0%}")
-    print(f"📈 Expected Action: {demo_decision['action'].upper()}")
-    print(f"🎯 Risk Management: ${demo_decision['stop_loss']:.2f} stop-loss")
+    print(f"\n Confidence Score: {demo_decision['confidence']:.0%}")
+    print(f" Expected Action: {demo_decision['action'].upper()}")
+    print(f" Risk Management: ${demo_decision['stop_loss']:.2f} stop-loss")
     print()
 
 
 def demo_portfolio_analysis():
     """Demo portfolio analysis format."""
-    print("📋 Demo: Portfolio Analysis Input")
+    print(" Demo: Portfolio Analysis Input")
     print("=" * 40)
     
     # Sample portfolio data
@@ -89,7 +89,7 @@ def demo_portfolio_analysis():
 
 def demo_llm_providers():
     """Demo available LLM providers."""
-    print("🤖 Demo: LLM Provider Options")
+    print(" Demo: LLM Provider Options")
     print("=" * 40)
     
     providers = {
@@ -124,27 +124,27 @@ def demo_llm_providers():
     }
     
     for provider_id, info in providers.items():
-        print(f"🔹 {info['name']} ({info['type']})")
-        print(f"   💰 Cost: {info['cost']}")
-        print(f"   ✅ Pros: {', '.join(info['pros'])}")
-        print(f"   ❌ Cons: {', '.join(info['cons'])}")
+        print(f" {info['name']} ({info['type']})")
+        print(f"    Cost: {info['cost']}")
+        print(f"    Pros: {', '.join(info['pros'])}")
+        print(f"    Cons: {', '.join(info['cons'])}")
         print()
 
 
 def demo_safety_features():
     """Demo safety and validation features."""
-    print("🛡️ Demo: Safety Features")
+    print(" Demo: Safety Features")
     print("=" * 40)
     
     safety_features = [
-        "🎯 Confidence Scoring: Filters out low-confidence recommendations (<30%)",
-        "💰 Cash Validation: Prevents trades exceeding available capital", 
-        "📊 Price Validation: Ensures trade prices are within daily range",
-        "⚠️ Position Limits: Respects portfolio diversification rules",
-        "👤 User Approval: Interactive confirmation for each recommendation",
-        "📝 Detailed Logging: Full audit trail of all AI decisions",
-        "🔄 Fallback Mode: System continues if AI fails",
-        "🛑 Stop-Loss Enforcement: Automatic risk management"
+        " Confidence Scoring: Filters out low-confidence recommendations (<30%)",
+        " Cash Validation: Prevents trades exceeding available capital", 
+        " Price Validation: Ensures trade prices are within daily range",
+        " Position Limits: Respects portfolio diversification rules",
+        " User Approval: Interactive confirmation for each recommendation",
+        " Detailed Logging: Full audit trail of all AI decisions",
+        " Fallback Mode: System continues if AI fails",
+        " Stop-Loss Enforcement: Automatic risk management"
     ]
     
     for feature in safety_features:
@@ -154,7 +154,7 @@ def demo_safety_features():
 
 def demo_command_examples():
     """Demo command-line usage examples."""
-    print("💻 Demo: Command-Line Usage")
+    print(" Demo: Command-Line Usage")
     print("=" * 40)
     
     examples = [
@@ -168,14 +168,14 @@ def demo_command_examples():
     ]
     
     for description, command in examples:
-        print(f"🔹 {description}:")
+        print(f" {description}:")
         print(f"   {command}")
         print()
 
 
 def main():
     """Run the complete demo."""
-    print("🚀 ChatGPT Micro-Cap Trading - LLM Integration Demo")
+    print(" ChatGPT Micro-Cap Trading - LLM Integration Demo")
     print("=" * 60)
     print()
     
@@ -185,13 +185,13 @@ def main():
     demo_safety_features()
     demo_command_examples()
     
-    print("🎉 Next Steps:")
+    print(" Next Steps:")
     print("1. Run: python setup_llm.py")
     print("2. Configure your preferred AI provider")
     print("3. Start trading: python trading_bot.py --ai")
     print()
-    print("📖 Full documentation: LLM_INTEGRATION.md")
-    print("🌐 Web interface: streamlit run streamlit_app.py")
+    print(" Full documentation: LLM_INTEGRATION.md")
+    print(" Web interface: streamlit run streamlit_app.py")
 
 
 if __name__ == "__main__":

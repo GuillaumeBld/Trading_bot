@@ -2,7 +2,7 @@
 
 Find quick answers to common questions about the ChatGPT Micro-Cap Trading Bot.
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Q: Do I need a brokerage account to use this?
 **A:** No! This is a portfolio tracking and analysis tool. It doesn't execute real trades with any broker. You manually track your trades and the system helps with analysis and recommendations.
@@ -12,10 +12,10 @@ Find quick answers to common questions about the ChatGPT Micro-Cap Trading Bot.
 
 ### Q: Is this suitable for beginners?
 **A:** Yes, but with caveats:
-- ✅ Great for learning portfolio management
-- ✅ Excellent for understanding AI in trading  
-- ⚠️ Micro-cap stocks are very risky
-- ⚠️ Only invest what you can afford to lose
+-  Great for learning portfolio management
+-  Excellent for understanding AI in trading  
+-  Micro-cap stocks are very risky
+-  Only invest what you can afford to lose
 
 ### Q: Do I need coding experience?
 **A:** Not for basic usage! The system has:
@@ -23,7 +23,7 @@ Find quick answers to common questions about the ChatGPT Micro-Cap Trading Bot.
 - User-friendly web interface
 - Step-by-step setup guides
 
-## 🤖 AI Features
+##  AI Features
 
 ### Q: Which AI provider should I choose?
 **A:** It depends on your needs:
@@ -60,7 +60,7 @@ Find quick answers to common questions about the ChatGPT Micro-Cap Trading Bot.
 - All trades are logged for transparency
 - You maintain full control
 
-## 💻 Technical Issues
+##  Technical Issues
 
 ### Q: "No LLM providers available" error
 **A:** This means no AI providers are configured:
@@ -99,7 +99,7 @@ Find quick answers to common questions about the ChatGPT Micro-Cap Trading Bot.
 3. Restart your router if needed
 4. Some corporate networks block financial APIs
 
-## 📊 Trading Questions
+##  Trading Questions
 
 ### Q: What are micro-cap stocks?
 **A:** Micro-cap stocks are companies with market capitalization under $300 million:
@@ -137,14 +137,14 @@ python trading_bot.py --data-dir "Portfolio_A"
 python trading_bot.py --data-dir "Portfolio_B"
 ```
 
-## 💰 Cost and Pricing
+##  Cost and Pricing
 
 ### Q: Is the software free?
 **A:** The software itself is completely free (MIT license):
-- ✅ Core trading bot: Free
-- ✅ Manual trading: Free
-- ✅ Local AI (Ollama/HuggingFace): Free
-- 💰 Cloud AI APIs: Paid (but cheap)
+-  Core trading bot: Free
+-  Manual trading: Free
+-  Local AI (Ollama/HuggingFace): Free
+-  Cloud AI APIs: Paid (but cheap)
 
 ### Q: Are there hidden costs?
 **A:** No hidden costs, but consider:
@@ -159,7 +159,7 @@ python trading_bot.py --data-dir "Portfolio_B"
 3. Use free API credits from OpenAI/Anthropic
 4. Switch to paid only if you like it
 
-## 🔒 Privacy and Security
+##  Privacy and Security
 
 ### Q: Is my trading data secure?
 **A:** Your data security depends on your setup:
@@ -176,12 +176,12 @@ python trading_bot.py --data-dir "Portfolio_B"
 
 ### Q: Can I use this without internet?
 **A:** Partially:
-- ✅ Portfolio tracking: Works offline
-- ✅ Local AI: Works offline (after initial setup)
-- ❌ Market data: Requires internet
-- ❌ Cloud AI: Requires internet
+-  Portfolio tracking: Works offline
+-  Local AI: Works offline (after initial setup)
+-  Market data: Requires internet
+-  Cloud AI: Requires internet
 
-## 🎯 Strategy and Performance
+##  Strategy and Performance
 
 ### Q: What trading strategy does the AI use?
 **A:** The AI uses multiple approaches:
@@ -211,7 +211,7 @@ python trading_bot.py --data-dir "Portfolio_B"
 4. Use AI for analysis, make your own decisions
 5. Track everything and learn from results
 
-## 🔄 Data and Backup
+##  Data and Backup
 
 ### Q: How do I backup my data?
 **A:** Your trading data is in CSV files:
@@ -239,7 +239,7 @@ df.to_excel('portfolio.xlsx', index=False)
 - Add trades to `chatgpt_trade_log.csv`
 - Update portfolio in `chatgpt_portfolio_update.csv`
 
-## 🛠️ Development and Customization
+##  Development and Customization
 
 ### Q: Can I contribute to the project?
 **A:** Yes! The project welcomes contributions:
@@ -264,7 +264,7 @@ df.to_excel('portfolio.xlsx', index=False)
 - ETFs and mutual funds
 - (Requires development work)
 
-## 🆘 Getting Help
+##  Getting Help
 
 ### Q: Where can I get help?
 **A:** Multiple support options:
@@ -292,6 +292,6 @@ df.to_excel('portfolio.xlsx', index=False)
 ---
 
 **Still have questions?** 
-- 📖 Check our [Complete Documentation](../README.md)
-- 🐛 [Report Issues on GitHub](https://github.com/your-repo/issues)
-- 💬 [Join our Discord Community](https://discord.gg/your-invite)
+-  Check our [Complete Documentation](../README.md)
+-  [Report Issues on GitHub](https://github.com/your-repo/issues)
+-  [Join our Discord Community](https://discord.gg/your-invite)

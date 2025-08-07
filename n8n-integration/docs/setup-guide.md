@@ -1,8 +1,8 @@
-# 🚀 n8n Integration Setup Guide
+#  n8n Integration Setup Guide
 
 Complete step-by-step guide to set up the ChatGPT Micro-Cap Trading Bot with n8n workflows.
 
-## 📋 Prerequisites
+##  Prerequisites
 
 Before starting, ensure you have:
 
@@ -12,7 +12,7 @@ Before starting, ensure you have:
 - **Notification Service Accounts** (Slack, Discord, Telegram, etc.)
 - **Basic understanding** of Docker and environment variables
 
-## 🎯 Quick Start (Recommended)
+##  Quick Start (Recommended)
 
 ### 1. Clone and Setup
 
@@ -58,7 +58,7 @@ docker-compose -f docker/docker-compose.yml ps
 - **API Documentation**: http://localhost:8000/docs
 - **Basic Dashboard**: http://localhost:8501
 
-## 🔧 Detailed Setup
+##  Detailed Setup
 
 ### Step 1: Environment Configuration
 
@@ -224,7 +224,7 @@ Workflows are automatically imported from the `workflows/` directory when n8n st
    - Username: `your-email@gmail.com`
    - Password: `your-app-password`
 
-## 🧪 Testing the Setup
+##  Testing the Setup
 
 ### 1. Health Checks
 
@@ -282,7 +282,7 @@ curl -X POST http://localhost:8000/api/trade/buy \
   }'
 ```
 
-## 🔧 Advanced Configuration
+##  Advanced Configuration
 
 ### Custom Workflows
 
@@ -347,7 +347,7 @@ api-wrapper:
    }
    ```
 
-## 🔍 Monitoring & Logging
+##  Monitoring & Logging
 
 ### Enable Monitoring Stack
 
@@ -383,7 +383,7 @@ docker inspect trading-bot-core
 docker stats trading-bot-core
 ```
 
-## 🚨 Troubleshooting
+##  Troubleshooting
 
 ### Common Issues
 
@@ -464,7 +464,7 @@ curl -H "Authorization: Bearer wrong-key" http://localhost:8000/api/portfolio
    - Verify service discovery
    - Test inter-container communication
 
-## 📞 Support
+##  Support
 
 ### Getting Help
 
@@ -507,6 +507,6 @@ curl -H "Authorization: Bearer wrong-key" http://localhost:8000/api/portfolio
 
 ---
 
-**Your n8n integration is now ready!** 🎉
+**Your n8n integration is now ready!** 
 
 Access your services and start automating your trading workflows with the power of n8n and AI-driven trading decisions.
