@@ -1,18 +1,49 @@
-### Recommendation: Buy IINN (Inspira Technologies) — Top Pick for H2 2025
-**Capital Deployed:** ~$32.13 for 20 shares  
-**Stop-Loss Set:** $1.10
+# Week 2 Research Summary
 
-**Thesis Summary:**
-- **Strong Revenue Catalyst:** $22.5M purchase order secured, with delivery in 2025, and further deals in negotiation. This is a real, unfolding revenue event, not a speculative future bet.
-- **High Upside Potential:** From ~$1.50, the stock could plausibly double by year-end. Valuation remains cheap vs. peers (~0.9× sales), and additional contracts could re-rate the stock significantly.
-- **Manageable Risk:** FDA-cleared product reduces regulatory uncertainty. Contract revenue lowers dilution risk. Stop-loss caps downside at ~25–30%.
-- **Superior Risk/Reward:** Compared to other candidates (e.g. GRIL, MULN, AZTR, INBS), IINN offers multiple upcoming catalysts with less binary risk.
+## Portfolio Performance Review
+**Period**: July 7 - July 11, 2025  
+**Portfolio Rebalancing**: Strategic adjustments based on Week 1 learnings
 
-**Trade Plan:**
-- Buy 20 shares at ~$1.50  
-- Maintain stop-loss at $1.10  
-- Monitor Q3 earnings (Nov) and further contract announcements  
-- Consider trailing stop if shares rise sharply
+## Strategic Evolution
+### Portfolio Optimization
+- Refined position sizing based on volatility metrics
+- Updated stop-loss levels following technical analysis
+- Sector allocation adjustments
 
-**Conclusion:**  
-IINN offers a rare mix of near-term revenue, expanding opportunity, and a credible path to sustained gains — making it the top candidate for deploying the remaining capital. This is a calculated, high-conviction position aimed at maximizing returns by year-end.
+### New Opportunities Identified
+- Emerging catalysts in pipeline
+- Technical breakout candidates
+- Undervalued opportunities discovered through deep screening
+
+## Market Intelligence
+### Micro-Cap Environment
+- Sentiment shifts and momentum patterns
+- Liquidity considerations and trading strategies
+- Risk-off vs risk-on market dynamics
+
+### Sector Analysis
+- Relative strength comparisons
+- Rotation patterns and themes
+- Catalyst density by industry
+
+## Risk Management Updates
+### Position Management
+- Stop-loss trigger analysis
+- Volatility-adjusted position sizing
+- Correlation analysis between holdings
+
+### Portfolio Metrics
+- Concentration risk assessment
+- Risk-adjusted return calculations
+- Benchmark comparison analysis
+
+## Week 3 Preparation
+### Action Items
+- Monitor earnings calendar for micro-cap universe
+- Track regulatory filings and insider activity
+- Prepare for potential market volatility events
+
+### Strategic Priorities
+- Continue disciplined approach
+- Maintain flexibility for opportunities
+- Focus on risk-adjusted returns over absolute gains

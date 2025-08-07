@@ -1,0 +1,311 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: trading-bot-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-trading_bot}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - trading-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-trading_bot}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for caching and message queue
+  redis:
+    image: redis:7-alpine
+    container_name: trading-bot-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-changeme}
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - trading-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Trading Bot Core Application
+  trading-bot:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.trading-bot
+    container_name: trading-bot-core
+    restart: unless-stopped
+    environment:
+      # AI Provider Settings
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OLLAMA_HOST: ${OLLAMA_HOST:-http://ollama:11434}
+      
+      # Trading Settings
+      TRADING_MODE: ${TRADING_MODE:-paper}
+      MAX_POSITION_SIZE: ${MAX_POSITION_SIZE:-0.2}
+      DEFAULT_STOP_LOSS: ${DEFAULT_STOP_LOSS:-0.15}
+      
+      # Database Settings
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-trading_bot}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-changeme}@redis:6379/0
+      
+      # Dashboard Settings
+      STREAMLIT_SERVER_PORT: 8501
+      STREAMLIT_SERVER_ADDRESS: 0.0.0.0
+      STREAMLIT_SERVER_HEADLESS: true
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - trading_data:/app/data
+      - trading_logs:/app/logs
+      - ./config:/app/config
+    ports:
+      - "8501:8501"  # Streamlit Dashboard
+      - "8502:8502"  # Dynamic Dashboard
+    networks:
+      - trading-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # FastAPI Wrapper for n8n Integration
+  api-wrapper:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.api-wrapper
+    container_name: trading-bot-api
+    restart: unless-stopped
+    environment:
+      # API Settings
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      API_TITLE: "Trading Bot API"
+      API_VERSION: "1.0.0"
+      
+      # Security
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-your-super-secret-jwt-key}
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-your-webhook-secret}
+      API_KEY: ${API_KEY:-your-api-key}
+      
+      # External Services
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-trading_bot}
+      REDIS_URL: redis://:${REDIS_PASSWORD:-changeme}@redis:6379/0
+      TRADING_BOT_URL: http://trading-bot:8501
+      
+      # Webhook URLs
+      N8N_WEBHOOK_URL: http://n8n:5678/webhook
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - trading_data:/app/data:ro
+      - api_logs:/app/logs
+    ports:
+      - "8000:8000"
+    networks:
+      - trading-network
+    depends_on:
+      trading-bot:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # n8n Workflow Automation
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: trading-bot-n8n
+    restart: unless-stopped
+    environment:
+      # Basic Configuration
+      N8N_BASIC_AUTH_ACTIVE: ${N8N_BASIC_AUTH_ACTIVE:-true}
+      N8N_BASIC_AUTH_USER: ${N8N_BASIC_AUTH_USER:-admin}
+      N8N_BASIC_AUTH_PASSWORD: ${N8N_BASIC_AUTH_PASSWORD:-changeme}
+      
+      # Database Configuration
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: ${N8N_DB:-n8n}
+      DB_POSTGRESDB_USER: ${POSTGRES_USER:-postgres}
+      DB_POSTGRESDB_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      
+      # Webhook Configuration
+      WEBHOOK_URL: ${N8N_WEBHOOK_URL:-http://localhost:5678}
+      N8N_PAYLOAD_SIZE_MAX: 16
+      
+      # Editor Configuration
+      N8N_EDITOR_BASE_URL: ${N8N_EDITOR_BASE_URL:-http://localhost:5678}
+      
+      # Execution Configuration
+      EXECUTIONS_PROCESS: main
+      EXECUTIONS_MODE: regular
+      
+      # Generic OAuth
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:-your-n8n-encryption-key}
+      
+      # Timezone
+      GENERIC_TIMEZONE: ${TIMEZONE:-UTC}
+      TZ: ${TIMEZONE:-UTC}
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n-workflows:/home/node/.n8n/workflows
+      - ./n8n-credentials:/home/node/.n8n/credentials
+    ports:
+      - "5678:5678"
+    networks:
+      - trading-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api-wrapper:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5678/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Ollama for Local LLM (Optional)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: trading-bot-ollama
+    restart: unless-stopped
+    profiles:
+      - local-llm
+    environment:
+      OLLAMA_ORIGINS: "*"
+      OLLAMA_HOST: 0.0.0.0
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - trading-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: trading-bot-nginx
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - trading-network
+    depends_on:
+      - trading-bot
+      - api-wrapper
+      - n8n
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Monitoring with Prometheus (Optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: trading-bot-prometheus
+    restart: unless-stopped
+    profiles:
+      - monitoring
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - trading-network
+
+  # Grafana for Visualization (Optional)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: trading-bot-grafana
+    restart: unless-stopped
+    profiles:
+      - monitoring
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    networks:
+      - trading-network
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  trading_data:
+    driver: local
+  trading_logs:
+    driver: local
+  api_logs:
+    driver: local
+  n8n_data:
+    driver: local
+  ollama_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  trading-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

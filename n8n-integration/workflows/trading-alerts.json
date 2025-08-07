@@ -1,0 +1,404 @@
+{
+  "name": "Trading Bot Alerts",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "webhook-trigger",
+      "name": "Trading Bot Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "webhookId": "trading-bot-alerts"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event_type}}",
+              "operation": "equal",
+              "value2": "trade_executed"
+            }
+          ]
+        }
+      },
+      "id": "trade-filter",
+      "name": "Trade Executed Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event_type}}",
+              "operation": "equal",
+              "value2": "portfolio_alert"
+            }
+          ]
+        }
+      },
+      "id": "portfolio-filter",
+      "name": "Portfolio Alert Filter",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [460, 400]
+    },
+    {
+      "parameters": {
+        "channel": "#trading-alerts",
+        "text": "🚀 **Trade Executed**\n\n📊 **Symbol:** {{$json.data.symbol}}\n💰 **Action:** {{$json.data.action | upper}}\n📈 **Shares:** {{$json.data.shares}}\n💵 **Price:** ${{$json.data.price}}\n⏰ **Time:** {{$json.data.timestamp}}\n\n{{$json.data.reasoning ? \"🤖 **AI Reasoning:** \" + $json.data.reasoning : \"\"}}"
+      },
+      "id": "slack-trade-alert",
+      "name": "Slack Trade Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [680, 100]
+    },
+    {
+      "parameters": {
+        "channel": "#trading-alerts",
+        "text": "⚠️ **Portfolio Alert**\n\n🎯 **Alert Type:** {{$json.data.alert_type}}\n📊 **Message:** {{$json.data.message}}\n🔥 **Severity:** {{$json.data.severity}}/5\n⏰ **Time:** {{$json.timestamp}}\n\n{{$json.data.affected_positions ? \"📈 **Affected Positions:** \" + $json.data.affected_positions.join(\", \") : \"\"}}"
+      },
+      "id": "slack-portfolio-alert",
+      "name": "Slack Portfolio Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "webhookUri": "{{$node[\"Discord Webhook URL\"].json[\"webhook_url\"]}}",
+        "text": "🚀 **Trade Executed**\\n\\n📊 **Symbol:** {{$json.data.symbol}}\\n💰 **Action:** {{$json.data.action | upper}}\\n📈 **Shares:** {{$json.data.shares}}\\n💵 **Price:** ${{$json.data.price}}\\n⏰ **Time:** {{$json.data.timestamp}}"
+      },
+      "id": "discord-trade-alert",
+      "name": "Discord Trade Alert",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1,
+      "position": [680, 150]
+    },
+    {
+      "parameters": {
+        "webhookUri": "{{$node[\"Discord Webhook URL\"].json[\"webhook_url\"]}}",
+        "text": "⚠️ **Portfolio Alert**\\n\\n🎯 **Alert Type:** {{$json.data.alert_type}}\\n📊 **Message:** {{$json.data.message}}\\n🔥 **Severity:** {{$json.data.severity}}/5\\n⏰ **Time:** {{$json.timestamp}}"
+      },
+      "id": "discord-portfolio-alert",
+      "name": "Discord Portfolio Alert",
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 1,
+      "position": [680, 350]
+    },
+    {
+      "parameters": {
+        "to": "{{$node[\"Email Config\"].json[\"alert_email\"]}}",
+        "subject": "Trading Bot Alert: {{$json.data.symbol ? $json.data.symbol + \" Trade\" : \"Portfolio Alert\"}}",
+        "text": "Trading Bot Alert\n\nEvent Type: {{$json.event_type}}\nTimestamp: {{$json.timestamp}}\n\n{{$json.data.symbol ? \"Symbol: \" + $json.data.symbol + \"\\n\" : \"\"}}{{$json.data.action ? \"Action: \" + $json.data.action + \"\\n\" : \"\"}}{{$json.data.shares ? \"Shares: \" + $json.data.shares + \"\\n\" : \"\"}}{{$json.data.price ? \"Price: $\" + $json.data.price + \"\\n\" : \"\"}}{{$json.data.message ? \"Message: \" + $json.data.message + \"\\n\" : \"\"}}{{$json.data.reasoning ? \"AI Reasoning: \" + $json.data.reasoning : \"\"}}"
+      },
+      "id": "email-alert",
+      "name": "Email Alert",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [680, 450]
+    },
+    {
+      "parameters": {
+        "chatId": "{{$node[\"Telegram Config\"].json[\"chat_id\"]}}",
+        "text": "🚀 *Trade Executed*\\n\\n📊 *Symbol:* {{$json.data.symbol}}\\n💰 *Action:* {{$json.data.action | upper}}\\n📈 *Shares:* {{$json.data.shares}}\\n💵 *Price:* ${{$json.data.price}}\\n⏰ *Time:* {{$json.data.timestamp}}\\n\\n{{$json.data.reasoning ? \"🤖 *AI Reasoning:* \" + $json.data.reasoning : \"\"}}",
+        "parseMode": "Markdown"
+      },
+      "id": "telegram-trade-alert",
+      "name": "Telegram Trade Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [900, 100]
+    },
+    {
+      "parameters": {
+        "chatId": "{{$node[\"Telegram Config\"].json[\"chat_id\"]}}",
+        "text": "⚠️ *Portfolio Alert*\\n\\n🎯 *Alert Type:* {{$json.data.alert_type}}\\n📊 *Message:* {{$json.data.message}}\\n🔥 *Severity:* {{$json.data.severity}}/5\\n⏰ *Time:* {{$json.timestamp}}",
+        "parseMode": "Markdown"
+      },
+      "id": "telegram-portfolio-alert",
+      "name": "Telegram Portfolio Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{$node[\"Trading Bot API\"].json[\"base_url\"]}}/api/notifications/acknowledge",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{$node[\"Trading Bot API\"].json[\"api_key\"]}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event_type",
+              "value": "={{$json.event_type}}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{$json.timestamp}}"
+            },
+            {
+              "name": "acknowledged_at",
+              "value": "={{new Date().toISOString()}}"
+            }
+          ]
+        }
+      },
+      "id": "acknowledge-notification",
+      "name": "Acknowledge Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "webhook_url",
+              "value": "https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "discord-webhook-url",
+      "name": "Discord Webhook URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [240, 500]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "chat_id",
+              "value": "YOUR_TELEGRAM_CHAT_ID"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "telegram-config",
+      "name": "Telegram Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [240, 550]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "alert_email",
+              "value": "your-email@example.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "email-config",
+      "name": "Email Config",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [240, 600]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "base_url",
+              "value": "http://api-wrapper:8000"
+            },
+            {
+              "name": "api_key",
+              "value": "your-api-key"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "trading-bot-api",
+      "name": "Trading Bot API",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [240, 650]
+    }
+  ],
+  "connections": {
+    "Trading Bot Webhook": {
+      "main": [
+        [
+          {
+            "node": "Trade Executed Filter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Portfolio Alert Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trade Executed Filter": {
+      "main": [
+        [
+          {
+            "node": "Slack Trade Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord Trade Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Trade Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portfolio Alert Filter": {
+      "main": [
+        [
+          {
+            "node": "Slack Portfolio Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Discord Portfolio Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram Portfolio Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Trade Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Portfolio Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord Trade Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord Portfolio Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trade Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Portfolio Alert": {
+      "main": [
+        [
+          {
+            "node": "Acknowledge Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "saveManualExecutions": true
+  },
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "trading-alerts-workflow",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "trading-bot",
+      "name": "Trading Bot"
+    }
+  ]
+}

@@ -1,52 +1,79 @@
-# === Python ===
+# Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
+*$py.class
+*.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Environments
+.env
+.venv
 env/
 venv/
-.venv/
-.mypy_cache/
-.pyright/
-.pylance/
+ENV/
+env.bak/
+venv.bak/
 
-# === VS Code ===
-.vscode/
-.vscode-test/
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# === OS/System Files ===
+# pyenv
+.python-version
+
+# OS generated files
 .DS_Store
-Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 ehthumbs.db
-desktop.ini
+Thumbs.db
 
-# === Logs and Temporary Files ===
-*.log
-*.tmp
-*.bak
+# IDE
+.vscode/
+.idea/
 *.swp
 *.swo
+*~
 
-# === Node/Frontend Artifacts ===
-node_modules/
-*.lock
-*.vsix
+# Streamlit
+.streamlit/
 
-# === User/System Profile Junk ===
-AppData/
-Application Data/
-Local Settings/
-My Documents/
-Cookies/
-Documents/
-.dotnet/
-.nuget/
-.ipython/
-.lesshst
-
-# === IDEs ===
-.idea/
-
-# === Environment Variables ===
-*.env
+# Local data files (optional - uncomment if you want to ignore CSV data)
+# *.csv

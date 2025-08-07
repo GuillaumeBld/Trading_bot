@@ -1,9 +1,30 @@
 # Start Your Own
 
-This folder lets you run the trading experiment on your own computer. It contains two small scripts and the CSV files they produce.
+This folder lets you run the trading experiment on your own computer with **full AI integration**. Choose between manual trading or AI-powered recommendations using local or cloud-based models.
 
-Run the commands below from the repository root. The scripts automatically
-save their CSV data inside this folder.
+Run the commands below from the repository root. The scripts automatically save their CSV data inside this folder.
+
+## 🚀 Quick Start Options
+
+### Option 1: AI-Enhanced Trading (Recommended)
+```bash
+# Setup AI providers
+python setup_llm.py
+
+# Run with AI recommendations  
+python trading_bot.py --ai --data-dir "Start Your Own"
+```
+
+### Option 2: Manual Trading Only
+```bash
+python "Start Your Own/Trading_Script.py"
+```
+
+### Option 3: Web Interface
+```bash
+streamlit run streamlit_app.py
+# Then set data directory to "Start Your Own" in sidebar
+```
 
 ## Trading_Script.py
 

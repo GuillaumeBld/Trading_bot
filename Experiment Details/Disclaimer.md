@@ -30,5 +30,3 @@ The project creator(s), contributors, and any associated parties accept **no res
 - Ask questions, challenge assumptions, and iterate responsibly
 
 ---
-
-

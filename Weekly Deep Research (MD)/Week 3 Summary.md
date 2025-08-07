@@ -1,31 +1,60 @@
-## Portfolio Reallocation Summary
+# Week 3 Research Summary
 
-By implementing the above, the portfolio shifts toward higher-conviction positions. We are holding onto winners (ABEO, IINN) and strong stories (CADL), while cutting the weakest link (AZTR). The freed capital is redeployed into MIST (targeting a biotech catalyst) and CCLD (a growth-at-a-value play).
+## Mid-Point Assessment
+**Period**: July 14 - July 18, 2025  
+**Experiment Progress**: 50% completion milestone
 
-This strategy blends:
-- **Biotech event-driven upside**
-- **Tech/AI-driven growth exposure**
+## Performance Analysis
+### Portfolio Metrics
+- Total return vs S&P 500 benchmark
+- Risk-adjusted performance (Sharpe/Sortino ratios)
+- Maximum drawdown and recovery patterns
 
-Both sectors are positioned to outperform the broader market into late 2025.
+### Attribution Analysis
+- Top performing positions and drivers
+- Underperforming holdings and lessons
+- Sector and style factor contributions
 
-### Position Rationale:
+## Strategic Refinements
+### Position Adjustments
+- Profit-taking on outperformers
+- Stop-loss updates based on technical levels
+- New entry points identified
 
-- **Abeona (ABEO):**  
-  Hold for commercial execution of a newly approved therapy. Still undervalued relative to cash and pipeline potential.
+### Portfolio Rebalancing
+- Concentration risk management
+- Sector diversification optimization
+- Cash allocation for opportunities
 
-- **Candel (CADL):**  
-  Maintain position. 2025 may be a quiet year, but long-term oncology payoff remains promising.
+## Market Dynamics
+### Micro-Cap Environment
+- Volatility regime analysis
+- Liquidity conditions assessment
+- Sentiment indicators and flows
 
-- **Azitra (AZTR):**  
-  Sell/rotate out due to funding risks and a binary outcome profile that no longer fits the high-conviction mandate.
+### Catalyst Calendar
+- Upcoming earnings events
+- Conference presentations
+- Regulatory milestone tracking
 
-- **Inspira (IINN):**  
-  Add/Hold to capitalize on real revenue momentum and government-backed support.
+## Risk Management Evolution
+### Enhanced Protocols
+- Dynamic stop-loss adjustments
+- Position sizing optimization
+- Correlation monitoring
 
-- **Milestone (MIST):**  
-  Initiate position as a high-reward catalyst trade into a December FDA decision.
+### Stress Testing
+- Portfolio resilience scenarios
+- Liquidity crisis preparedness
+- Black swan event hedging
 
-- **CareCloud (CCLD):**  
-  Buy based on undervaluation and emerging AI-driven growth narrative.
+## Second Half Strategy
+### Key Objectives
+- Maintain performance momentum
+- Enhance risk-adjusted returns
+- Prepare for final quarter push
 
-By focusing the portfolio on high-conviction, catalyst-backed ideas, we aim to maximize return potential. We will monitor each position closely and adjust using stop-losses and position sizing as needed. Barring major macro disruptions, this revised micro-cap portfolio is well-positioned to outperform heading into year-end.
+### Tactical Focus
+- Technical pattern recognition
+- Event-driven opportunities
+- Market timing optimization

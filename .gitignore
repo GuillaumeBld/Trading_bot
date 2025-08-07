@@ -1,2 +1,150 @@
+# Python
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Trading data
+data/trades/*
+data/backups/*
+!data/trades/.gitkeep
+!data/backups/.gitkeep
+
+# Configuration files with secrets
+config/local_config.py
+config/production_config.py
+*_config.json
+credentials.json
+
+# Dashboard data
+dashboard_data/
+temp_data/
+cache/
+
+# API keys and credentials
+api_keys.txt
+credentials.txt
+secrets.yaml
+
+# Docker
+.dockerignore
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Streamlit
+.streamlit/
+
+# Node.js (for any frontend components)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# n8n specific
+n8n-data/
+n8n_user_data/
+
+# AI model files (if downloading models locally)
+models/
+*.bin
+*.safetensors
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# System files
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Editor files
+*.sublime-project
+*.sublime-workspace
+
+# Local development
+local_*
+debug_*
+test_*

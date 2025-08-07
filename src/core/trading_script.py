@@ -573,4 +573,3 @@ def load_latest_portfolio_state(
     latest = df.sort_values("Date").iloc[-1]
     cash = float(latest["Cash Balance"])
     return latest_tickers, cash
-

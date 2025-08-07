@@ -1,0 +1,60 @@
+# Trading Bot Docker Image
+# Optimized for production deployment with n8n integration
+
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory and user
+RUN groupadd -r tradingbot && useradd -r -g tradingbot tradingbot
+WORKDIR /app
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+COPY n8n-integration/api-wrapper/requirements.txt ./api-requirements.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir -r api-requirements.txt
+
+# Copy application code
+COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY data/ ./data/
+COPY docs/ ./docs/
+COPY *.py ./
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/data/portfolio /app/data/trades /app/data/backups && \
+    chown -R tradingbot:tradingbot /app
+
+# Copy entrypoint script
+COPY n8n-integration/docker/entrypoint-trading-bot.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8501/_stcore/health || exit 1
+
+# Switch to non-root user
+USER tradingbot
+
+# Expose ports
+EXPOSE 8501 8502
+
+# Set entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Default command
+CMD ["python", "-m", "streamlit", "run", "src/interfaces/dynamic_dashboard.py", "--server.port", "8502", "--server.address", "0.0.0.0"]

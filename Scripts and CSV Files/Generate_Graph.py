@@ -176,4 +176,3 @@ if __name__ == "__main__":
     end = parse_date(args.end_date, "end date") if args.end_date else None
 
     main(args.baseline_equity, start, end)
-

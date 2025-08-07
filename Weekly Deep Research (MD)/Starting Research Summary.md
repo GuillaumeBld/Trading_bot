@@ -1,14 +1,37 @@
-## Portfolio Summary and Allocation
+# Starting Research Summary
 
-With a $100 capital and a 6-month horizon, we’ve constructed a concentrated micro-cap portfolio aiming for maximum return. All picks are U.S.-listed micro-cap stocks (sub-$300M market caps) chosen for strong catalysts or growth potential by December 27, 2025.
+## Initial Portfolio Strategy
+**Date**: June 27, 2025  
+**Starting Capital**: $100  
+**Objective**: Maximum alpha generation over 6-month period  
 
-We’ve balanced high-upside biotech plays with an AI/tech growth stock, and we’ll actively manage risk through position sizing and stop-loss orders.
+## Research Methodology
+1. **Screening Criteria**:
+   - Market cap under $300M (micro-cap definition)
+   - U.S.-listed securities only
+   - Strong fundamentals with catalyst potential
+   - Technical momentum indicators
 
-### Initial Portfolio Allocation:
+2. **Risk Management**:
+   - Stop-loss levels at 15-20% below entry
+   - Position sizing based on volatility
+   - Maximum 5 positions for diversification
 
-- **Abeona Therapeutics (ABEO)** – 6 shares ≈ $36 (36% of portfolio)  
-- **Candel Therapeutics (CADL)** – 5 shares ≈ $28 (28% of portfolio)  
-- **Cloudastructure Inc (CSAI)** – 15 shares ≈ $30 (30% of portfolio)  
-- **Cash Reserve:** ≈ $6 (6% cash for flexibility or fees)
+## Initial Holdings Selection
+Based on comprehensive analysis of:
+- Financial statements and growth metrics
+- Recent news and upcoming catalysts  
+- Technical chart patterns
+- Sector dynamics and market conditions
 
-Each stock is a full-share position and was selected based on verifiable positive research and upcoming catalysts. Below we detail the thesis for each holding and our risk management plan.
+## Portfolio Construction Philosophy
+- Focus on undervalued companies with near-term catalysts
+- Balance between growth and value opportunities
+- Diversification across sectors while maintaining conviction
+- Active management approach with quick decision-making
+
+## Expected Challenges
+- High volatility inherent in micro-cap space
+- Limited liquidity requiring careful entry/exit planning
+- Information asymmetry and research coverage gaps
+- Market sentiment swings affecting small-cap performance
